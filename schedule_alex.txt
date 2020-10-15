@@ -1,0 +1,10 @@
+(Preliminary) Deliverables for Alex:
+1) setup subset of data for initial testing (up until prototype)
+2) brainstorm: data loading strategy for large amounts of image data processing
+3) code image merging tool
+4) stress-test and debug image merging tool
+5) brainstorm (ref: Yushen): which high-level features to focus on first, which we need/want
+6) research web image-loading solutions
+7) code image processing (base for feature extraction) tool
+8) stress-test and debug image processing tool
+9) (ref: Yushen and Andrew) design data formats for extracted features
