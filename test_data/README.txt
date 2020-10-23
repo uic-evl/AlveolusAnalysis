@@ -1,0 +1,1 @@
+Currently, this folder contains 11 images from each channel (i.e. Ch2 and Ch4) and is used as a testing repo for image processing and feature extraction. Note that images are not currently saved to the Github so if you also want/need to use these images please let Alex know!
