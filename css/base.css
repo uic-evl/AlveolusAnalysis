@@ -5,6 +5,30 @@
   --background: #1a202c;
   --font-serif: "Lora", serif;
   --font: "IBM Plex Sans", sans-serif;
+
+  --cg50: #f9fafb;
+  --cg100: #f3f4f6;
+  --cg200: #e5e7eb;
+  --cg300: #d1d5db;
+  --cg400: #9ca3af;
+  --cg500: #6b7280;
+  --cg600: #4b5563;
+  --cg700: #374151;
+  --cg800: #1f2937;
+  --cg900: #111827;
+
+  --bg50: #f8fafc;
+  --bg100: #f1f5f9;
+  --bg200: #e2e8f0;
+  --bg300: #cbd5e1;
+  --bg400: #94a3b8;
+  --bg500: #64748b;
+  --bg600: #475569;
+  --bg700: #334155;
+  --bg800: #1e293b;
+  --bg900: #0f172a;
+
+  --background: var(--cg900);
 }
 
 html,
@@ -54,7 +78,7 @@ svg text {
 }
 
 .header {
-  color: #fecdd3;
+  color: var(--bg100);
 
   font-size: 1.1rem;
   display: flex;
@@ -128,7 +152,12 @@ svg text {
 }
 
 .right {
+  display: grid;
   grid-area: right;
+
+  grid-template: 1fr 1fr / 1fr 1fr;
+
+  gap: 1rem;
 }
 
 /* Dark Theme elevation definitions from:
