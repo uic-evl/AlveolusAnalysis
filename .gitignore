@@ -1,3 +1,6 @@
-*.tif
-*.png
+data/**/*.png
+data/**/*.tif
+
+test_data/**/*.png
+test_data/**/*.tif
 *.zip
