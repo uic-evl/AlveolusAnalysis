@@ -6,21 +6,61 @@
 
     <link rel="stylesheet" href="./css/base.css" />
 
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
     <title>Alveolus Analysis</title>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <body>
     <div class="content">
-      <div class="header dp-4">Alveolus Analysis</div>
+      <div class="header dp-4">
+        <img
+          src="./android-chrome-192x192.png"
+          alt="Lung image"
+          height="100%"
+          style="margin-right: 8px"
+        />
+        Alveolus Analysis
+      </div>
 
       <div class="left">
         <div class="box image-pane dp-1">
-          <div class="view-title">Control Image</div>
+          <div class="image-wrapper">
+            <img
+              id="top-image"
+              src="./test_data/combo/001200.png"
+              alt="pre-color-boosted image"
+              height="300"
+              style="filter: saturate(10)"
+            />
+          </div>
         </div>
         <div class="box time-control dp-1">
           <div class="view-title">Time Control and Chart</div>
+          <input
+            type="range"
+            name="time"
+            id="time-slider"
+            min="0"
+            max="9"
+            step="1"
+            value="0"
+          />
         </div>
         <div class="box image-pane dp-1">
-          <div class="view-title">Experimental Image</div>
+          <div class="image-wrapper">
+            <img
+              id="bot-image"
+              src="./test_data/maxed_combo/001200.png"
+              alt="color-boosted image"
+              height="300"
+              style=""
+            />
+          </div>
         </div>
       </div>
       <div class="right">
@@ -38,5 +78,6 @@
         </div>
       </div>
     </div>
+    <script src="./src/main.js" module="true"></script>
   </body>
 </html>
