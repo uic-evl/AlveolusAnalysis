@@ -4,7 +4,7 @@ import cv2
 import os
 import re
 
-data_dir = "../test_data/"
+data_dir = "./hksa-control_2-028/"
 
 def main():
     # processing strats:
@@ -32,7 +32,7 @@ def main():
     #img_scaled = cv2.normalize(img, dst=None, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX)
     #plt.imshow("scaled image", img_scaled)
     #cv2.waitKey(0)
-    for idx, fname in enumerate(os.listdir("../test_data/ch2/")):
+    for idx, fname in enumerate(os.listdir(data_dir + "ch2/")):
         #print("fname")
         #print(fname)
         code_str = re.split("(\.ome)?\.tif", (re.split("Ch2[-_]", fname))[1])[0]
@@ -40,42 +40,45 @@ def main():
         #print(code_str)
         ch4_fname = fname.replace("Ch2", "Ch4")
         ch2_img = cv2.imread(data_dir + "ch2/" + fname, cv2.IMREAD_GRAYSCALE)
-        ch4_img = cv2.imread(data_dir + "ch4/" + ch4_fname, cv2.IMREAD_GRAYSCALE)
-        #cv2.imshow("a", ch2_img)
-        #cv2.waitKey(0)
-        #cv2.imshow("b", ch4_img)
-        #cv2.waitKey(0)
-        #cv2.destroyAllWindows()
+        try:
+            ch4_img = cv2.imread(data_dir + "ch4/" + ch4_fname, cv2.IMREAD_GRAYSCALE)
+            #cv2.imshow("a", ch2_img)
+            #cv2.waitKey(0)
+            #cv2.imshow("b", ch4_img)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
 
-        # method 1: direct overlay
-        # - put Ch2 in "b" index of rgb array
-        # - put Ch4 in "r" index of rgb array
-        # note: check which format/order of rgb OpenCV uses
-        # - view and export image as new file
-        #print("ch2_img")
-        #print(ch2_img)
-        #print("ch4_img")
-        #print(ch4_img)
-        #ch2_img[ch2_img > 0] = 255
-        #ch4_img[ch4_img > 0] = 255
-        #print("ch2_img")
-        #print(ch2_img)
-        #print("ch4_img")
-        #print(ch4_img)
-        #cv2.imshow("a", ch2_img)
-        #cv2.waitKey(0)
-        #cv2.imshow("b", ch4_img)
-        #cv2.waitKey(0)
-        #cv2.destroyAllWindows()
-        phold_img = np.zeros_like(ch2_img)
-        new_img = np.asarray([ch2_img, phold_img, ch4_img])
-        new_img = np.moveaxis(new_img, 0, -1) # NOTE this could be much faster, check np.einsum if necessary
-        #cv2.imshow("new img", new_img)
-        #cv2.waitKey(0)
-        #cv2.destroyAllWindows()
-        cv2.imwrite(data_dir + "combo/" + code_str + ".png", new_img)
+            # method 1: direct overlay
+            # - put Ch2 in "b" index of rgb array
+            # - put Ch4 in "r" index of rgb array
+            # note: check which format/order of rgb OpenCV uses
+            # - view and export image as new file
+            #print("ch2_img")
+            #print(ch2_img)
+            #print("ch4_img")
+            #print(ch4_img)
+            ch2_img[ch2_img > 0] = 255
+            ch4_img[ch4_img > 0] = 255
+            #print("ch2_img")
+            #print(ch2_img)
+            #print("ch4_img")
+            #print(ch4_img)
+            #cv2.imshow("a", ch2_img)
+            #cv2.waitKey(0)
+            #cv2.imshow("b", ch4_img)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
+            phold_img = np.zeros_like(ch2_img)
+            new_img = np.asarray([ch2_img, phold_img, ch4_img])
+            new_img = np.moveaxis(new_img, 0, -1) # NOTE this could be much faster, check np.einsum if necessary
+            #cv2.imshow("new img", new_img)
+            #cv2.waitKey(0)
+            #cv2.destroyAllWindows()
+            cv2.imwrite(data_dir + "combo/" + code_str + ".png", new_img)
 
-        #input("wait")
+            #input("wait")
+        except:
+            print("image mismatch")
 
 if __name__ == "__main__":
     main()
