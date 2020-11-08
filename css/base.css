@@ -250,6 +250,7 @@ body:not(.dark) .header {
 
 .experiment .image-wrapper svg {
   height: 100%;
+  width: 350px;
 }
 
 .experiment .image-wrapper .filter-dropdown {
