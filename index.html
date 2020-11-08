@@ -131,7 +131,9 @@
           .map(([key, value]) => [key, value === undefined ? true : value])
       );
 
-      if (params.dark) {
+      if (params.light) {
+        d3.select("body").classed("dark", false);
+      } else {
         d3.select("body").classed("dark", true);
       }
     </script>
