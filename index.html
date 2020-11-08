@@ -31,7 +31,7 @@
   </head>
   <body>
     <div class="content">
-      <div class="header dp-4">
+      <div class="header dp-2">
         <img
           src="./android-chrome-192x192.png"
           alt="Lung image"
@@ -91,6 +91,19 @@
         </div>
       </div>
     </div>
+    <script>
+      window.params = Object.fromEntries(
+        location.search
+          .substring(1)
+          .split("&")
+          .map((entry) => entry.split("="))
+          .map(([key, value]) => [key, value === undefined ? true : value])
+      );
+
+      if (params.dark) {
+        d3.select("body").classed("dark", true);
+      }
+    </script>
     <script src="./src/main.js" module="true"></script>
   </body>
 </html>

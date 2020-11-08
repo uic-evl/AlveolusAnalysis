@@ -24,3 +24,7 @@ d3.select("#time-slider").on("input", ({ target }) => {
     `${folder2}${value.toString().padStart(6, "0")}.png`
   );
 });
+
+fetch("./test_data/features/tys.json")
+  .then((res) => res.json())
+  .then(console.log);
