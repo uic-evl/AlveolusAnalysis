@@ -41,7 +41,8 @@ body {
   width: 100%;
   height: 100%;
 
-  font: 112.5%/1.45em IBM Plex Sans, sans-serif;
+  /* font: 112.5%/1.45em IBM Plex Sans, sans-serif; */
+  font-family: IBM Plex Sans, sans-serif;
 }
 
 * {
@@ -242,10 +243,47 @@ body:not(.dark) .header {
 .experiment .image-wrapper {
   height: 100%;
   overflow: hidden;
+  position: relative;
+
+  padding: 4px;
 }
 
 .experiment .image-wrapper svg {
   height: 100%;
+}
+
+.experiment .image-wrapper .filter-dropdown {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+}
+
+.experiment .image-wrapper .filter-dropdown button {
+  margin: 0;
+  background: #0002;
+  color: white;
+  border-radius: 4px;
+  border: 1px solid #fff9;
+}
+
+.experiment .image-wrapper .filter-dropdown .options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  right: 0;
+  padding: 2px;
+  border-radius: 4px;
+
+  flex-direction: column;
+  background: #000c;
+}
+
+.experiment .image-wrapper .filter-dropdown .options button {
+  margin: 2px 0;
+}
+
+.experiment .image-wrapper .filter-dropdown:focus-within .options {
+  display: flex;
 }
 
 /* Dark Theme elevation definitions from:

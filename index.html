@@ -52,19 +52,19 @@
 
       <div id="compare">
         <div class="box image-pane dp-1">
-          <div class="view-title">Chart</div>
+          <div class="view-title">Chart 1</div>
         </div>
         <div class="box image-pane dp-1">
-          <div class="view-title">Chart</div>
+          <div class="view-title">Chart B</div>
         </div>
         <div class="box image-pane dp-1">
-          <div class="view-title">Chart</div>
+          <div class="view-title">Chart III</div>
         </div>
       </div>
       <div id="top-experiment" class="box dp-1 experiment">
         <div class="feature-charts">feat</div>
         <div class="resp-cycle">resp</div>
-        <div class="image-wrapper">
+        <div class="image-wrapper" id="top-image-wrapper">
           <svg
             id="top-image-view"
             height="100%"
@@ -94,6 +94,14 @@
               </filter>
             </defs>
           </svg>
+          <div class="filter-dropdown">
+            <button class="button">v</button>
+            <div class="options">
+              <button data-value="none">Both</button>
+              <button data-value="url(#red-only)">Red</button>
+              <button data-value="url(#blue-only)">Blue</button>
+            </div>
+          </div>
         </div>
       </div>
       <div id="timeline-control" class="box dp-1">
@@ -111,13 +119,21 @@
       <div id="bottom-experiment" class="box dp-1 experiment">
         <div class="feature-charts">feat</div>
         <div class="resp-cycle">resp</div>
-        <div class="image-wrapper">
+        <div class="image-wrapper" id="bot-image-wrapper">
           <svg
             id="bot-image-view"
             height="100%"
             viewBox="0,0,512,512"
             preserveAspectRatio="xMidYMid meet"
           ></svg>
+          <div class="filter-dropdown">
+            <button class="button">v</button>
+            <div class="options">
+              <button data-value="none">Both</button>
+              <button data-value="url(#red-only)">Red</button>
+              <button data-value="url(#blue-only)">Blue</button>
+            </div>
+          </div>
         </div>
       </div>
     </div>

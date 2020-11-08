@@ -1,4 +1,4 @@
-const IMAGE_FOLDER = "./test_data/combined_images/";
+const IMAGE_FOLDER = "./test_data/combined_images";
 
 export class ImageView {
   name = "";
@@ -7,9 +7,10 @@ export class ImageView {
   contours = [];
   currentTime = 1;
 
-  constructor({ name, svg }) {
+  constructor({ name, container }) {
     this.name = name;
-    this.svg = svg;
+    this.container = container;
+    this.svg = this.container.select("svg");
 
     this.contoursPromise = fetch(`./test_data/features/${name}.json`)
       .then((res) => res.json())
@@ -17,17 +18,26 @@ export class ImageView {
       .then(() => this.setTime(this.currentTime))
       .catch((err) => console.log(err));
 
-    this.image = svg
+    const image = (this.image = this.svg
       .append("image")
       .attr("width", 512)
       .attr("height", 512)
       .attr("y", 0)
-      .attr("x", 0)
-      .style("filter", "url(#blue-only)");
+      .attr("x", 0));
 
-    this.featureG = svg.append("g").attr("class", "contour-group");
+    this.featureG = this.svg.append("g").attr("class", "contour-group");
 
     this.setTime(1);
+
+    this.container
+      .selectAll(".filter-dropdown .options button")
+      .on("click", function () {
+        const button = d3.select(this);
+
+        // console.log(button.node().dataset.value);
+
+        image.style("filter", button.node().dataset.value);
+      });
   }
 
   setTime(t) {

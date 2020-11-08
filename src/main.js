@@ -7,12 +7,12 @@ const folder2 = "./test_data/combined_images/tys/";
 
 const topImage = new ImageView({
   name: "tys",
-  svg: d3.select("#top-image-view"),
+  container: d3.select("#top-image-wrapper"),
 });
 
 const botImage = new ImageView({
   name: "control",
-  svg: d3.select("#bot-image-view"),
+  container: d3.select("#bot-image-wrapper"),
 });
 
 d3.select("#time-slider").on("input", ({ target }) => {
