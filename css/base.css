@@ -74,15 +74,20 @@ body.dark {
 
   display: grid;
   grid-template:
-    28px
+    32px
     1fr
-    / 2fr 3fr;
-  gap: 1rem;
-  padding: 1rem;
+    200px
+    1fr
+    / 300px 1fr 2fr;
+
+  gap: 0.5rem;
+  padding: 0.5rem;
 
   grid-template-areas:
-    "header header"
-    "left right";
+    "header header header"
+    "animals compare top"
+    "animals compare timeline"
+    "animals compare bottom";
 }
 
 svg text {
@@ -100,7 +105,7 @@ svg text {
   padding: 8px 16px;
 
   overflow: hidden;
-  margin: -1rem -1rem 0;
+  margin: -0.5rem -0.5rem 0;
 
   grid-area: header;
   justify-content: flex-start;
@@ -143,51 +148,104 @@ body:not(.dark) .header {
 
   grid-template: 1fr 100px 1fr / 1fr;
 
-  gap: 1rem;
+  gap: 0.5rem;
 }
-
-.image-pane,
-.time-control {
-  padding: 8px;
-}
-
-.image-pane {
+#animals {
+  grid-area: animals;
+  display: flex;
+  flex-direction: column;
   align-items: stretch;
-  justify-content: stretch;
-  position: relative;
 }
 
-.image-wrapper {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
+#animals .view-title {
+  text-align: center;
+
+  flex-shrink: 0;
+}
+
+#animals .list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 40px;
+}
+
+#animals .list .mouse {
+  border: 1px solid var(--accent);
+  margin: 12px 0;
+  padding-top: 100%;
+  text-align: center;
+  font-size: 12px;
+  width: 100%;
+}
+
+#compare {
+  display: grid;
+  grid-area: compare;
+
+  grid-template-rows: repeat(auto-fill, 1fr);
+
+  gap: 0.5rem;
+}
+
+.experiment,
+#timeline-control {
   padding: 8px;
 }
 
-.image-wrapper img {
-  width: 100%;
-  height: 100%;
-
-  object-fit: contain;
-}
-
-.time-control {
+#timeline-control {
   flex-flow: column;
 }
 
-.time-control input[type="range"] {
+#timeline-control input[type="range"] {
   width: 400px;
 }
 
-.right {
-  display: grid;
-  grid-area: right;
+#timeline-control {
+  grid-area: timeline;
+}
 
-  grid-template: 1fr 1fr / 1fr 1fr;
+#top-experiment {
+  grid-area: top;
+}
 
-  gap: 1rem;
+#bottom-experiment {
+  grid-area: bottom;
+}
+
+.experiment {
+  display: flex;
+  flex-flow: row;
+  align-items: stretch;
+}
+
+.experiment .feature-charts {
+  flex: 1 0;
+  border: 1px solid var(--accent);
+  margin-right: 8px;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.experiment .resp-cycle {
+  flex: 0 0 250px;
+  border: 1px solid var(--accent);
+  margin-right: 8px;
+  padding: 8px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.experiment .image-wrapper {
+  height: 100%;
+  overflow: hidden;
+}
+
+.experiment .image-wrapper svg {
+  height: 100%;
 }
 
 /* Dark Theme elevation definitions from:
