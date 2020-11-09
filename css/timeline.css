@@ -1,0 +1,39 @@
+#timeline-control {
+  flex-flow: column;
+  position: relative;
+}
+
+#timeline-control input[type="range"] {
+  width: calc(100% - 40px);
+  z-index: 1;
+
+  opacity: 1;
+
+  position: absolute;
+  top: 50%;
+  transform: translateY(-10px);
+  left: 35px;
+  right: 5px;
+}
+
+#timeline-control {
+  grid-area: timeline;
+}
+
+#timeline-control svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  pointer-events: none;
+}
+
+#timeline-control .ratio-path {
+  fill: #1f78b4;
+  fill-opacity: 0.2;
+
+  stroke: #1f78b4;
+  stroke-width: 2px;
+}

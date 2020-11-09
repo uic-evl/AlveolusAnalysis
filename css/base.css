@@ -1,6 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
 
 @import "./shadows.css";
+@import "./box.css";
+@import "./animals.css";
+@import "./experiment.css";
+@import "./timeline.css";
 
 :root {
   /* --background: #121212; */
@@ -76,9 +80,9 @@ body.dark {
   display: grid;
   grid-template:
     32px
+    2fr
     1fr
-    200px
-    1fr
+    2fr
     / 300px 1fr 2fr;
 
   gap: 0.5rem;
@@ -126,82 +130,9 @@ svg text {
   box-sizing: border-box;
 }
 
-.box {
-  border-radius: 8px;
-  display: flex;
-
-  /* color: white; */
-  font-family: sans-serif;
-  font-size: 1.4rem;
-
-  align-items: center;
-  justify-content: center;
-}
-
 body:not(.dark) .box,
 body:not(.dark) .header {
   background: white;
-}
-
-.left {
-  display: grid;
-  grid-area: left;
-
-  grid-template: 1fr 100px 1fr / 1fr;
-
-  gap: 0.5rem;
-}
-#animals {
-  grid-area: animals;
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-}
-
-#animals .view-title {
-  text-align: center;
-
-  flex-shrink: 0;
-}
-
-#animals .list {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0 40px;
-}
-
-#animals .list .mouse {
-  border: 1px solid var(--accent);
-  margin: 12px 0;
-  padding: 18px;
-  text-align: center;
-  font-size: 12px;
-  width: 100%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  flex-flow: column;
-}
-
-#animals .list .mouse .name {
-  font-size: 22px;
-  font-weight: 700;
-}
-
-#animals .list .mouse button {
-  background: #fff1;
-
-  border: 1px solid white;
-  margin: 4px;
-  margin-top: 18px;
-  color: white;
-  border-radius: 4px;
-  padding: 4px;
 }
 
 #compare {
@@ -217,99 +148,3 @@ body:not(.dark) .header {
 #timeline-control {
   padding: 8px;
 }
-
-#timeline-control {
-  flex-flow: column;
-}
-
-#timeline-control input[type="range"] {
-  width: 400px;
-}
-
-#timeline-control {
-  grid-area: timeline;
-}
-
-#top-experiment {
-  grid-area: top;
-}
-
-#bottom-experiment {
-  grid-area: bottom;
-}
-
-.experiment {
-  display: flex;
-  flex-flow: row;
-  align-items: stretch;
-}
-
-.experiment .feature-charts {
-  flex: 1 0;
-  border: 1px solid var(--accent);
-  margin-right: 8px;
-  padding: 8px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.experiment .resp-cycle {
-  flex: 0 0 250px;
-  border: 1px solid var(--accent);
-  margin-right: 8px;
-  padding: 8px;
-  text-align: center;
-  font-size: 12px;
-}
-
-.experiment .image-wrapper {
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-
-  padding: 4px;
-}
-
-.experiment .image-wrapper svg {
-  height: 100%;
-  width: 350px;
-}
-
-.experiment .image-wrapper .filter-dropdown {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-}
-
-.experiment .image-wrapper .filter-dropdown button {
-  margin: 0;
-  background: #0002;
-  color: white;
-  border-radius: 4px;
-  border: 1px solid #fff9;
-}
-
-.experiment .image-wrapper .filter-dropdown .options {
-  display: none;
-  position: absolute;
-  top: 100%;
-  right: 0;
-  padding: 2px;
-  border-radius: 4px;
-
-  flex-direction: column;
-  background: #000c;
-}
-
-.experiment .image-wrapper .filter-dropdown .options button {
-  margin: 2px 0;
-}
-
-.experiment .image-wrapper .filter-dropdown:focus-within .options {
-  display: flex;
-}
-
-/* Dark Theme elevation definitions from:
-  shadows: https://gist.github.com/serglo/f9f0be9a66fd6755a0bda85f9c64e85f
-  background: https://material.io/design/color/dark-theme.html#properties
-*/

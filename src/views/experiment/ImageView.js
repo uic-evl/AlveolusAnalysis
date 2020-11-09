@@ -14,6 +14,8 @@ export class ImageView {
 
     this.svg.selectAll(".contour-group, image").remove();
 
+    this.container.style("width", this.container.node().clientHeight + "px");
+
     data
       .getAllFeatures()
       .then((features) => (this.contours = features))

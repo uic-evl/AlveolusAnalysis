@@ -1,0 +1,52 @@
+#animals {
+  grid-area: animals;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+#animals .view-title {
+  text-align: center;
+
+  flex-shrink: 0;
+}
+
+#animals .list {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 40px;
+}
+
+#animals .list .mouse {
+  border: 1px solid var(--accent);
+  margin: 12px 0;
+  padding: 18px;
+  text-align: center;
+  font-size: 12px;
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  flex-flow: column;
+}
+
+#animals .list .mouse .name {
+  font-size: 22px;
+  font-weight: 700;
+}
+
+#animals .list .mouse button {
+  background: #fff1;
+
+  border: 1px solid white;
+  margin: 4px;
+  margin-top: 18px;
+  color: white;
+  border-radius: 4px;
+  padding: 4px;
+}
