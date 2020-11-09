@@ -1,27 +1,16 @@
-import { ImageView } from "./views/ImageView.js";
+import { ComparisonController } from "./controllers/ComparisonController.js";
 
-console.log("in main");
+// const topImage = new ImageView({
+//   name: "tys",
+//   container: d3.select("#top-image-wrapper"),
+// });
 
-const folder1 = "./test_data/combined_images/control/";
-const folder2 = "./test_data/combined_images/tys/";
+// const botImage = new ImageView({
+//   name: "tys",
+//   container: d3.select("#bot-image-wrapper"),
+// });
 
-const topImage = new ImageView({
-  name: "tys",
-  container: d3.select("#top-image-wrapper"),
-});
+const comparison = new ComparisonController();
 
-const botImage = new ImageView({
-  name: "control",
-  container: d3.select("#bot-image-wrapper"),
-});
-
-d3.select("#time-slider").on("input", ({ target }) => {
-  const { value } = target;
-
-  topImage.setTime(value);
-  botImage.setTime(value);
-});
-
-fetch("./test_data/features/tys.json")
-  .then((res) => res.json())
-  .then(console.log);
+comparison.setTopExperiment({ name: "tys" });
+comparison.setBotExperiment({ name: "tys" });

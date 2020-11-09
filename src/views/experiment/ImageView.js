@@ -7,13 +7,15 @@ export class ImageView {
   contours = [];
   currentTime = 1;
 
-  constructor({ name, container }) {
+  constructor({ name, container, data }) {
     this.name = name;
     this.container = container;
     this.svg = this.container.select("svg");
 
-    this.contoursPromise = fetch(`./test_data/features/${name}.json`)
-      .then((res) => res.json())
+    this.svg.selectAll(".contour-group").remove();
+
+    data
+      .getAllFeatures()
       .then((features) => (this.contours = features))
       .then(() => this.setTime(this.currentTime))
       .catch((err) => console.log(err));
