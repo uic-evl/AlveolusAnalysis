@@ -53,8 +53,8 @@ export class ImageView {
     if (this.contours[t - 1]) {
       this.featureG.attr("visibility", "visible");
       const {
-        contour_centers: centers,
-        contour_outlines: paths,
+        alveoli_location: centers,
+        alveoli_contour_outlines: paths,
       } = this.contours[t - 1];
 
       const features = this.featureG
