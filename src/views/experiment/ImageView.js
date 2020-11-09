@@ -24,6 +24,7 @@ export class ImageView {
 
     const image = (this.image = this.svg
       .append("image")
+      .style("filter", "url(#blue-only)")
       .attr("width", 512)
       .attr("height", 512)
       .attr("y", 0)
@@ -57,9 +58,13 @@ export class ImageView {
       const {
         alveoli_location: centers,
         alveoli_contour_outlines: paths,
+        neutrophil_location: neutCenters,
+        neutrophil_contour_outlines: neutPaths,
       } = this.contours[t - 1];
 
-      const features = this.featureG
+      console.log(this.contours[t - 1]);
+
+      this.featureG
         .selectAll(".feature")
         .data(Object.keys(centers))
         .join("g")
@@ -86,6 +91,26 @@ export class ImageView {
             )
             .attr("fill", "none")
             .attr("stroke", "white")
+            .style("stroke-linejoin", "round");
+        });
+
+      this.featureG
+        .selectAll(".neut")
+        .data(Object.keys(neutCenters))
+        .join("g")
+        .attr("class", "neut")
+        .each(function (id) {
+          const g = d3.select(this);
+          const points = neutPaths[id];
+
+          g.selectAll("path")
+            .data([null])
+            .join("path")
+            .attr(
+              "d",
+              "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
+            )
+            .attr("fill", "#f00")
             .style("stroke-linejoin", "round");
         });
     } else {

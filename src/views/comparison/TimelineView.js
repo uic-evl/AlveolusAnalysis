@@ -117,10 +117,6 @@ export class TimelineView {
             alveoli_area / interstitial_area
         );
 
-        console.log(ratios);
-
-        console.log(ratios.map(scale));
-
         this.paths
           .selectAll(`.${name}`)
           .data([
