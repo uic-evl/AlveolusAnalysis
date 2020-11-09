@@ -12,7 +12,7 @@ export class ImageView {
     this.container = container;
     this.svg = this.container.select("svg");
 
-    this.svg.selectAll(".contour-group").remove();
+    this.svg.selectAll(".contour-group, image").remove();
 
     data
       .getAllFeatures()
