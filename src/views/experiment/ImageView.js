@@ -62,8 +62,6 @@ export class ImageView {
         neutrophil_contour_outlines: neutPaths,
       } = this.contours[t - 1];
 
-      console.log(this.contours[t - 1]);
-
       this.featureG
         .selectAll(".feature")
         .data(Object.keys(centers))
