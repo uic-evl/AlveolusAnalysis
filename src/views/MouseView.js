@@ -1,4 +1,6 @@
-const ITEMS = ["control", "tys"];
+//const ITEMS = ["control", "tys"];
+
+import { ITEMS } from "../global.js";
 
 export class MouseView {
   constructor({ container, setTop, setBot }) {

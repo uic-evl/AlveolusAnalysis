@@ -1,4 +1,6 @@
-const NUM_TIMESTEPS = 20;
+//const NUM_TIMESTEPS = 20;
+
+import { NUM_TIMESTEPS } from "../../global.js";
 
 const MARGINS = {
   left: 40,
