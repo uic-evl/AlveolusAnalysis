@@ -1,6 +1,5 @@
-//const NUM_TIMESTEPS = 20;
-
 import { NUM_TIMESTEPS } from "../../global.js";
+import { findMinimaLocations } from "../../util.js";
 
 const MARGINS = {
   left: 40,
@@ -13,18 +12,20 @@ export class TimelineView {
   topData = null;
   botData = null;
 
+  time = 1;
+  playInterval = undefined;
+
   constructor({ container, onChange }) {
     this.container = container;
     this.onChange = onChange;
 
     this.svg = container.select("svg");
+    this.svg.selectAll("*").remove();
 
-    this.width = this.container.node().clientWidth;
-    this.height = this.container.node().clientHeight;
+    this.width = this.container.select(".svg-wrapper").node().clientWidth;
+    this.height = this.container.select(".svg-wrapper").node().clientHeight;
 
-    this.svg
-      .attr("width", this.container.node().clientWidth)
-      .attr("height", this.container.node().clientHeight);
+    this.svg.attr("width", this.width).attr("height", this.height);
 
     console.log("TimelineView", this);
 
@@ -33,6 +34,7 @@ export class TimelineView {
       .attr("max", NUM_TIMESTEPS)
       .on("input", ({ target }) => {
         const { value } = target;
+        this.time = +value;
 
         this.onChange({
           top: value,
@@ -40,7 +42,18 @@ export class TimelineView {
         });
       });
 
+    this.setupControls();
     this.setupTimeline();
+  }
+
+  setTime(t) {
+    this.time = t;
+    this.container.select("input").attr("value", t);
+
+    this.onChange({
+      top: t,
+      bot: t,
+    });
   }
 
   setTopData({ data }) {
@@ -53,6 +66,27 @@ export class TimelineView {
     this.drawPath({ data, scale: this.yScaleBot, name: "bot-path" });
   }
 
+  setupControls() {
+    const view = this;
+
+    this.container.select("#play-button").on("click", function () {
+      const button = d3.select(this);
+
+      if (view.playInterval) {
+        clearInterval(view.playInterval);
+        view.playInterval = undefined;
+
+        button.text("Play");
+      } else {
+        view.playInterval = setInterval(() => {
+          view.setTime((view.time + 1) % NUM_TIMESTEPS);
+        }, 50);
+
+        button.text("Pause");
+      }
+    });
+  }
+
   setupTimeline() {
     // this.svg
     //   .append("rect")
@@ -62,6 +96,7 @@ export class TimelineView {
     //   .attr("height", this.height - MARGINS.top - MARGINS.bottom)
     //   .style("fill", "none")
     //   .style("stroke", "orange");
+
     this.paths = this.svg.append("g");
 
     this.axes = this.svg.append("g");
@@ -107,6 +142,18 @@ export class TimelineView {
       .attr("class", "y-axis y-axis-bot")
       .call(yAxisBot)
       .attr("transform", `translate(${MARGINS.left}, 0)`);
+
+    // this.sliderG = this.svg.append("g");
+
+    // this.sliderG
+    //   .append("line")
+    //   .attr("y1", MARGINS.top)
+    //   .attr("y2", this.height - MARGINS.bottom)
+    //   .attr("x1", MARGINS.left)
+    //   .attr("x2", MARGINS.left)
+    //   .style("stroke", "#00ffff")
+    //   .style("stroke-linecap", "round")
+    //   .style("stroke-width", 4);
   }
 
   drawPath({ data, scale, name }) {
@@ -115,7 +162,7 @@ export class TimelineView {
     data
       .getAllFeatures()
       .then((features) => {
-        this.paths;
+        const minima = findMinimaLocations(features);
 
         const ratios = features.map(
           ({ alveoli_area, interstitial_area }) =>
@@ -134,8 +181,22 @@ export class TimelineView {
           .attr("class", `ratio-path ${name}`)
           .attr("visibility", "visible")
           .attr("d", line);
+
+        this.paths
+          .selectAll(`.${name}-minima`)
+          .data(minima)
+          .join("line")
+          .attr("class", `${name}-minima`)
+          .attr("x1", this.xScale)
+          .attr("x2", this.xScale)
+          .attr("y1", scale(0.6))
+          .attr("y2", scale(0))
+          .attr("stroke-width", 1)
+          .attr("stroke", "var(--accent)")
+          .attr("stroke-dasharray", "4 4");
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err);
         d3.select(`.${name}`).attr("visibility", "hidden");
       });
   }

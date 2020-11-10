@@ -1,6 +1,6 @@
 #timeline-control {
-  flex-flow: column;
   position: relative;
+  align-items: stretch;
 }
 
 #timeline-control input[type="range"] {
@@ -20,6 +20,24 @@
   grid-area: timeline;
 }
 
+#timeline-control .controls {
+  flex: 0 0 150px;
+  display: flex;
+  flex-flow: column;
+
+  border-radius: 8px;
+
+  font-size: 12px;
+  padding: 12px;
+
+  align-items: center;
+}
+
+#timeline-control .svg-wrapper {
+  position: relative;
+  flex: 1;
+}
+
 #timeline-control svg {
   position: absolute;
   top: 0;
@@ -34,6 +52,6 @@
   fill: #1f78b4;
   fill-opacity: 0.2;
 
-  stroke: #1f78b4;
-  stroke-width: 2px;
+  /* stroke: #1f78b4;
+  stroke-width: 2px; */
 }

@@ -23,11 +23,42 @@
 
 .experiment .resp-cycle {
   flex: 0 0 250px;
-  border: 1px solid var(--accent);
   margin-right: 8px;
   padding: 8px;
   text-align: center;
   font-size: 12px;
+
+  position: relative;
+}
+
+.experiment .resp-cycle svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  pointer-events: none;
+}
+
+.experiment .resp-cycle .time-point {
+  fill: #fb6a4a;
+  stroke-width: 2;
+  stroke: white;
+}
+
+.experiment .resp-cycle .cycle {
+  fill: none;
+  stroke-opacity: 0.5;
+  stroke-width: 2;
+
+  transition: stroke 250ms ease-out;
+}
+
+.experiment .resp-cycle .cycle.highlighted {
+  stroke: #fb6a4a;
+  stroke-opacity: 1;
+  stroke-width: 6;
 }
 
 .experiment .image-wrapper {

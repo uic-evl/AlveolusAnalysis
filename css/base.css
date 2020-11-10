@@ -135,6 +135,16 @@ body:not(.dark) .header {
   background: white;
 }
 
+button {
+  background: #fff1;
+
+  border: 1px solid white;
+  margin: 4px;
+  color: white;
+  border-radius: 4px;
+  padding: 4px;
+}
+
 #compare {
   display: grid;
   grid-area: compare;

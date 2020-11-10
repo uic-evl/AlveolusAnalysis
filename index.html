@@ -60,7 +60,9 @@
       </div>
       <div id="top-experiment" class="box dp-1 experiment">
         <div class="feature-charts">feat</div>
-        <div class="resp-cycle">resp</div>
+        <div class="resp-cycle">
+          <svg width="0" height="0"></svg>
+        </div>
         <div class="image-wrapper" id="top-image-wrapper">
           <svg
             id="top-image-view"
@@ -102,20 +104,28 @@
         </div>
       </div>
       <div id="timeline-control" class="box dp-1">
-        <svg width="0" height="0"></svg>
-        <input
-          type="range"
-          name="time"
-          id="time-slider"
-          min="1"
-          max="20"
-          step="1"
-          value="1"
-        />
+        <div class="controls">
+          <span>controls</span>
+          <button id="play-button">play</button>
+        </div>
+        <div class="svg-wrapper">
+          <svg width="0" height="0"></svg>
+          <input
+            type="range"
+            name="time"
+            id="time-slider"
+            min="1"
+            max="20"
+            step="1"
+            value="1"
+          />
+        </div>
       </div>
       <div id="bot-experiment" class="box dp-1 experiment">
         <div class="feature-charts">feat</div>
-        <div class="resp-cycle">resp</div>
+        <div class="resp-cycle">
+          <svg width="0" height="0"></svg>
+        </div>
         <div class="image-wrapper" id="bot-image-wrapper">
           <svg
             id="bot-image-view"
