@@ -158,3 +158,8 @@ button {
 #timeline-control {
   padding: 8px;
 }
+
+.x-axis,
+.y-axis {
+  color: #b0b0b0;
+}

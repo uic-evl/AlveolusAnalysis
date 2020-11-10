@@ -12,7 +12,8 @@ export class TimelineView {
   topData = null;
   botData = null;
 
-  time = 1;
+  botTime = 1;
+  topTime = 1;
   playInterval = undefined;
 
   constructor({ container, onChange }) {
@@ -29,30 +30,20 @@ export class TimelineView {
 
     console.log("TimelineView", this);
 
-    container
-      .select("input")
-      .attr("max", NUM_TIMESTEPS)
-      .on("input", ({ target }) => {
-        const { value } = target;
-        this.time = +value;
-
-        this.onChange({
-          top: value,
-          bot: value,
-        });
-      });
-
     this.setupControls();
     this.setupTimeline();
   }
 
-  setTime(t) {
-    this.time = t;
-    this.container.select("input").attr("value", t);
+  setTime({ top, bot }) {
+    this.topTime = top;
+    this.botTime = bot;
+
+    this.topSliderG.attr("transform", `translate(${this.xScale(top)}, 0)`);
+    this.botSliderG.attr("transform", `translate(${this.xScale(bot)}, 0)`);
 
     this.onChange({
-      top: t,
-      bot: t,
+      top,
+      bot,
     });
   }
 
@@ -79,7 +70,10 @@ export class TimelineView {
         button.text("Play");
       } else {
         view.playInterval = setInterval(() => {
-          view.setTime((view.time + 1) % NUM_TIMESTEPS);
+          view.setTime({
+            top: 1 + (view.topTime % NUM_TIMESTEPS),
+            bot: 1 + (view.botTime % NUM_TIMESTEPS),
+          });
         }, 50);
 
         button.text("Pause");
@@ -143,17 +137,67 @@ export class TimelineView {
       .call(yAxisBot)
       .attr("transform", `translate(${MARGINS.left}, 0)`);
 
-    // this.sliderG = this.svg.append("g");
+    this.topSliderG = this.svg
+      .append("g")
+      .attr("class", "slider")
+      .attr("transform", `translate(${MARGINS.left}, 0)`)
+      .call(
+        d3.drag().on("drag", (e) => {
+          const t = Math.round(this.xScale.invert(e.x));
 
-    // this.sliderG
-    //   .append("line")
-    //   .attr("y1", MARGINS.top)
-    //   .attr("y2", this.height - MARGINS.bottom)
-    //   .attr("x1", MARGINS.left)
-    //   .attr("x2", MARGINS.left)
-    //   .style("stroke", "#00ffff")
-    //   .style("stroke-linecap", "round")
-    //   .style("stroke-width", 4);
+          // this.topTime = t;
+          this.setTime({ top: t, bot: this.botTime });
+        })
+      );
+
+    const topRange = this.yScaleTop.range();
+
+    this.topSliderG
+      .append("line")
+      .attr("class", "slider-bg")
+      .attr("y1", topRange[1])
+      .attr("y2", topRange[0])
+      .attr("x1", 0)
+      .attr("x2", 0);
+
+    this.topSliderG
+      .append("line")
+      .attr("class", "slider-line")
+      .attr("y1", topRange[1])
+      .attr("y2", topRange[0])
+      .attr("x1", 0)
+      .attr("x2", 0);
+
+    this.botSliderG = this.svg
+      .append("g")
+      .attr("class", "slider")
+      .attr("transform", `translate(${MARGINS.left}, 0)`)
+      .call(
+        d3.drag().on("drag", (e) => {
+          const t = Math.round(this.xScale.invert(e.x));
+
+          // this.topTime = t;
+          this.setTime({ bot: t, top: this.topTime });
+        })
+      );
+
+    const botRange = this.yScaleBot.range();
+
+    this.botSliderG
+      .append("line")
+      .attr("class", "slider-bg")
+      .attr("y1", botRange[1])
+      .attr("y2", botRange[0])
+      .attr("x1", 0)
+      .attr("x2", 0);
+
+    this.botSliderG
+      .append("line")
+      .attr("class", "slider-line")
+      .attr("y1", botRange[1])
+      .attr("y2", botRange[0])
+      .attr("x1", 0)
+      .attr("x2", 0);
   }
 
   drawPath({ data, scale, name }) {

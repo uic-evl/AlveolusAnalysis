@@ -103,7 +103,8 @@ export class RespCycleView {
     this.timePoint = this.svg
       .append("circle")
       .attr("class", "time-point")
-      .attr("r", 6);
+      .attr("r", 6)
+      .attr("visibility", "hidden");
   }
 
   drawChart() {

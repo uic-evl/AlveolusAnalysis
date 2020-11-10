@@ -3,19 +3,6 @@
   align-items: stretch;
 }
 
-#timeline-control input[type="range"] {
-  width: calc(100% - 40px);
-  z-index: 1;
-
-  opacity: 1;
-
-  position: absolute;
-  top: 50%;
-  transform: translateY(-10px);
-  left: 35px;
-  right: 5px;
-}
-
 #timeline-control {
   grid-area: timeline;
 }
@@ -46,6 +33,26 @@
   bottom: 0;
 
   pointer-events: none;
+}
+
+#timeline-control svg .slider {
+  pointer-events: all;
+  cursor: ew-resize;
+}
+
+#timeline-control svg .slider .slider-bg {
+  stroke: #fff4;
+  stroke-width: 8;
+}
+
+#timeline-controlsvg .slider:hover .slider-bg {
+  stroke-opacity: 1;
+}
+
+#timeline-control svg .slider .slider-line {
+  stroke: #fb6a4a;
+  stroke-width: 2;
+  stroke-linecap: round;
 }
 
 #timeline-control .ratio-path {
