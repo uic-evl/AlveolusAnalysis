@@ -92,25 +92,34 @@ export class ImageView {
             .style("stroke-linejoin", "round");
         });
 
-      // this.featureG
-      //   .selectAll(".neut")
-      //   .data(Object.keys(neutCenters))
-      //   .join("g")
-      //   .attr("class", "neut")
-      //   .each(function (id) {
-      //     const g = d3.select(this);
-      //     const points = neutPaths[id];
+      this.featureG
+        .selectAll(".neut")
+        .data(Object.keys(neutCenters))
+        .join("g")
+        .attr("class", "neut")
+        .each(function (id) {
+          const g = d3.select(this);
+          const points = neutPaths[id];
+          const center = neutCenters[id];
 
-      //     g.selectAll("path")
-      //       .data([null])
-      //       .join("path")
-      //       .attr(
-      //         "d",
-      //         "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
-      //       )
-      //       .attr("fill", "#f00")
-      //       .style("stroke-linejoin", "round");
-      //   });
+          g.selectAll("circle")
+            .data([null])
+            .join("circle")
+            .attr("cx", center[0])
+            .attr("cy", center[1])
+            .attr("r", 2)
+            .attr("fill", "#f00");
+
+          // g.selectAll("path")
+          //   .data([null])
+          //   .join("path")
+          //   .attr(
+          //     "d",
+          //     "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
+          //   )
+          //   .attr("fill", "#f00")
+          //   .style("stroke-linejoin", "round");
+        });
     } else {
       this.featureG.attr("visibility", "hidden");
     }

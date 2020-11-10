@@ -13,12 +13,38 @@
 }
 
 .experiment .feature-charts {
+  display: flex;
+  align-items: stretch;
+  flex-flow: column;
+
   flex: 1 0;
-  border: 1px solid var(--accent);
+  /* border: 1px solid var(--accent); */
   margin-right: 8px;
   padding: 8px;
-  text-align: center;
   font-size: 12px;
+}
+
+.experiment .feature-charts .view-title {
+  font-size: 18px;
+
+  font-weight: 600;
+  padding-left: 4px;
+  padding-bottom: 8px;
+}
+
+.experiment .feature-charts .svg-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.experiment .feature-charts .svg-wrapper svg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  background: #fff1;
 }
 
 .experiment .resp-cycle {

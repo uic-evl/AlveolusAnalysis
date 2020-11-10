@@ -21,6 +21,7 @@ export class ExperimentController {
     });
 
     this.features = new FeatureView({
+      name, // needed for title
       data: this.data,
       container: container.select(".feature-charts"),
     });

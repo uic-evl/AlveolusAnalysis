@@ -32,7 +32,7 @@
   right: 0;
   bottom: 0;
 
-  pointer-events: none;
+  /* pointer-events: none; */
 }
 
 #timeline-control svg .slider {

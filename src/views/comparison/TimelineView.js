@@ -74,7 +74,7 @@ export class TimelineView {
             top: 1 + (view.topTime % NUM_TIMESTEPS),
             bot: 1 + (view.botTime % NUM_TIMESTEPS),
           });
-        }, 50);
+        }, 100);
 
         button.text("Pause");
       }
@@ -143,7 +143,10 @@ export class TimelineView {
       .attr("transform", `translate(${MARGINS.left}, 0)`)
       .call(
         d3.drag().on("drag", (e) => {
-          const t = Math.round(this.xScale.invert(e.x));
+          const t = Math.max(
+            1,
+            Math.min(NUM_TIMESTEPS, Math.round(this.xScale.invert(e.x)))
+          );
 
           // this.topTime = t;
           this.setTime({ top: t, bot: this.botTime });
@@ -174,7 +177,10 @@ export class TimelineView {
       .attr("transform", `translate(${MARGINS.left}, 0)`)
       .call(
         d3.drag().on("drag", (e) => {
-          const t = Math.round(this.xScale.invert(e.x));
+          const t = Math.max(
+            1,
+            Math.min(NUM_TIMESTEPS, Math.round(this.xScale.invert(e.x)))
+          );
 
           // this.topTime = t;
           this.setTime({ bot: t, top: this.topTime });

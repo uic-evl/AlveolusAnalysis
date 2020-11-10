@@ -114,8 +114,6 @@ export class RespCycleView {
         const minima = findMinimaLocations(features);
         const cycles = chuckFeaturesByMinima(features, minima);
 
-        console.log(cycles);
-
         this.cycles = cycles;
 
         // const maxArea = d3.max(cycles.flat(), (t) => t.alveoli_area);
