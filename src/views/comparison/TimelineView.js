@@ -28,14 +28,17 @@ export class TimelineView {
 
     console.log("TimelineView", this);
 
-    container.select("input").on("input", ({ target }) => {
-      const { value } = target;
+    container
+      .select("input")
+      .attr("max", NUM_TIMESTEPS)
+      .on("input", ({ target }) => {
+        const { value } = target;
 
-      this.onChange({
-        top: value,
-        bot: value,
+        this.onChange({
+          top: value,
+          bot: value,
+        });
       });
-    });
 
     this.setupTimeline();
   }
@@ -81,7 +84,7 @@ export class TimelineView {
 
     this.yScaleTop = d3
       .scaleLinear()
-      .domain([0, 0.5])
+      .domain([0, 0.6])
       .range([midpoint, MARGINS.top]);
 
     const yAxisTop = d3.axisLeft(this.yScaleTop).ticks(3);
@@ -94,7 +97,7 @@ export class TimelineView {
 
     this.yScaleBot = d3
       .scaleLinear()
-      .domain([0, 0.5])
+      .domain([0, 0.6])
       .range([midpoint, this.height - MARGINS.bottom]);
 
     const yAxisBot = d3.axisLeft(this.yScaleBot).ticks(3);
@@ -107,7 +110,7 @@ export class TimelineView {
   }
 
   drawPath({ data, scale, name }) {
-    const line = d3.area().y0(scale(0.5));
+    const line = d3.area().y0(scale(0.6)).curve(d3.curveMonotoneX);
 
     data
       .getAllFeatures()

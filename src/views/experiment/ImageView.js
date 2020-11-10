@@ -92,25 +92,25 @@ export class ImageView {
             .style("stroke-linejoin", "round");
         });
 
-      this.featureG
-        .selectAll(".neut")
-        .data(Object.keys(neutCenters))
-        .join("g")
-        .attr("class", "neut")
-        .each(function (id) {
-          const g = d3.select(this);
-          const points = neutPaths[id];
+      // this.featureG
+      //   .selectAll(".neut")
+      //   .data(Object.keys(neutCenters))
+      //   .join("g")
+      //   .attr("class", "neut")
+      //   .each(function (id) {
+      //     const g = d3.select(this);
+      //     const points = neutPaths[id];
 
-          g.selectAll("path")
-            .data([null])
-            .join("path")
-            .attr(
-              "d",
-              "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
-            )
-            .attr("fill", "#f00")
-            .style("stroke-linejoin", "round");
-        });
+      //     g.selectAll("path")
+      //       .data([null])
+      //       .join("path")
+      //       .attr(
+      //         "d",
+      //         "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
+      //       )
+      //       .attr("fill", "#f00")
+      //       .style("stroke-linejoin", "round");
+      //   });
     } else {
       this.featureG.attr("visibility", "hidden");
     }

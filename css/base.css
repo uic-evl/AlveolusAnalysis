@@ -139,7 +139,7 @@ body:not(.dark) .header {
   display: grid;
   grid-area: compare;
 
-  grid-template-rows: repeat(auto-fill, 1fr);
+  grid-template-rows: repeat(3, 1fr);
 
   gap: 0.5rem;
 }
