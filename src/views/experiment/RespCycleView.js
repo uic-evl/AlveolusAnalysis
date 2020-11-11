@@ -7,7 +7,7 @@ import {
 
 const MARGINS = {
   left: 30,
-  top: 30,
+  top: 50,
   bottom: 24,
   right: 10,
 };
@@ -63,9 +63,18 @@ export class RespCycleView {
     this.svg
       .append("text")
       .attr("x", 4)
-      .attr("y", MARGINS.top - 12)
-      .attr("font-size", 14)
+      .attr("y", MARGINS.top - 30)
+      .attr("font-size", 18)
+      .attr("font-weight", 300)
       .text("Respiratory Cycles");
+
+    this.svg
+      .append("text")
+      .attr("x", 4)
+      .attr("y", MARGINS.top - 12)
+      .attr("font-size", 12)
+      .style("fill", "var(--selected)")
+      .text("Current Full Cycle");
 
     const axesG = this.svg.append("g").attr("class", "axes-g");
 

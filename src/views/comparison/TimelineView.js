@@ -137,10 +137,16 @@ export class TimelineView {
       .call(yAxisBot)
       .attr("transform", `translate(${MARGINS.left}, 0)`);
 
-    this.topSliderG = this.svg
-      .append("g")
-      .attr("class", "slider")
-      .attr("transform", `translate(${MARGINS.left}, 0)`)
+    const topRange = this.yScaleTop.range();
+    const botRange = this.yScaleBot.range();
+
+    this.svg
+      .append("rect")
+      .attr("class", "slider-area")
+      .attr("x", MARGINS.left)
+      .attr("y", topRange[1])
+      .attr("height", topRange[0] - topRange[1])
+      .attr("width", this.width - MARGINS.left - MARGINS.right)
       .call(
         d3.drag().on("drag", (e) => {
           const t = Math.max(
@@ -153,7 +159,29 @@ export class TimelineView {
         })
       );
 
-    const topRange = this.yScaleTop.range();
+    this.svg
+      .append("rect")
+      .attr("class", "slider-area")
+      .attr("x", MARGINS.left)
+      .attr("y", botRange[0])
+      .attr("height", botRange[1] - botRange[0])
+      .attr("width", this.width - MARGINS.left - MARGINS.right)
+      .call(
+        d3.drag().on("drag", (e) => {
+          const t = Math.max(
+            1,
+            Math.min(NUM_TIMESTEPS, Math.round(this.xScale.invert(e.x)))
+          );
+
+          // this.topTime = t;
+          this.setTime({ bot: t, top: this.topTime });
+        })
+      );
+
+    this.topSliderG = this.svg
+      .append("g")
+      .attr("class", "slider")
+      .attr("transform", `translate(${MARGINS.left}, 0)`);
 
     this.topSliderG
       .append("line")
@@ -174,20 +202,7 @@ export class TimelineView {
     this.botSliderG = this.svg
       .append("g")
       .attr("class", "slider")
-      .attr("transform", `translate(${MARGINS.left}, 0)`)
-      .call(
-        d3.drag().on("drag", (e) => {
-          const t = Math.max(
-            1,
-            Math.min(NUM_TIMESTEPS, Math.round(this.xScale.invert(e.x)))
-          );
-
-          // this.topTime = t;
-          this.setTime({ bot: t, top: this.topTime });
-        })
-      );
-
-    const botRange = this.yScaleBot.range();
+      .attr("transform", `translate(${MARGINS.left}, 0)`);
 
     this.botSliderG
       .append("line")

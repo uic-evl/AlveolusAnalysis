@@ -31,13 +31,15 @@
   left: 0;
   right: 0;
   bottom: 0;
+}
 
-  /* pointer-events: none; */
+#timeline-control svg .slider-area {
+  cursor: ew-resize;
+  fill-opacity: 0;
 }
 
 #timeline-control svg .slider {
-  pointer-events: all;
-  cursor: ew-resize;
+  pointer-events: none;
 }
 
 #timeline-control svg .slider .slider-bg {
@@ -50,7 +52,7 @@
 }
 
 #timeline-control svg .slider .slider-line {
-  stroke: #fb6a4a;
+  stroke: var(--selected);
   stroke-width: 2;
   stroke-linecap: round;
 }

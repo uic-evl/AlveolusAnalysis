@@ -30,7 +30,7 @@ export class FeatureView {
 
     this.svg.attr("width", this.width).attr("height", this.height);
 
-    this.container.select(".view-title").text(name);
+    this.container.select(".view-title").text(`${name} experiment`);
 
     this.setupChart();
     this.drawChart();
@@ -46,11 +46,35 @@ export class FeatureView {
   }
 
   setupChart() {
-    // haha
-
-    const sectionHeight = (this.height - 12) / 2;
+    const sectionHeight = (this.height - PADDING) / 2;
 
     this.alvG = this.svg.append("g").attr("class", "alv-g");
+
+    this.alvG
+      .append("text")
+      .attr("x", MARGINS.left)
+      .attr("y", MARGINS.top - 6)
+      .attr("font-size", 14)
+      .attr("font-weight", 300)
+      .text("Mean Alveolus Area");
+
+    this.alvG
+      .append("text")
+      .attr("x", this.width - 4)
+      .attr("y", MARGINS.top - 6)
+      .attr("text-anchor", "end")
+      .attr("font-size", 12)
+      .style("fill", "var(--selected)")
+      .text("Current Full Cycle");
+
+    this.alvG
+      .append("text")
+      .attr("x", MARGINS.left + (this.width - MARGINS.left - MARGINS.right) / 2)
+      .attr("y", sectionHeight)
+      .attr("font-size", 12)
+      .attr("text-anchor", "middle")
+      .style("fill", "#b0b0b0")
+      .text("Respiratory Cycle");
 
     this.alvG
       .append("g")
@@ -71,6 +95,23 @@ export class FeatureView {
       .attr("transform", `translate(0, ${sectionHeight})`);
 
     this.neuG
+      .append("text")
+      .attr("x", MARGINS.left)
+      .attr("y", MARGINS.top - 6)
+      .attr("font-size", 14)
+      .attr("font-weight", 300)
+      .text("Mean Neutrophil Area");
+
+    this.neuG
+      .append("text")
+      .attr("x", MARGINS.left + (this.width - MARGINS.left - MARGINS.right) / 2)
+      .attr("y", sectionHeight)
+      .attr("font-size", 12)
+      .attr("text-anchor", "middle")
+      .style("fill", "#b0b0b0")
+      .text("Respiratory Cycle");
+
+    this.neuG
       .append("g")
       .attr("class", "x-axis x-axis-neu")
       .attr("transform", `translate(0, ${sectionHeight - MARGINS.bottom})`);
@@ -86,7 +127,8 @@ export class FeatureView {
     this.xScale = d3
       .scaleLinear()
       .domain([0, 10])
-      .range([MARGINS.left, this.width - MARGINS.right]);
+      .range([MARGINS.left, this.width - MARGINS.right])
+      .clamp(true);
 
     this.svg.selectAll(".x-axis").call(d3.axisBottom(this.xScale).ticks(0));
 
@@ -113,6 +155,15 @@ export class FeatureView {
       .x((d) => d[0])
       .y0((d) => d[1])
       .y1((d) => d[2]);
+
+    this.alvG
+      .append("circle")
+      .attr("class", "highlighted-cycle")
+      .attr("visibility", "hidden");
+    this.neuG
+      .append("circle")
+      .attr("class", "highlighted-cycle")
+      .attr("visibility", "hidden");
   }
 
   drawChart() {
@@ -150,13 +201,33 @@ export class FeatureView {
         };
 
         const alvExtent = [
-          d3.min(alveoli.mean, (d, i) => d - alveoli.ci[i] * 1.05),
-          d3.max(alveoli.mean, (d, i) => d + alveoli.ci[i] * 1.05),
+          d3.min(
+            features,
+            ({ areas_per_alveoli }, i) =>
+              d3.mean(Object.values(areas_per_alveoli)) -
+              2 * d3.deviation(Object.values(areas_per_alveoli))
+          ),
+          d3.max(
+            features,
+            ({ areas_per_alveoli }, i) =>
+              d3.mean(Object.values(areas_per_alveoli)) +
+              2 * d3.deviation(Object.values(areas_per_alveoli))
+          ),
         ];
 
         const neuExtent = [
-          d3.min(neutrophil.mean, (d, i) => d - neutrophil.ci[i] * 1.05),
-          d3.max(neutrophil.mean, (d, i) => d + neutrophil.ci[i] * 1.05),
+          d3.min(
+            features,
+            ({ areas_per_neutrophil }, i) =>
+              d3.mean(Object.values(areas_per_neutrophil)) -
+              2 * d3.deviation(Object.values(areas_per_neutrophil))
+          ),
+          d3.max(
+            features,
+            ({ areas_per_neutrophil }, i) =>
+              d3.mean(Object.values(areas_per_neutrophil)) +
+              2 * d3.deviation(Object.values(areas_per_neutrophil))
+          ),
         ];
 
         this.updateXAxis([1, fullCycles.length]);
@@ -188,6 +259,15 @@ export class FeatureView {
             )
           );
 
+        this.alvG
+          .select(".highlighted-cycle")
+          .attr(
+            "visibility",
+            fullCycles[cycleLocation.c - 1] ? "visible" : "hidden"
+          )
+          .attr("cx", this.xScale(cycleLocation.c))
+          .attr("cy", this.yScaleAlv(alveoli.mean[cycleLocation.c - 1] || 0));
+
         this.neuG
           .select(".ci-area")
           .attr(
@@ -210,6 +290,18 @@ export class FeatureView {
                 this.yScaleNeu(mean),
               ])
             )
+          );
+
+        this.neuG
+          .select(".highlighted-cycle")
+          .attr(
+            "visibility",
+            fullCycles[cycleLocation.c - 1] ? "visible" : "hidden"
+          )
+          .attr("cx", this.xScale(cycleLocation.c))
+          .attr(
+            "cy",
+            this.yScaleNeu(neutrophil.mean[cycleLocation.c - 1] || 0)
           );
       })
       .catch(console.error);

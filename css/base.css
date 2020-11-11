@@ -40,6 +40,7 @@
   --inter: #1f78b4;
   --alv: #c1c1c1;
   --neut: #9ccc9c;
+  --selected: #fb6a4a;
 }
 
 html,
@@ -101,6 +102,7 @@ body.dark {
 
 svg text {
   fill: currentColor;
+  font-family: var(--font);
 }
 
 .header {
