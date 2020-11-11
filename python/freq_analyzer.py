@@ -4,6 +4,8 @@ import os
 import re
 import matplotlib.pyplot as plt
 
+# generates a heatmap of image standard deviations over the entire timeline (could be useful for visualizing changes)
+
 data_dir = "./hksa-control_2-028/combo/"
 
 def main():
@@ -17,30 +19,20 @@ def main():
         img = cv2.imread(data_dir + fname)
 
         # do regular counting
-        #image_counts[np.sum(img, axis=2) > 0] += 1
         image_counts += np.sum(img, axis=2)
 
         # do ch2 counting
-        #ch2_counts[img[:,:,0] > 0] += 1
         ch2_counts += img[:,:,0]
 
         # do ch4 counting
-        #ch4_counts[img[:,:,2] > 0] += 1
         ch4_counts += img[:,:,2]
 
         total_count += 1
-
-        #if idx > 10:
-        #    break
 
     # calc densities
     image_avg = image_counts / total_count
     ch2_avg = ch2_counts / total_count
     ch4_avg = ch4_counts / total_count
-
-    #print(image_avg)
-    #print(ch2_avg)
-    #print(ch4_avg)
 
     image_diffs = np.zeros((512,512))
     ch2_diffs = np.zeros((512,512))
@@ -58,16 +50,9 @@ def main():
         ch4_stuff = img[:,:,2]
         ch4_diffs += (abs(ch4_stuff - ch4_avg))**2
 
-        #if idx > 10:
-        #    break
-
     image_stdev = np.sqrt(image_diffs / total_count)
     ch2_stdev = np.sqrt(ch2_diffs / total_count)
     ch4_stdev = np.sqrt(ch4_diffs / total_count)
-
-    #print(image_stdev)
-    #print(ch2_stdev)
-    #print(ch4_stdev)
 
     # plot heatmaps
     # - image
