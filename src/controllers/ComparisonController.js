@@ -47,7 +47,7 @@ export class ComparisonController {
 
     this.timeline.setTopData({ data });
     this.chartA.setTopData({ data });
-    this.chartB.setTopData({ data });
+    this.chartB.setTopData({ data, name });
     this.chartC.setTopData({ data });
   }
 
@@ -61,7 +61,7 @@ export class ComparisonController {
 
     this.timeline.setBotData({ data });
     this.chartA.setBotData({ data });
-    this.chartB.setBotData({ data });
+    this.chartB.setBotData({ data, name });
     this.chartC.setBotData({ data });
   }
 
