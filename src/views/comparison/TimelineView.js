@@ -277,6 +277,7 @@ export class TimelineView {
       .catch((err) => {
         console.error(err);
         d3.select(`.${name}`).attr("visibility", "hidden");
+        d3.select(`.${name}-air`).attr("visibility", "hidden");
       });
   }
 }
