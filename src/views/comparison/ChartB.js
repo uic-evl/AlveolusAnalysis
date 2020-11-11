@@ -54,23 +54,26 @@ export class ChartB {
 
     this.svg
       .append("text")
-      .attr("x", MARGINS.left+10)
+      .attr("x", MARGINS.left+0.5*xScale_length)
       .attr("y", MARGINS.top - 10)
       .attr("font-size", 10)
+      .attr("text-anchor","middle")
       .text("Interstitial Area");
       
     this.svg
       .append("text")
-      .attr("x", MARGINS.left+1.3*xScale_length)
+      .attr("x", MARGINS.left+1.5*xScale_length)
       .attr("y", MARGINS.top - 10)
       .attr("font-size", 10)
+      .attr("text-anchor","middle")
       .text("Alveoli");
     
     this.svg
       .append("text")
-      .attr("x", this.width-MARGINS.right-0.8*xScale_length)
+      .attr("x", this.width-MARGINS.right-0.5*xScale_length)
       .attr("y", MARGINS.top - 10)
       .attr("font-size", 10)
+      .attr("text-anchor","middle")
       .text("Neutrophil");
 
     

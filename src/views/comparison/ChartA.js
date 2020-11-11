@@ -30,7 +30,7 @@ export class ChartA {
     .attr("x", 6)
     .attr("y", MARGINS.top - 12)
     .attr("font-size", 14)
-    .text("Experience difference over time");
+    .text("Experiments Difference Over Time");
 
     console.log("ChartA", this);
   }

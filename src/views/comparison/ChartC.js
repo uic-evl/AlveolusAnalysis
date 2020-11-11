@@ -61,16 +61,18 @@ export class ChartC {
     
     this.svg
       .append("text")
-      .attr("x", MARGINS.left+0.4*xlength)
+      .attr("x", MARGINS.left+0.5*xlength)
       .attr("y", MARGINS.top - 10)
       .attr("font-size", 10)
+      .attr("text-anchor","middle")
       .text("Ratio");
       
     this.svg
       .append("text")
-      .attr("x", 2*MARGINS.left+MARGINS.right+1.3*xlength)
+      .attr("x", this.width-MARGINS.right-0.5*xlength)
       .attr("y", MARGINS.top - 10)
       .attr("font-size", 10)
+      .attr("text-anchor","middle")
       .text("Neutrophil");
 
     //y-axis for interstitial area
@@ -161,7 +163,7 @@ export class ChartC {
       this.lines = this.svg.append("g");
 
       const { yScale, yScale_N} = this;
-      const xlength = 0.45*(this.width-2*MARGINS.left-2*MARGINS.right);;
+      const xlength = 0.5*(this.width-2*MARGINS.left-2*MARGINS.right);;
       
       //ratio
      this.lines.append("line")
