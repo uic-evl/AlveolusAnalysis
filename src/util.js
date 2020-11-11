@@ -41,3 +41,27 @@ export function findTimeInCycles(t, cycles) {
     }
   }
 }
+
+export function getValueAcrossCycles(
+  progress, // 0 to 1
+  cycles,
+  func
+) {
+  return cycles.map((c) => {
+    const ind = c.length * progress;
+
+    if (Number.isInteger(ind)) {
+      return func(c[ind]);
+    } else {
+      const [begin, end] = [Math.floor(ind), Math.ceil(ind)];
+
+      const weight = ind - begin;
+
+      if (!c[end]) {
+        return func(c[begin]);
+      }
+
+      return func(c[begin]) * weight + func(c[end]) * (1 - weight);
+    }
+  });
+}
