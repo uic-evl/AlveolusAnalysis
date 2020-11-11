@@ -51,7 +51,10 @@ export class RespCycleView {
           .attr("cx", this.timeScale(loc.t / (cyc.length - 1)))
           .attr(
             "cy",
-            this.yScale(cyc[loc.t].alveoli_area / cyc[loc.t].interstitial_area)
+            this.yScale(
+              cyc[loc.t].alveoli_area /
+                (cyc[loc.t].alveoli_area + cyc[loc.t].interstitial_area)
+            )
           );
       } else {
         this.timePoint.attr("visibility", "hidden");
@@ -136,7 +139,9 @@ export class RespCycleView {
             this.line(
               cyc.map((t, i) => [
                 this.timeScale(i / (cyc.length - 1)),
-                this.yScale(t.alveoli_area / t.interstitial_area),
+                this.yScale(
+                  t.alveoli_area / (t.alveoli_area + t.interstitial_area)
+                ),
               ])
             )
           )
