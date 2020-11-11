@@ -56,9 +56,14 @@
 }
 
 #timeline-control .ratio-path {
-  fill: #1f78b4;
+  fill: var(--inter);
   fill-opacity: 0.2;
 
   /* stroke: #1f78b4;
   stroke-width: 2px; */
+}
+
+#timeline-control .airspace {
+  fill: none;
+  stroke: var(--alv);
 }

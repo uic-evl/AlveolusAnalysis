@@ -36,6 +36,10 @@
 
   --background: var(--cg900);
   --accent: #fda4af;
+
+  --inter: #1f78b4;
+  --alv: #c1c1c1;
+  --neut: #9ccc9c;
 }
 
 html,
@@ -83,7 +87,7 @@ body.dark {
     2fr
     1fr
     2fr
-    / 300px 1fr 2fr;
+    / 0.6fr 1fr 2fr;
 
   gap: 0.5rem;
   padding: 0.5rem;
@@ -152,6 +156,8 @@ button {
   grid-template-rows: repeat(3, 1fr);
 
   gap: 0.5rem;
+
+  padding: 0 0.5rem;
 }
 
 .experiment,

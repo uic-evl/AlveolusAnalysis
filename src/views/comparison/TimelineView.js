@@ -207,7 +207,8 @@ export class TimelineView {
   }
 
   drawPath({ data, scale, name }) {
-    const line = d3.area().y0(scale(0.6)).curve(d3.curveMonotoneX);
+    const interstitial = d3.area().y0(scale(0.6)).curve(d3.curveMonotoneX);
+    const air = d3.line().curve(d3.curveMonotoneX);
 
     data
       .getAllFeatures()
@@ -230,7 +231,20 @@ export class TimelineView {
           .join("path")
           .attr("class", `ratio-path ${name}`)
           .attr("visibility", "visible")
-          .attr("d", line);
+          .attr("d", interstitial);
+
+        this.paths
+          .selectAll(`.${name}-air`)
+          .data([
+            ratios.map((ratio, index) => [
+              this.xScale(index + 1),
+              scale(ratio),
+            ]),
+          ])
+          .join("path")
+          .attr("class", `airspace ${name}-air`)
+          .attr("visibility", "visible")
+          .attr("d", air);
 
         this.paths
           .selectAll(`.${name}-minima`)

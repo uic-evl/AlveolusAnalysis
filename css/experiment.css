@@ -12,6 +12,7 @@
   align-items: stretch;
 }
 
+/* FEATURE CHARTS */
 .experiment .feature-charts {
   display: flex;
   align-items: stretch;
@@ -22,6 +23,7 @@
   margin-right: 8px;
   padding: 8px;
   font-size: 12px;
+  padding-bottom: 0;
 }
 
 .experiment .feature-charts .view-title {
@@ -43,10 +45,28 @@
   left: 0;
   right: 0;
   bottom: 0;
-
-  background: #fff1;
 }
 
+.experiment .feature-charts .alv-g {
+  --feature-color: var(--alv);
+}
+
+.experiment .feature-charts .neu-g {
+  --feature-color: var(--neut);
+}
+
+.experiment .feature-charts .ci-area {
+  fill: var(--feature-color);
+  fill-opacity: 0.2;
+}
+
+.experiment .feature-charts .mean {
+  stroke: var(--feature-color);
+  stroke-width: 2;
+  fill: none;
+}
+
+/* RESPIRATORY CYCLE CHART */
 .experiment .resp-cycle {
   flex: 0 0 250px;
   margin-right: 8px;
@@ -87,6 +107,7 @@
   stroke-width: 6;
 }
 
+/* IMAGE VIEWER */
 .experiment .image-wrapper {
   height: 100%;
   overflow: hidden;
