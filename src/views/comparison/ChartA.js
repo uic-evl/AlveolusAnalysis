@@ -24,7 +24,7 @@ export class ChartA {
     this.svg
       .attr("width", this.container.node().clientWidth)
       .attr("height", this.container.node().clientHeight);
-
+      
     console.log("ChartA", this);
   }
 
@@ -42,11 +42,11 @@ export class ChartA {
   }
 
   drawCoordinate({ min_I,min_A,min_N,max_I,max_A,max_N }){
-    document.querySelectorAll('.chart1_yaxis').forEach(e => e.remove()); 
-
+    this.svg.selectAll('g').remove();
 
     this.xAxis = this.svg.append("g");
     this.yAxis = this.svg.append("g");
+
 
     const gap = 5;
     const yScale_length = (this.height-MARGINS.top-MARGINS.bottom-3*gap)/3;
@@ -131,54 +131,106 @@ export class ChartA {
       });
 
       //get the max and min for differnece 
-      //const min_I = Math.min(this.diff.interstitial_diff);
-      const min_I = Math.min.apply(Math, this.diff.map(function(d) { return d.interstitial_diff; }));
-      const min_A = Math.min.apply(Math, this.diff.map(function(d) { return d.alveoli_diff; }));
-      const min_N = Math.min.apply(Math, this.diff.map(function(d) { return d.neutrophil_diff; }));
-      const max_I = Math.max.apply(Math, this.diff.map(function(d) { return d.interstitial_diff; }));
-      const max_A = Math.max.apply(Math, this.diff.map(function(d) { return d.alveoli_diff; }));
-      const max_N = Math.max.apply(Math, this.diff.map(function(d) { return d.neutrophil_diff; }));
+      const [min_I, max_I] = d3.extent(this.diff, d => d.interstitial_diff);
+      const [min_A, max_A] = d3.extent(this.diff, d => d.alveoli_diff);
+      const [min_N, max_N] = d3.extent(this.diff, d => d.neutrophil_diff);
+
       const start_I = this.diff[0].interstitial_diff;
       const start_A = this.diff[0].alveoli_diff;
       const start_N = this.diff[0].neutrophil_diff;
 
+      //draw coordiantes
+      this.drawCoordinate({min_I,min_A,min_N,max_I,max_A,max_N});
+
       //draw three line chart
+
+      const { timeScale, yScale_I, yScale_N, yScale_A} = this;
+
       this.paths_I = this.svg.append("g");
       this.paths_A = this.svg.append("g");
       this.paths_N = this.svg.append("g");
 
-
+      //draw line for interstitial area
       this.paths_I;
 
-      this.paths_I.selectAll("path")
-        .data(this.diff)
+      this.paths_I.selectAll("patharea")
+        .data([this.diff])
         .join("path")
-        .attr("fill", "#69b3a2")
-        .attr("fill-opacity", .3)
+        .attr("fill", "#1f78b4")
+        .attr("fill-opacity", 0.2)
         .attr("stroke", "none")
         .attr("d", d3.area()
-        .x(function(d,i) { return this.timeScale(i); })
-        .y0( function(d) { return this.yScale_I( start_I); })
-        .y1(function(d) { return this.yScale_I(d.interstitial_diff); })
+        .x(function(d,i) { return timeScale(i+1); })
+        .y0( function(d) { return yScale_I( start_I); })
+        .y1(function(d) { return yScale_I(d.interstitial_diff); })
         );
       
-      this.paths_I.selectAll("path")
-        .data(this.diff)
+      this.paths_I.selectAll("pathline")
+        .data([this.diff])
         .join("path")
         .attr("fill", "none")
-        .attr("stroke", "#69b3a2")
-        .attr("stroke-width", 4)
+        .attr("stroke", "#1f78b4")
+        .attr("stroke-width", 2)
         .attr("d", d3.line()
-        .x(function(d,i) { return this.timeScale(i) })
-        .y(function(d) { return this.yScale_I(d.interstitial_diff) })
+        .x(function(d,i) { return timeScale(i+1); })
+        .y(function(d) { return yScale_I(d.interstitial_diff); })
         );
-       
 
 
+      //draw line for alveoli area
+
+      this.paths_A;
+
+      this.paths_A.selectAll("patharea")
+          .data([this.diff])
+          .join("path")
+          .attr("fill", "#C1C1C1")
+          .attr("fill-opacity", .3)
+          .attr("stroke", "none")
+          .attr("d", d3.area()
+          .x(function(d,i) { return timeScale(i+1); })
+          .y0( function(d) { return yScale_A( start_A); })
+          .y1(function(d) { return yScale_A(d.alveoli_diff); })
+          );
+        
+      this.paths_A.selectAll("pathline")
+          .data([this.diff])
+          .join("path")
+          .attr("fill", "none")
+          .attr("stroke", "#C1C1C1")
+          .attr("stroke-width", 2)
+          .attr("d", d3.line()
+          .x(function(d,i) { return timeScale(i+1); })
+          .y(function(d) { return yScale_A(d.alveoli_diff); })
+          );
 
 
-      //draw coordiantes
-      this.drawCoordinate({min_I,min_A,min_N,max_I,max_A,max_N});
+      //draw line for neutrophil area
+
+      this.paths_N;
+
+      this.paths_N.selectAll("patharea")
+          .data([this.diff])
+          .join("path")
+          .attr("fill", "#9CCC9C")
+          .attr("fill-opacity", .3)
+          .attr("stroke", "none")
+          .attr("d", d3.area()
+          .x(function(d,i) { return timeScale(i+1); })
+          .y0( function(d) { return yScale_N( start_N); })
+          .y1(function(d) { return yScale_N(d.neutrophil_diff); })
+          );
+        
+        this.paths_N.selectAll("pathline")
+          .data([this.diff])
+          .join("path")
+          .attr("fill", "none")
+          .attr("stroke", "#9CCC9C")
+          .attr("stroke-width", 2)
+          .attr("d", d3.line()
+          .x(function(d,i) { return timeScale(i+1); })
+          .y(function(d) { return yScale_N(d.neutrophil_diff); })
+          );
 
       console.log("topFeatures",topFeatures,"botFeatures",botFeatures,"difference",this.diff);
     });
