@@ -4,8 +4,8 @@ import { NUM_TIMESTEPS } from "../../global.js";
 
 const MARGINS = {
   left: 35,
-  top: 15,
-  bottom: 20,
+  top: 30,
+  bottom: 25,
   right: 10,
 };
 
@@ -25,6 +25,13 @@ export class ChartA {
       .attr("width", this.container.node().clientWidth)
       .attr("height", this.container.node().clientHeight);
       
+    this.svg
+    .append("text")
+    .attr("x", 6)
+    .attr("y", MARGINS.top - 12)
+    .attr("font-size", 14)
+    .text("Experience difference over time");
+
     console.log("ChartA", this);
   }
 
@@ -48,7 +55,7 @@ export class ChartA {
     this.yAxis = this.svg.append("g");
 
 
-    const gap = 5;
+    const gap = 10;
     const yScale_length = (this.height-MARGINS.top-MARGINS.bottom-3*gap)/3;
     
     //y-axis for interstitial area
@@ -232,7 +239,7 @@ export class ChartA {
           .y(function(d) { return yScale_N(d.neutrophil_diff); })
           );
 
-      console.log("topFeatures",topFeatures,"botFeatures",botFeatures,"difference",this.diff);
+      //console.log("topFeatures",topFeatures,"botFeatures",botFeatures,"difference",this.diff);
     });
   }
 }

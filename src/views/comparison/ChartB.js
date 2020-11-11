@@ -2,7 +2,7 @@ import { ITEMS } from "../../global.js";
 
 const MARGINS = {
   left: 45,
-  top: 15,
+  top: 50,
   bottom: 20,
   right: 45,
 };
@@ -21,7 +21,14 @@ export class ChartB {
     this.svg
       .attr("width", this.container.node().clientWidth)
       .attr("height", this.container.node().clientHeight);
-
+    
+    this.svg
+    .append("text")
+    .attr("x", 6)
+    .attr("y", MARGINS.top - 32)
+    .attr("font-size", 14)
+    .text("Experiments Overall Comparison");
+    
     console.log("ChartB", this);
   }
 
@@ -44,6 +51,28 @@ export class ChartB {
 
     const xScale_length = 0.3*(this.width-MARGINS.left-MARGINS.right);
     const gap = 0.1*(this.width-MARGINS.left-MARGINS.right);
+
+    this.svg
+      .append("text")
+      .attr("x", MARGINS.left+10)
+      .attr("y", MARGINS.top - 10)
+      .attr("font-size", 10)
+      .text("Interstitial Area");
+      
+    this.svg
+      .append("text")
+      .attr("x", MARGINS.left+1.3*xScale_length)
+      .attr("y", MARGINS.top - 10)
+      .attr("font-size", 10)
+      .text("Alveoli");
+    
+    this.svg
+      .append("text")
+      .attr("x", this.width-MARGINS.right-0.8*xScale_length)
+      .attr("y", MARGINS.top - 10)
+      .attr("font-size", 10)
+      .text("Neutrophil");
+
     
     //y-axis
     this.yScale = d3
@@ -51,7 +80,7 @@ export class ChartB {
       .domain([0, max_AI])
       .range([this.height-MARGINS.bottom, MARGINS.top]);
     
-    const yAxis = d3.axisLeft(this.yScale).ticks(5);
+    const yAxis = d3.axisLeft(this.yScale).ticks(5).tickFormat(d3.format(".3~s"));
 
     this.yAxis
       .append("g")
@@ -73,7 +102,6 @@ export class ChartB {
       .attr("class", "y-axis chart2_yaxis")
       .call(yAxis_N)
       .attr("transform", `translate(${this.width-MARGINS.right}, 0)`);
-
 
 
     //x-axis for interstitial
@@ -429,7 +457,7 @@ export class ChartB {
     
 
 
-      console.log("topFeatures",topFeatures,"botFeatures",botFeatures);
+      //console.log("topFeatures",topFeatures,"botFeatures",botFeatures);
     });
   }
 }
