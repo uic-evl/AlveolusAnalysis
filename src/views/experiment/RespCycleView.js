@@ -8,8 +8,8 @@ import {
 const MARGINS = {
   left: 30,
   top: 50,
-  bottom: 24,
-  right: 10,
+  bottom: 36,
+  right: 14,
 };
 
 export class RespCycleView {
@@ -70,11 +70,28 @@ export class RespCycleView {
 
     this.svg
       .append("text")
-      .attr("x", 4)
+      .attr("x", this.width - 4)
       .attr("y", MARGINS.top - 12)
       .attr("font-size", 12)
+      .style("text-anchor", "end")
       .style("fill", "var(--selected)")
       .text("Current Full Cycle");
+
+    this.svg
+      .append("line")
+      .attr("class", "cycle highlighted")
+      .style("stroke-linecap", "round")
+      .attr("x1", this.width - 36)
+      .attr("x2", this.width - 4)
+      .attr("y1", MARGINS.top)
+      .attr("y2", MARGINS.top);
+
+    this.svg
+      .append("circle")
+      .attr("class", "time-point")
+      .attr("r", 6)
+      .attr("cx", this.width - 20)
+      .attr("cy", MARGINS.top);
 
     const axesG = this.svg.append("g").attr("class", "axes-g");
 
@@ -90,8 +107,14 @@ export class RespCycleView {
 
     this.colorScale = d3.scaleSequential(d3.interpolatePuBu).domain([0, 1.25]);
 
-    const timeAxis = d3.axisBottom(this.timeScale).ticks(4);
-    const yAxis = d3.axisLeft(this.yScale).ticks(6);
+    const timeAxis = d3
+      .axisBottom(this.timeScale)
+      .ticks(4)
+      .tickFormat(d3.format(".0~%"));
+    const yAxis = d3
+      .axisLeft(this.yScale)
+      .ticks(6)
+      .tickFormat(d3.format(".1~%"));
 
     axesG
       .append("g")

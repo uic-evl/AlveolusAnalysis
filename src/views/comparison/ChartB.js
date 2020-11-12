@@ -3,7 +3,7 @@
 const MARGINS = {
   left: 45,
   top: 50,
-  bottom: 20,
+  bottom: 25,
   right: 45,
 };
 export class ChartB {
@@ -24,9 +24,10 @@ export class ChartB {
 
     this.svg
       .append("text")
-      .attr("x", 6)
-      .attr("y", MARGINS.top - 32)
-      .attr("font-size", 14)
+      .attr("x", 16)
+      .attr("y", MARGINS.top - 28)
+      .attr("font-size", 16)
+      .attr("font-weight", 300)
       .text("Experiments Overall Comparison");
 
     console.log("ChartB", this);
@@ -57,7 +58,9 @@ export class ChartB {
       .append("text")
       .attr("x", MARGINS.left + 0.5 * xScale_length)
       .attr("y", MARGINS.top - 10)
-      .attr("font-size", 10)
+      .attr("font-size", 12)
+      .style("font-style", "italic")
+      .style("color", "var(--inter)")
       .attr("text-anchor", "middle")
       .text("Interstitial Area");
 
@@ -65,15 +68,19 @@ export class ChartB {
       .append("text")
       .attr("x", MARGINS.left + 1.5 * xScale_length)
       .attr("y", MARGINS.top - 10)
-      .attr("font-size", 10)
+      .attr("font-size", 12)
+      .style("font-style", "italic")
+      .style("color", "var(--alv)")
       .attr("text-anchor", "middle")
-      .text("Alveolus Area");
+      .text("Alveolar Area");
 
     this.svg
       .append("text")
       .attr("x", this.width - MARGINS.right - 0.5 * xScale_length)
       .attr("y", MARGINS.top - 10)
-      .attr("font-size", 10)
+      .attr("font-size", 12)
+      .style("font-style", "italic")
+      .style("color", "var(--neut)")
       .attr("text-anchor", "middle")
       .text("Neutrophil Area");
 

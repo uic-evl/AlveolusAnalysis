@@ -7,7 +7,7 @@ import {
 
 const MARGINS = {
   left: 36,
-  top: 30,
+  top: 42,
   bottom: 14,
   right: 10,
 };
@@ -48,17 +48,16 @@ export class FeatureView {
   setupChart() {
     const sectionHeight = (this.height - PADDING) / 2;
 
-    this.alvG = this.svg.append("g").attr("class", "alv-g");
-
-    this.alvG
+    this.svg
       .append("text")
-      .attr("x", MARGINS.left)
-      .attr("y", MARGINS.top - 6)
+      .attr("x", 4)
+      .attr("y", MARGINS.top - 24)
       .attr("font-size", 14)
       .attr("font-weight", 300)
-      .text("Mean Alveolus Area");
+      .attr("font-style", "italic")
+      .text("At this stage across Respiratory Cycles...");
 
-    this.alvG
+    this.svg
       .append("text")
       .attr("x", this.width - 4)
       .attr("y", MARGINS.top - 6)
@@ -66,6 +65,23 @@ export class FeatureView {
       .attr("font-size", 12)
       .style("fill", "var(--selected)")
       .text("Current Full Cycle");
+
+    this.svg
+      .append("circle")
+      .attr("class", "highlighted-cycle")
+      .attr("r", 6)
+      .attr("cx", this.width - 12)
+      .attr("cy", MARGINS.top + 6);
+
+    this.alvG = this.svg.append("g").attr("class", "alv-g");
+
+    this.alvG
+      .append("text")
+      .attr("x", MARGINS.left)
+      .attr("y", MARGINS.top - 6)
+      .attr("font-size", 12)
+      .attr("font-weight", 300)
+      .text("Mean Alveolus Area");
 
     this.alvG
       .append("text")
@@ -98,7 +114,7 @@ export class FeatureView {
       .append("text")
       .attr("x", MARGINS.left)
       .attr("y", MARGINS.top - 6)
-      .attr("font-size", 14)
+      .attr("font-size", 12)
       .attr("font-weight", 300)
       .text("Mean Neutrophil Area");
 

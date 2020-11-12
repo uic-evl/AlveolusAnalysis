@@ -21,9 +21,8 @@
   flex: 1 0;
   /* border: 1px solid var(--accent); */
   margin-right: 8px;
-  padding: 8px;
+  padding: 0 8px;
   font-size: 12px;
-  padding-bottom: 0;
 }
 
 .experiment .feature-charts .view-title {
@@ -31,7 +30,6 @@
 
   font-weight: 300;
   padding-left: 4px;
-  padding-bottom: 8px;
 }
 
 .experiment .feature-charts .svg-wrapper {

@@ -77,7 +77,7 @@
 }
 
 #animals .mouse .kiv-axis:hover {
-  stroke-width: 8;
+  stroke-width: 16;
   stroke-opacity: 0.5;
 
   cursor: help;

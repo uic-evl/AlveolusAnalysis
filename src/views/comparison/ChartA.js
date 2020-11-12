@@ -26,9 +26,10 @@ export class ChartA {
 
     this.svg
       .append("text")
-      .attr("x", 6)
-      .attr("y", MARGINS.top - 12)
-      .attr("font-size", 14)
+      .attr("x", 16)
+      .attr("y", MARGINS.top - 6)
+      .attr("font-size", 16)
+      .attr("font-weight", 300)
       .text("Experiments Difference Over Time");
 
     this.svg
@@ -70,24 +71,30 @@ export class ChartA {
       .append("text")
       .attr("x", MARGINS.left)
       .attr("y", MARGINS.top + gap)
-      .attr("font-size", 10)
+      .attr("font-size", 12)
       .attr("text-anchor", "start")
+      .style("font-style", "italic")
+      .style("color", "var(--inter)")
       .text("Interstitial Area Difference");
 
     this.svg
       .append("text")
       .attr("x", MARGINS.left)
       .attr("y", yScale_length + MARGINS.top + 2 * gap + titlegap)
-      .attr("font-size", 10)
+      .attr("font-size", 12)
       .attr("text-anchor", "start")
-      .text("Alveolus Area Difference");
+      .style("font-style", "italic")
+      .style("color", "var(--alv)")
+      .text("Alveolar Area Difference");
 
     this.svg
       .append("text")
       .attr("x", MARGINS.left)
       .attr("y", 2 * yScale_length + MARGINS.top + 3 * gap + 2 * titlegap)
-      .attr("font-size", 10)
       .attr("text-anchor", "start")
+      .attr("font-size", 12)
+      .style("font-style", "italic")
+      .style("color", "var(--neut)")
       .text("Neutrophil Area Difference");
 
     //y-axis for interstitial area
@@ -256,6 +263,7 @@ export class ChartA {
             .y1(function (d) {
               return yScale_I(d.interstitial_diff);
             })
+            .curve(d3.curveMonotoneX)
         );
 
       this.paths_I
@@ -275,6 +283,7 @@ export class ChartA {
             .y(function (d) {
               return yScale_I(d.interstitial_diff);
             })
+            .curve(d3.curveMonotoneX)
         );
 
       //draw line for alveoli area
@@ -301,6 +310,7 @@ export class ChartA {
             .y1(function (d) {
               return yScale_A(d.alveoli_diff);
             })
+            .curve(d3.curveMonotoneX)
         );
 
       this.paths_A
@@ -320,6 +330,7 @@ export class ChartA {
             .y(function (d) {
               return yScale_A(d.alveoli_diff);
             })
+            .curve(d3.curveMonotoneX)
         );
 
       //draw line for neutrophil area
@@ -346,6 +357,7 @@ export class ChartA {
             .y1(function (d) {
               return yScale_N(d.neutrophil_diff);
             })
+            .curve(d3.curveMonotoneX)
         );
 
       this.paths_N
@@ -365,6 +377,7 @@ export class ChartA {
             .y(function (d) {
               return yScale_N(d.neutrophil_diff);
             })
+            .curve(d3.curveMonotoneX)
         );
 
       //console.log("allcycles", topaligned);

@@ -117,6 +117,7 @@ function kiviat(svg, width, height, name) {
     .attr("text-anchor", "middle")
     .attr("x", 0)
     .attr("y", 14)
+    .attr("font-size", 16)
     .text("value");
 
   data.getAllFeatures().then((features) => {
@@ -148,8 +149,6 @@ function kiviat(svg, width, height, name) {
       .attr("transform", (d, i) => `rotate(${-90 + (360 * i) / numAttributes})`)
       .on("mouseover", (e, i) => {
         const key = Object.keys(labels)[i];
-        console.log(labels[key], values[key], i);
-        console.log("open position", i > 1 && i < 5 ? "top" : "bottom");
 
         overlay
           .style("opacity", 1)

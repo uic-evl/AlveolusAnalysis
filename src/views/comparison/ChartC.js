@@ -2,8 +2,8 @@ import { findMinimaLocations, chuckFeaturesByMinima } from "../../util.js";
 
 const MARGINS = {
   left: 45,
-  top: 50,
-  bottom: 15,
+  top: 80,
+  bottom: 25,
   right: 45,
 };
 
@@ -25,12 +25,11 @@ export class ChartC {
 
     this.svg
       .append("text")
-      .attr("x", 6)
-      .attr("y", MARGINS.top - 32)
-      .attr("font-size", 14)
+      .attr("x", 16)
+      .attr("y", 24)
+      .attr("font-size", 16)
+      .attr("font-weight", 300)
       .text("Experiments Trend Comparison");
-
-    console.log("ChartB", this);
 
     console.log("ChartC", this);
   }
@@ -50,6 +49,51 @@ export class ChartC {
   drawCoordinate({ min_AI, max_AI, min_N, max_N }) {
     this.svg.selectAll("g").remove();
 
+    const legendG = this.svg
+      .append("g")
+      .attr("transform", `translate(${MARGINS.left}, ${MARGINS.top - 36})`);
+
+    legendG
+      .append("line")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 32)
+      .attr("y2", 0)
+      .attr("stroke", "#ccc")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 4);
+
+    legendG
+      .append("text")
+      .attr("x", 40)
+      .attr("y", 4)
+      .attr("class", "top-label")
+      .attr("fill", "#ccc")
+      .attr("stroke-width", 4)
+      .attr("font-size", 14)
+      .text("TEST TEST");
+
+    legendG
+      .append("line")
+      .attr("x1", 120)
+      .attr("y1", 0)
+      .attr("x2", 120 + 32)
+      .attr("y2", 0)
+      .attr("stroke", "#ccc")
+      .attr("stroke-dasharray", "5 8")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 4);
+
+    legendG
+      .append("text")
+      .attr("x", 120 + 40)
+      .attr("y", 4)
+      .attr("class", "bot-label")
+      .attr("fill", "#ccc")
+      .attr("stroke-width", 4)
+      .attr("font-size", 14)
+      .text("TEST TEST");
+
     this.yAxis = this.svg.append("g");
 
     //const gap =  0.1*(this.height-MARGINS.bottom-MARGINS.top);
@@ -57,27 +101,47 @@ export class ChartC {
     //const ylength = 0.45*(this.height-MARGINS.bottom-MARGINS.top);
     const xlength = 0.5 * (this.width - 2 * MARGINS.left - 2 * MARGINS.right);
 
-    this.svg
+    const ratioLabel = this.svg
       .append("text")
-      .attr("x", MARGINS.left)
+      .attr("x", MARGINS.left + xlength / 2)
       .attr("y", MARGINS.top - 10)
-      .attr("font-size", 10)
-      .attr("text-anchor", "start")
-      .text("Ratio");
-    //.text("Ratio of Alveolus Area to Interstitial Area");
+      .attr("font-size", 12)
+      .attr("text-anchor", "middle");
+
+    ratioLabel
+      .append("tspan")
+      .style("fill", "#F4BC1C")
+      .style("font-weight", 600)
+      .text("Ratio:  ");
+
+    ratioLabel
+      .append("tspan")
+      .style("color", "var(--alv)")
+      .style("font-style", "italic")
+      .text("Alveolar");
+
+    ratioLabel.append("tspan").text(" / ");
+
+    ratioLabel
+      .append("tspan")
+      .style("font-style", "italic")
+      .style("color", "var(--inter)")
+      .text("Interstitial");
 
     this.svg
       .append("text")
-      .attr("x", this.width - MARGINS.right - xlength)
+      .attr("x", this.width - MARGINS.right - xlength / 2)
       .attr("y", MARGINS.top - 10)
-      .attr("font-size", 10)
-      .attr("text-anchor", "start")
+      .attr("font-size", 12)
+      .style("font-style", "italic")
+      .style("color", "var(--neut)")
+      .attr("text-anchor", "middle")
       .text("Neutrophil Area");
 
     this.svg
       .append("text")
       .attr("x", MARGINS.left)
-      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("y", this.height - MARGINS.bottom + 14)
       .attr("font-size", 10)
       .attr("text-anchor", "middle")
       .text("Start");
@@ -85,7 +149,7 @@ export class ChartC {
     this.svg
       .append("text")
       .attr("x", this.width - MARGINS.right - xlength)
-      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("y", this.height - MARGINS.bottom + 14)
       .attr("font-size", 10)
       .attr("text-anchor", "middle")
       .text("Start");
@@ -93,7 +157,7 @@ export class ChartC {
     this.svg
       .append("text")
       .attr("x", MARGINS.left + xlength)
-      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("y", this.height - MARGINS.bottom + 14)
       .attr("font-size", 10)
       .attr("text-anchor", "middle")
       .text("End");
@@ -101,7 +165,7 @@ export class ChartC {
     this.svg
       .append("text")
       .attr("x", this.width - MARGINS.right)
-      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("y", this.height - MARGINS.bottom + 14)
       .attr("font-size", 10)
       .attr("text-anchor", "middle")
       .text("End");
@@ -238,7 +302,8 @@ export class ChartC {
         .attr("y1", yScale(topstart_A / topstart_I))
         .attr("y2", yScale(topend_A / topend_I))
         .attr("stroke", "#F4BC1C")
-        .attr("stroke-width", 2);
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 4);
 
       this.lines
         .append("line")
@@ -247,8 +312,9 @@ export class ChartC {
         .attr("y1", yScale(botstart_A / botstart_I))
         .attr("y2", yScale(botend_A / botend_I))
         .attr("stroke", "#F4BC1C")
-        .attr("stroke-dasharray", 5)
-        .attr("stroke-width", 2);
+        .attr("stroke-dasharray", "5 8")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 4);
 
       //neutrophil
       this.lines
@@ -257,8 +323,9 @@ export class ChartC {
         .attr("x2", this.width - MARGINS.right)
         .attr("y1", yScale_N(topstart_N))
         .attr("y2", yScale_N(topend_N))
-        .attr("stroke", "#9CCC9C")
-        .attr("stroke-width", 2);
+        .attr("stroke", "var(--neut)")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 4);
 
       this.lines
         .append("line")
@@ -266,11 +333,15 @@ export class ChartC {
         .attr("x2", this.width - MARGINS.right)
         .attr("y1", yScale_N(botstart_N))
         .attr("y2", yScale_N(botend_N))
-        .attr("stroke", "#9CCC9C")
-        .attr("stroke-dasharray", 5)
-        .attr("stroke-width", 2);
+        .attr("stroke", "var(--neut)")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-dasharray", "5 8")
+        .attr("stroke-width", 4);
 
       //console.log(topstart_I, topend_I);
+
+      this.svg.select(".top-label").text(this.topData.name);
+      this.svg.select(".bot-label").text(this.botData.name);
     });
   }
 }
