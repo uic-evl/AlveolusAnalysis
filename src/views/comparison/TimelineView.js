@@ -113,7 +113,7 @@ export class TimelineView {
 
     this.yScaleTop = d3
       .scaleLinear()
-      .domain([0, 1])
+      .domain([0, 0.6])
       .range([midpoint, MARGINS.top]);
 
     const yAxisTop = d3.axisLeft(this.yScaleTop).ticks(3);
@@ -126,7 +126,7 @@ export class TimelineView {
 
     this.yScaleBot = d3
       .scaleLinear()
-      .domain([0, 1])
+      .domain([0, 0.6])
       .range([midpoint, this.height - MARGINS.bottom]);
 
     const yAxisBot = d3.axisLeft(this.yScaleBot).ticks(3);
@@ -222,7 +222,7 @@ export class TimelineView {
   }
 
   drawPath({ data, scale, name }) {
-    const interstitial = d3.area().y0(scale(1)).curve(d3.curveMonotoneX);
+    const interstitial = d3.area().y0(scale(0.6)).curve(d3.curveMonotoneX);
     const air = d3.line().curve(d3.curveMonotoneX);
 
     data
@@ -230,11 +230,9 @@ export class TimelineView {
       .then((features) => {
         const minima = findMinimaLocations(features);
 
-        console.log(features.length);
-
         const ratios = features.map(
           ({ alveoli_area, interstitial_area }) =>
-            alveoli_area / (alveoli_area + interstitial_area)
+            alveoli_area / interstitial_area
         );
 
         this.paths

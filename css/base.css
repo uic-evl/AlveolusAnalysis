@@ -68,7 +68,7 @@ body {
 body.dark {
   background: var(--background);
 
-  color: white;
+  color: #e0e0e0;
   --accent: #fda4af;
 }
 
@@ -91,7 +91,7 @@ body.dark {
     / 0.6fr 1fr 2fr;
 
   gap: 0.5rem;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
 
   grid-template-areas:
     "header header header"
@@ -116,7 +116,7 @@ svg text {
   padding: 8px 16px;
 
   overflow: hidden;
-  margin: -0.5rem -0.5rem 0;
+  margin: -0.5rem -1rem 0;
 
   grid-area: header;
   justify-content: flex-start;
@@ -144,11 +144,19 @@ body:not(.dark) .header {
 button {
   background: #fff1;
 
-  border: 1px solid white;
+  border: 1px solid #e0e0e0;
   margin: 4px;
-  color: white;
+  color: #e0e0e0;
   border-radius: 4px;
   padding: 4px;
+}
+
+button:hover {
+  box-shadow: 0 0 2px 1px var(--accent);
+  cursor: pointer;
+
+  color: white;
+  border-color: var(--accent);
 }
 
 #compare {

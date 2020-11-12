@@ -3,7 +3,7 @@ export function findMinimaLocations(features) {
 
   for (let i = 0; i < features.length; i++) {
     const timesteps = d3
-      .range(i - 3, i + 4)
+      .range(i - 5, i + 6)
       .filter((t) => t >= 0 && t < features.length);
 
     const min = d3.minIndex(timesteps, (t) => features[t].alveoli_area);

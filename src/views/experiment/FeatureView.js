@@ -135,6 +135,7 @@ export class FeatureView {
     this.yScaleAlv = d3
       .scaleLinear()
       .domain([0, 2000])
+      .clamp(true)
       .range([sectionHeight - MARGINS.bottom, MARGINS.top]);
 
     this.alvG
@@ -144,6 +145,7 @@ export class FeatureView {
     this.yScaleNeu = d3
       .scaleLinear()
       .domain([0, 100])
+      .clamp(true)
       .range([sectionHeight - MARGINS.bottom, MARGINS.top]);
 
     this.neuG.selectAll(".y-axis").call(d3.axisLeft(this.yScaleNeu).ticks(4));
@@ -179,34 +181,39 @@ export class FeatureView {
         const progress = cycleLocation.t / allCycles[cycleLocation.c].length;
 
         const alveoli = {
-          mean: getValueAcrossCycles(progress, fullCycles, (t) =>
-            d3.mean(Object.values(t.areas_per_alveoli))
+          mean: getValueAcrossCycles(
+            progress,
+            fullCycles,
+            (t) => d3.mean(Object.values(t.areas_per_alveoli)) || 0
           ),
           ci: getValueAcrossCycles(
             progress,
             fullCycles,
-            (t) => 2 * d3.deviation(Object.values(t.areas_per_alveoli))
+            (t) => 2 * d3.deviation(Object.values(t.areas_per_alveoli)) || 0
           ),
         };
 
         const neutrophil = {
-          mean: getValueAcrossCycles(progress, fullCycles, (t) =>
-            d3.mean(Object.values(t.areas_per_neutrophil))
+          mean: getValueAcrossCycles(
+            progress,
+            fullCycles,
+            (t) => d3.mean(Object.values(t.areas_per_neutrophil)) || 0
           ),
           ci: getValueAcrossCycles(
             progress,
             fullCycles,
-            (t) => 2 * d3.deviation(Object.values(t.areas_per_neutrophil))
+            (t) => 2 * d3.deviation(Object.values(t.areas_per_neutrophil)) || 0
           ),
         };
 
         const alvExtent = [
-          d3.min(
-            features,
-            ({ areas_per_alveoli }, i) =>
-              d3.mean(Object.values(areas_per_alveoli)) -
-              2 * d3.deviation(Object.values(areas_per_alveoli))
-          ),
+          0,
+          // d3.min(
+          //   features,
+          //   ({ areas_per_alveoli }, i) =>
+          //     d3.mean(Object.values(areas_per_alveoli)) -
+          //     2 * d3.deviation(Object.values(areas_per_alveoli))
+          // ),
           d3.max(
             features,
             ({ areas_per_alveoli }, i) =>
@@ -216,12 +223,13 @@ export class FeatureView {
         ];
 
         const neuExtent = [
-          d3.min(
-            features,
-            ({ areas_per_neutrophil }, i) =>
-              d3.mean(Object.values(areas_per_neutrophil)) -
-              2 * d3.deviation(Object.values(areas_per_neutrophil))
-          ),
+          0,
+          // d3.min(
+          //   features,
+          //   ({ areas_per_neutrophil }, i) =>
+          //     d3.mean(Object.values(areas_per_neutrophil)) -
+          //     2 * d3.deviation(Object.values(areas_per_neutrophil))
+          // ),
           d3.max(
             features,
             ({ areas_per_neutrophil }, i) =>
@@ -311,12 +319,7 @@ export class FeatureView {
     this.xScale.domain(domain);
     this.svg
       .selectAll(".x-axis")
-      .call(
-        d3
-          .axisBottom(this.xScale)
-          .tickFormat(d3.format(".0"))
-          .tickValues(domain)
-      );
+      .call(d3.axisBottom(this.xScale).tickValues(domain));
   }
 
   updateYAxisAlv(domain) {
