@@ -74,6 +74,38 @@ export class ChartC {
       .attr("text-anchor", "start")
       .text("Neutrophil Area");
 
+    this.svg
+      .append("text")
+      .attr("x", MARGINS.left)
+      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("font-size", 10)
+      .attr("text-anchor", "middle")
+      .text("Start");
+
+    this.svg
+      .append("text")
+      .attr("x", this.width - MARGINS.right - xlength)
+      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("font-size", 10)
+      .attr("text-anchor", "middle")
+      .text("Start");
+
+    this.svg
+      .append("text")
+      .attr("x", MARGINS.left + xlength)
+      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("font-size", 10)
+      .attr("text-anchor", "middle")
+      .text("End");
+
+    this.svg
+      .append("text")
+      .attr("x", this.width - MARGINS.right)
+      .attr("y", this.height - MARGINS.bottom + 10)
+      .attr("font-size", 10)
+      .attr("text-anchor", "middle")
+      .text("End");
+
     //y-axis for interstitial area
     this.yScale = d3
       .scaleLinear()

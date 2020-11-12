@@ -31,6 +31,14 @@ export class ChartA {
       .attr("font-size", 14)
       .text("Experiments Difference Over Time");
 
+    this.svg
+      .append("text")
+      .attr("x", this.width - MARGINS.right)
+      .attr("y", MARGINS.top)
+      .attr("font-size", 11)
+      .attr("text-anchor", "end")
+      .text("Top sbtracts bottom");
+
     console.log("ChartA", this);
   }
 
