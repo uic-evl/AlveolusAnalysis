@@ -78,6 +78,27 @@ export class RespCycleView {
       .style("fill", "var(--selected)")
       .text("Current Full Cycle");
 
+    const axisLabel = this.svg
+      .append("text")
+      .attr("x", 4)
+      .attr("y", MARGINS.top - 12)
+      .attr("font-size", 12)
+      .attr("text-anchor", "left");
+
+    axisLabel
+      .append("tspan")
+      .style("color", "var(--alv)")
+      .style("font-style", "italic")
+      .text("Alveolar");
+
+    axisLabel.append("tspan").text(" / ");
+
+    axisLabel
+      .append("tspan")
+      .style("font-style", "italic")
+      .style("color", "var(--inter)")
+      .text("Interstitial");
+
     this.svg
       .append("line")
       .attr("class", "cycle highlighted")
