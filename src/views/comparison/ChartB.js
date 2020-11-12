@@ -251,9 +251,9 @@ export class ChartB {
       //draw the coordinate
       this.drawCoordinate({ max_AI, max_N });
       //draw the boxplot
-      this.box_I = this.svg.append("g");
-      this.box_A = this.svg.append("g");
-      this.box_N = this.svg.append("g");
+      this.box_I = this.svg.append("g").attr("transform", "translate(4.5, 0)");
+      this.box_A = this.svg.append("g").attr("transform", "translate(4.5, 0)");
+      this.box_N = this.svg.append("g").attr("transform", "translate(4.5, 0)");
 
       const { yScale, yScale_N, xScale_I, xScale_N, xScale_A } = this;
       const boxwidth = (this.width - MARGINS.left - MARGINS.right) / 12;
