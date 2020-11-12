@@ -163,4 +163,5 @@
 
 .experiment .image-wrapper .filter-dropdown:focus-within .options {
   display: flex;
+  width: 100%;
 }

@@ -118,7 +118,10 @@ export class TimelineView {
       .domain([0, 0.6])
       .range([midpoint, MARGINS.top]);
 
-    const yAxisTop = d3.axisLeft(this.yScaleTop).ticks(3);
+    const yAxisTop = d3
+      .axisLeft(this.yScaleTop)
+      .ticks(3)
+      .tickFormat(d3.format(".2~%"));
 
     this.axes
       .append("g")
@@ -131,7 +134,10 @@ export class TimelineView {
       .domain([0, 0.6])
       .range([midpoint, this.height - MARGINS.bottom]);
 
-    const yAxisBot = d3.axisLeft(this.yScaleBot).ticks(3);
+    const yAxisBot = d3
+      .axisLeft(this.yScaleBot)
+      .ticks(3)
+      .tickFormat(d3.format(".2~%"));
 
     this.axes
       .append("g")

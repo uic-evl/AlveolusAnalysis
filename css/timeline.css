@@ -57,6 +57,9 @@
   stroke-linecap: round;
 }
 
+#timeline-control svg .slider .slider-label {
+}
+
 #timeline-control .ratio-path {
   fill: var(--inter);
   fill-opacity: 0.2;
