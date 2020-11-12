@@ -1,6 +1,5 @@
-//const NUM_TIMESTEPS = 20;
-
-import { NUM_TIMESTEPS } from "../../global.js";
+import { findMinimaLocations, chuckFeaturesByMinima } from "../../util.js";
+//import { NUM_TIMESTEPS } from "../../global.js";
 
 const MARGINS = {
   left: 40,
@@ -47,7 +46,7 @@ export class ChartA {
     this.drawChart();
   }
 
-  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N }) {
+  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_images }) {
     this.svg.selectAll("g").remove();
 
     this.xAxis = this.svg.append("g");
@@ -86,7 +85,7 @@ export class ChartA {
     //y-axis for interstitial area
     this.yScale_I = d3
       .scaleLinear()
-      .domain([min_I, max_I])
+      .domain([d3.min([min_I, 0]), d3.max([max_I, 0])])
       .range([
         yScale_length + MARGINS.top + titlegap + gap,
         MARGINS.top + titlegap + gap,
@@ -106,7 +105,7 @@ export class ChartA {
     //y-axis for alveoli area
     this.yScale_A = d3
       .scaleLinear()
-      .domain([min_A, max_A])
+      .domain([d3.min([min_A, 0]), d3.max([max_A, 0])])
       .range([
         2 * yScale_length + MARGINS.top + 2 * gap + 2 * titlegap,
         yScale_length + MARGINS.top + 2 * gap + 2 * titlegap,
@@ -126,7 +125,7 @@ export class ChartA {
     //y-axis for neutrophil area
     this.yScale_N = d3
       .scaleLinear()
-      .domain([min_N, max_N])
+      .domain([d3.min([min_N, 0]), d3.max([max_N, 0])])
       .range([
         3 * yScale_length + MARGINS.top + 3 * gap + 3 * titlegap,
         2 * yScale_length + MARGINS.top + 3 * gap + 3 * titlegap,
@@ -143,7 +142,7 @@ export class ChartA {
     //x-axis for time
     this.timeScale = d3
       .scaleLinear()
-      .domain([1, NUM_TIMESTEPS])
+      .domain([1, min_images])
       .range([MARGINS.left, this.width - MARGINS.right]);
 
     const timeAxis = d3.axisBottom(this.timeScale).ticks(5);
@@ -164,16 +163,38 @@ export class ChartA {
       this.botData.getAllFeatures().catch((err) => []),
     ]).then(([topFeatures, botFeatures]) => {
       //get the difference
+      const topminima = findMinimaLocations(topFeatures);
+      const topallCycles = chuckFeaturesByMinima(topFeatures, topminima);
+      const topaligned = [
+        ...topallCycles
+          .slice(1, -1)
+          .map((cycle) => cycle.slice(0, -1))
+          .flat(),
+      ];
+      const botminima = findMinimaLocations(botFeatures);
+      const botallCycles = chuckFeaturesByMinima(botFeatures, botminima);
+      const botaligned = [
+        ...botallCycles
+          .slice(1, -1)
+          .map((cycle) => cycle.slice(0, -1))
+          .flat(),
+      ];
+
+      const min_images = d3.min([botaligned.length, topaligned.length]);
+
       this.diff = [];
 
-      topFeatures.forEach((eachtop, index) => {
-        const eachbottom = botFeatures[index];
-        this.diff.push({
-          alveoli_diff: eachtop.alveoli_area - eachbottom.alveoli_area,
-          interstitial_diff:
-            eachtop.interstitial_area - eachbottom.interstitial_area,
-          neutrophil_diff: eachtop.neutrophil_area - eachbottom.neutrophil_area,
-        });
+      topaligned.forEach((eachtop, index) => {
+        if (index < min_images) {
+          const eachbottom = botaligned[index];
+          this.diff.push({
+            alveoli_diff: eachtop.alveoli_area - eachbottom.alveoli_area,
+            interstitial_diff:
+              eachtop.interstitial_area - eachbottom.interstitial_area,
+            neutrophil_diff:
+              eachtop.neutrophil_area - eachbottom.neutrophil_area,
+          });
+        }
       });
 
       //get the max and min for differnece
@@ -181,12 +202,20 @@ export class ChartA {
       const [min_A, max_A] = d3.extent(this.diff, (d) => d.alveoli_diff);
       const [min_N, max_N] = d3.extent(this.diff, (d) => d.neutrophil_diff);
 
-      const start_I = this.diff[0].interstitial_diff;
-      const start_A = this.diff[0].alveoli_diff;
-      const start_N = this.diff[0].neutrophil_diff;
+      //const start_I = this.diff[0].interstitial_diff;
+      //const start_A = this.diff[0].alveoli_diff;
+      //const start_N = this.diff[0].neutrophil_diff;
 
       //draw coordiantes
-      this.drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N });
+      this.drawCoordinate({
+        min_I,
+        min_A,
+        min_N,
+        max_I,
+        max_A,
+        max_N,
+        min_images,
+      });
 
       //draw three line chart
 
@@ -214,7 +243,7 @@ export class ChartA {
               return timeScale(i + 1);
             })
             .y0(function (d) {
-              return yScale_I(start_I);
+              return yScale_I(0);
             })
             .y1(function (d) {
               return yScale_I(d.interstitial_diff);
@@ -259,7 +288,7 @@ export class ChartA {
               return timeScale(i + 1);
             })
             .y0(function (d) {
-              return yScale_A(start_A);
+              return yScale_A(0);
             })
             .y1(function (d) {
               return yScale_A(d.alveoli_diff);
@@ -304,7 +333,7 @@ export class ChartA {
               return timeScale(i + 1);
             })
             .y0(function (d) {
-              return yScale_N(start_N);
+              return yScale_N(0);
             })
             .y1(function (d) {
               return yScale_N(d.neutrophil_diff);
@@ -330,7 +359,7 @@ export class ChartA {
             })
         );
 
-      //console.log("topFeatures",topFeatures,"botFeatures",botFeatures,"difference",this.diff);
+      //console.log("allcycles", topaligned);
     });
   }
 }
