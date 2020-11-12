@@ -37,7 +37,7 @@ export class ChartA {
       .attr("y", MARGINS.top)
       .attr("font-size", 11)
       .attr("text-anchor", "end")
-      .text("Top sbtracts bottom");
+      .text("Top subtracts bottom");
 
     console.log("ChartA", this);
   }
