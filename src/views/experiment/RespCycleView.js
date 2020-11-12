@@ -73,6 +73,7 @@ export class RespCycleView {
       .attr("x", this.width - 4)
       .attr("y", MARGINS.top - 12)
       .attr("font-size", 12)
+      .attr("font-style", "italic")
       .style("text-anchor", "end")
       .style("fill", "var(--selected)")
       .text("Current Full Cycle");

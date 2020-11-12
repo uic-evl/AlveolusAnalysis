@@ -63,6 +63,7 @@ export class FeatureView {
       .attr("y", MARGINS.top - 6)
       .attr("text-anchor", "end")
       .attr("font-size", 12)
+      .attr("font-style", "italic")
       .style("fill", "var(--selected)")
       .text("Current Full Cycle");
 

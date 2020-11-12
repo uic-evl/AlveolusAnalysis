@@ -3,8 +3,8 @@ import { findMinimaLocations } from "../../util.js";
 
 const MARGINS = {
   left: 40,
-  top: 15,
-  bottom: 15,
+  top: 18,
+  bottom: 18,
   right: 10,
 };
 
@@ -39,7 +39,9 @@ export class TimelineView {
     this.botTime = bot;
 
     this.topSliderG.attr("transform", `translate(${this.xScale(top)}, 0)`);
+    this.topSliderG.select(".slider-label text").text(top);
     this.botSliderG.attr("transform", `translate(${this.xScale(bot)}, 0)`);
+    this.botSliderG.select(".slider-label text").text(bot);
 
     this.onChange({
       top,
@@ -186,7 +188,7 @@ export class TimelineView {
     this.topSliderG
       .append("line")
       .attr("class", "slider-bg")
-      .attr("y1", topRange[1])
+      .attr("y1", topRange[1] - 2)
       .attr("y2", topRange[0])
       .attr("x1", 0)
       .attr("x2", 0);
@@ -194,10 +196,32 @@ export class TimelineView {
     this.topSliderG
       .append("line")
       .attr("class", "slider-line")
-      .attr("y1", topRange[1])
+      .attr("y1", topRange[1] - 2)
       .attr("y2", topRange[0])
       .attr("x1", 0)
       .attr("x2", 0);
+
+    const topLabel = this.topSliderG
+      .append("g")
+      .attr("class", "slider-label")
+      .attr("transform", `translate(0, ${topRange[1] - 2})`);
+
+    topLabel
+      .append("rect")
+      .attr("x", -20)
+      .attr("width", 40)
+      .attr("height", 14)
+      .attr("y", -14)
+      .attr("rx", 2)
+      .style("fill", "#fff4")
+      .style("stroke", "#fff8");
+
+    topLabel
+      .append("text")
+      .text("1")
+      .attr("font-size", 12)
+      .attr("y", -3)
+      .attr("text-anchor", "middle");
 
     this.botSliderG = this.svg
       .append("g")
@@ -207,7 +231,7 @@ export class TimelineView {
     this.botSliderG
       .append("line")
       .attr("class", "slider-bg")
-      .attr("y1", botRange[1])
+      .attr("y1", botRange[1] + 2)
       .attr("y2", botRange[0])
       .attr("x1", 0)
       .attr("x2", 0);
@@ -219,6 +243,28 @@ export class TimelineView {
       .attr("y2", botRange[0])
       .attr("x1", 0)
       .attr("x2", 0);
+
+    const botLabel = this.botSliderG
+      .append("g")
+      .attr("class", "slider-label")
+      .attr("transform", `translate(0, ${botRange[1] + 2})`);
+
+    botLabel
+      .append("rect")
+      .attr("x", -20)
+      .attr("width", 40)
+      .attr("height", 14)
+      .attr("y", 0)
+      .attr("rx", 2)
+      .style("fill", "#fff4")
+      .style("stroke", "#fff8");
+
+    botLabel
+      .append("text")
+      .text("1")
+      .attr("font-size", 12)
+      .attr("y", 11)
+      .attr("text-anchor", "middle");
   }
 
   drawPath({ data, scale, name }) {

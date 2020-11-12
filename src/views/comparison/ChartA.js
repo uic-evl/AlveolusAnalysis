@@ -34,9 +34,10 @@ export class ChartA {
 
     this.svg
       .append("text")
+      .attr("class", "subtracts-label")
       .attr("x", this.width - MARGINS.right)
       .attr("y", MARGINS.top)
-      .attr("font-size", 11)
+      .attr("font-size", 12)
       .attr("text-anchor", "end")
       .text("Top subtracts bottom");
 
@@ -379,6 +380,10 @@ export class ChartA {
             })
             .curve(d3.curveMonotoneX)
         );
+
+      this.svg
+        .selectAll(".subtracts-label")
+        .text(`difference: ${this.topData.name} – ${this.botData.name}`);
 
       //console.log("allcycles", topaligned);
     });
