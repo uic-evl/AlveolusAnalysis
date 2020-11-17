@@ -200,7 +200,7 @@ const domains = {
   // mean # alv across time
   meanAlvCount: [15, 25],
   // mean # neut across time
-  meanNeutCount: [10, 20],
+  meanNeutCount: [0, 20],
   // max diff min/max air %
   maxAirPercent: [45, 55],
   // max of (mean neut area per cycle) across cycles
