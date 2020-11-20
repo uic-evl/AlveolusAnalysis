@@ -385,7 +385,7 @@ export class ChartA {
         .selectAll(".subtracts-label")
         .text(`difference: ${this.topData.name} – ${this.botData.name}`);
 
-      //console.log("allcycles", topaligned);
+      //console.log("diff", this.diff);
     });
   }
 }

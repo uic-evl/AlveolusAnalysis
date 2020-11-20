@@ -121,7 +121,7 @@ export class ChartB {
       .scaleBand()
       .domain(["top", "bot"])
       .range([MARGINS.left, MARGINS.left + xScale_length])
-      .padding([0.8]);
+      .padding([0.1]);
 
     const xAxis_I = d3.axisBottom(this.xScale_I).tickFormat(function (d) {
       return d === "top" ? topname : botname;
@@ -138,7 +138,7 @@ export class ChartB {
       .scaleBand()
       .domain(["top", "bot"])
       .range([MARGINS.left + xScale_length, MARGINS.left + 2 * xScale_length])
-      .padding([0.8]);
+      .padding([0.1]);
 
     const xAxis_A = d3.axisBottom(this.xScale_A).tickFormat(function (d) {
       return d === "top" ? topname : botname;
@@ -158,7 +158,7 @@ export class ChartB {
         gap + MARGINS.left + 2 * xScale_length,
         gap + MARGINS.left + 3 * xScale_length,
       ])
-      .padding([0.8]);
+      .padding([0.1]);
 
     const xAxis_N = d3.axisBottom(this.xScale_N).tickFormat(function (d) {
       return d === "top" ? topname : botname;
@@ -179,7 +179,7 @@ export class ChartB {
       this.topData.getAllFeatures().catch((err) => []),
       this.botData.getAllFeatures().catch((err) => []),
     ]).then(([topFeatures, botFeatures]) => {
-      //get 5-statistics for interstitial area
+      //get min max for interstitial area
       const [topmin_I, topmax_I] = d3.extent(
         topFeatures,
         (d) => d.interstitial_area
@@ -188,30 +188,8 @@ export class ChartB {
         botFeatures,
         (d) => d.interstitial_area
       );
-      const topq1_I = d3.quantile(
-        topFeatures,
-        0.25,
-        (d) => d.interstitial_area
-      );
-      const botq1_I = d3.quantile(
-        botFeatures,
-        0.25,
-        (d) => d.interstitial_area
-      );
-      const topq2_I = d3.quantile(topFeatures, 0.5, (d) => d.interstitial_area);
-      const botq2_I = d3.quantile(botFeatures, 0.5, (d) => d.interstitial_area);
-      const topq3_I = d3.quantile(
-        topFeatures,
-        0.75,
-        (d) => d.interstitial_area
-      );
-      const botq3_I = d3.quantile(
-        botFeatures,
-        0.75,
-        (d) => d.interstitial_area
-      );
 
-      //get 5-statistics for alveoli area
+      //get min max for alveoli area
       const [topmin_A, topmax_A] = d3.extent(
         topFeatures,
         (d) => d.alveoli_area
@@ -220,14 +198,8 @@ export class ChartB {
         botFeatures,
         (d) => d.alveoli_area
       );
-      const topq1_A = d3.quantile(topFeatures, 0.25, (d) => d.alveoli_area);
-      const botq1_A = d3.quantile(botFeatures, 0.25, (d) => d.alveoli_area);
-      const topq2_A = d3.quantile(topFeatures, 0.5, (d) => d.alveoli_area);
-      const botq2_A = d3.quantile(botFeatures, 0.5, (d) => d.alveoli_area);
-      const topq3_A = d3.quantile(topFeatures, 0.75, (d) => d.alveoli_area);
-      const botq3_A = d3.quantile(botFeatures, 0.75, (d) => d.alveoli_area);
 
-      //get 5-statistics for neutrophil area
+      //get min max for neutrophil area
       const [topmin_N, topmax_N] = d3.extent(
         topFeatures,
         (d) => d.neutrophil_area
@@ -236,332 +208,268 @@ export class ChartB {
         botFeatures,
         (d) => d.neutrophil_area
       );
-      const topq1_N = d3.quantile(topFeatures, 0.25, (d) => d.neutrophil_area);
-      const botq1_N = d3.quantile(botFeatures, 0.25, (d) => d.neutrophil_area);
-      const topq2_N = d3.quantile(topFeatures, 0.5, (d) => d.neutrophil_area);
-      const botq2_N = d3.quantile(botFeatures, 0.5, (d) => d.neutrophil_area);
-      const topq3_N = d3.quantile(topFeatures, 0.75, (d) => d.neutrophil_area);
-      const botq3_N = d3.quantile(botFeatures, 0.75, (d) => d.neutrophil_area);
 
       //get min and max for y_axis
       const max_AI = d3.max([topmax_I, botmax_I, topmax_A, botmax_A]);
       const max_N = d3.max([topmax_N, botmax_N]);
-      //const min_all = d3.min([topmin_I, botmin_I, topmin_A, botmin_A, topmin_N, botmin_N]);
 
       //draw the coordinate
       this.drawCoordinate({ max_AI, max_N });
       //draw the boxplot
-      this.box_I = this.svg.append("g").attr("transform", "translate(4.5, 0)");
-      this.box_A = this.svg.append("g").attr("transform", "translate(4.5, 0)");
-      this.box_N = this.svg.append("g").attr("transform", "translate(4.5, 0)");
+      this.box_I = this.svg.append("g");
+      this.box_A = this.svg.append("g");
+      this.box_N = this.svg.append("g");
 
       const { yScale, yScale_N, xScale_I, xScale_N, xScale_A } = this;
-      const boxwidth = (this.width - MARGINS.left - MARGINS.right) / 12;
+      //const boxwidth = (this.width - MARGINS.left - MARGINS.right) / 12;
 
-      //Box for interstital area
-      //top
-      this.box_I
-        .append("line")
-        .attr("x1", xScale_I("top"))
-        .attr("x2", xScale_I("top"))
-        .attr("y1", yScale(topmin_I))
-        .attr("y2", yScale(topq1_I))
-        .attr("stroke", "#1f78b4");
+      //function for kernel density estimator
+      function kernelDensityEstimator(kernel, X) {
+        return function (V) {
+          return X.map(function (x) {
+            return [
+              x,
+              d3.mean(V, function (v) {
+                return kernel(x - v);
+              }),
+            ];
+          });
+        };
+      }
+      function kernelGaussian(k) {
+        return function (v) {
+          return (
+            (1 / Math.sqrt(2 * Math.PI)) *
+            (1 / k) *
+            Math.exp(-0.5 * (v / k) * (v / k))
+          );
+        };
+      }
 
-      this.box_I
-        .append("line")
-        .attr("x1", xScale_I("top"))
-        .attr("x2", xScale_I("top"))
-        .attr("y1", yScale(topq3_I))
-        .attr("y2", yScale(topmax_I))
-        .attr("stroke", "#1f78b4");
+      this.kde = kernelDensityEstimator(
+        kernelGaussian(max_AI / 100),
+        yScale.ticks(50)
+      );
+      this.kde_N = kernelDensityEstimator(
+        kernelGaussian(max_N / 100),
+        yScale_N.ticks(50)
+      );
 
-      this.box_I
-        .append("rect")
-        .attr("x", xScale_I("top") - boxwidth / 2)
-        .attr("y", yScale(topq3_I))
-        .attr("height", yScale(topq1_I) - yScale(topq3_I))
-        .attr("width", boxwidth)
-        .attr("stroke", "#1f78b4")
-        .style("fill", "#1f78b4")
-        .attr("fill-opacity", 0.2);
+      //get data for each of them
 
-      this.box_I
-        .selectAll("bars")
-        .data([topmin_I, topmax_I])
-        .enter()
-        .append("line")
-        .attr("x1", xScale_I("top") - boxwidth / 4)
-        .attr("x2", xScale_I("top") + boxwidth / 4)
-        .attr("y1", function (d) {
-          return yScale(d);
+      const density_topI = this.kde(
+        topFeatures.map(function (g) {
+          return g.interstitial_area;
         })
-        .attr("y2", function (d) {
-          return yScale(d);
+      );
+      const density_topA = this.kde(
+        topFeatures.map(function (g) {
+          return g.alveoli_area;
         })
-        .attr("stroke", "#1f78b4");
-
-      this.box_I
-        .append("line")
-        .attr("x1", xScale_I("top") - boxwidth / 2)
-        .attr("x2", xScale_I("top") + boxwidth / 2)
-        .attr("y1", yScale(topq2_I))
-        .attr("y2", yScale(topq2_I))
-        .attr("stroke", "#1f78b4");
-
-      //bottom
-      this.box_I
-        .append("line")
-        .attr("x1", xScale_I("bot"))
-        .attr("x2", xScale_I("bot"))
-        .attr("y1", yScale(botmin_I))
-        .attr("y2", yScale(botq1_I))
-        .attr("stroke", "#1f78b4");
-
-      this.box_I
-        .append("line")
-        .attr("x1", xScale_I("bot"))
-        .attr("x2", xScale_I("bot"))
-        .attr("y1", yScale(botq3_I))
-        .attr("y2", yScale(botmax_I))
-        .attr("stroke", "#1f78b4");
-
-      this.box_I
-        .append("rect")
-        .attr("x", xScale_I("bot") - boxwidth / 2)
-        .attr("y", yScale(botq3_I))
-        .attr("height", yScale(botq1_I) - yScale(botq3_I))
-        .attr("width", boxwidth)
-        .attr("stroke", "#1f78b4")
-        .style("fill", "#1f78b4")
-        .attr("fill-opacity", 0.2);
-
-      this.box_I
-        .selectAll("bars")
-        .data([botmin_I, botmax_I])
-        .enter()
-        .append("line")
-        .attr("x1", xScale_I("bot") - boxwidth / 4)
-        .attr("x2", xScale_I("bot") + boxwidth / 4)
-        .attr("y1", function (d) {
-          return yScale(d);
+      );
+      const density_topN = this.kde_N(
+        topFeatures.map(function (g) {
+          return g.neutrophil_area;
         })
-        .attr("y2", function (d) {
-          return yScale(d);
+      );
+      const density_botI = this.kde(
+        botFeatures.map(function (g) {
+          return g.interstitial_area;
         })
-        .attr("stroke", "#1f78b4");
+      );
+      const density_botA = this.kde(
+        botFeatures.map(function (g) {
+          return g.alveoli_area;
+        })
+      );
+      const density_botN = this.kde_N(
+        botFeatures.map(function (g) {
+          return g.neutrophil_area;
+        })
+      );
+
+      //get the max value for density
+      const maxValue = d3.max([
+        d3.max(density_topI, function (d) {
+          return d[1];
+        }),
+        d3.max(density_topA, function (d) {
+          return d[1];
+        }),
+        d3.max(density_botI, function (d) {
+          return d[1];
+        }),
+        d3.max(density_botA, function (d) {
+          return d[1];
+        }),
+      ]);
+
+      const maxValue_N = d3.max([
+        d3.max(density_topN, function (d) {
+          return d[1];
+        }),
+        d3.max(density_botN, function (d) {
+          return d[1];
+        }),
+      ]);
+
+      //scale for violin
+      this.violinScale = d3
+        .scaleLinear()
+        .range([0, xScale_A.bandwidth()])
+        .domain([-maxValue, maxValue]);
+
+      this.violinScale_N = d3
+        .scaleLinear()
+        .range([0, xScale_N.bandwidth()])
+        .domain([-maxValue_N, maxValue_N]);
+
+      const { violinScale, violinScale_N } = this;
+      this.box_I;
+      //violin for interstitial area
+      this.box_I
+        .selectAll("violin")
+        .data([density_topI])
+        .join("path")
+        .attr("fill", "var(--inter)")
+        .attr("fill-opacity", 0.3)
+        .attr("stroke", 2)
+        .attr(
+          "d",
+          d3
+            .area()
+            .x0(function (d) {
+              return xScale_I("top") + violinScale(-d[1]);
+            })
+            .x1(function (d) {
+              return xScale_I("top") + violinScale(d[1]);
+            })
+            .y(function (d) {
+              return yScale(d[0]);
+            })
+            .curve(d3.curveCatmullRom)
+        );
 
       this.box_I
-        .append("line")
-        .attr("x1", xScale_I("bot") - boxwidth / 2)
-        .attr("x2", xScale_I("bot") + boxwidth / 2)
-        .attr("y1", yScale(botq2_I))
-        .attr("y2", yScale(botq2_I))
-        .attr("stroke", "#1f78b4");
+        .selectAll("violin")
+        .data([density_botI])
+        .join("path")
+        .attr("fill", "var(--inter)")
+        .attr("fill-opacity", 0.3)
+        .attr("stroke", 2)
+        .attr(
+          "d",
+          d3
+            .area()
+            .x0(function (d) {
+              return xScale_I("bot") + violinScale(-d[1]);
+            })
+            .x1(function (d) {
+              return xScale_I("bot") + violinScale(d[1]);
+            })
+            .y(function (d) {
+              return yScale(d[0]);
+            })
+            .curve(d3.curveCatmullRom)
+        );
 
-      //Box for alveoli area
-      //top
+      this.box_A;
+      //violin for interstitial area
       this.box_A
-        .append("line")
-        .attr("x1", xScale_A("top"))
-        .attr("x2", xScale_A("top"))
-        .attr("y1", yScale(topmin_A))
-        .attr("y2", yScale(topq1_A))
-        .attr("stroke", "#C1C1C1");
-
-      this.box_A
-        .append("line")
-        .attr("x1", xScale_A("top"))
-        .attr("x2", xScale_A("top"))
-        .attr("y1", yScale(topq3_A))
-        .attr("y2", yScale(topmax_A))
-        .attr("stroke", "#C1C1C1");
-
-      this.box_A
-        .append("rect")
-        .attr("x", xScale_A("top") - boxwidth / 2)
-        .attr("y", yScale(topq3_A))
-        .attr("height", yScale(topq1_A) - yScale(topq3_A))
-        .attr("width", boxwidth)
-        .attr("stroke", "#C1C1C1")
-        .style("fill", "#C1C1C1")
-        .attr("fill-opacity", 0.2);
-
-      this.box_A
-        .selectAll("bars")
-        .data([topmin_A, topmax_A])
-        .enter()
-        .append("line")
-        .attr("x1", xScale_A("top") - boxwidth / 4)
-        .attr("x2", xScale_A("top") + boxwidth / 4)
-        .attr("y1", function (d) {
-          return yScale(d);
-        })
-        .attr("y2", function (d) {
-          return yScale(d);
-        })
-        .attr("stroke", "#C1C1C1");
-
-      this.box_A
-        .append("line")
-        .attr("x1", xScale_A("top") - boxwidth / 2)
-        .attr("x2", xScale_A("top") + boxwidth / 2)
-        .attr("y1", yScale(topq2_A))
-        .attr("y2", yScale(topq2_A))
-        .attr("stroke", "#C1C1C1");
-
-      //bottom
-      this.box_A
-        .append("line")
-        .attr("x1", xScale_A("bot"))
-        .attr("x2", xScale_A("bot"))
-        .attr("y1", yScale(botmin_A))
-        .attr("y2", yScale(botq1_A))
-        .attr("stroke", "#C1C1C1");
-
-      this.box_A
-        .append("line")
-        .attr("x1", xScale_A("bot"))
-        .attr("x2", xScale_A("bot"))
-        .attr("y1", yScale(botq3_A))
-        .attr("y2", yScale(botmax_A))
-        .attr("stroke", "#C1C1C1");
-
-      this.box_A
-        .append("rect")
-        .attr("x", xScale_A("bot") - boxwidth / 2)
-        .attr("y", yScale(botq3_A))
-        .attr("height", yScale(botq1_A) - yScale(botq3_A))
-        .attr("width", boxwidth)
-        .attr("stroke", "#C1C1C1")
-        .style("fill", "#C1C1C1")
-        .attr("fill-opacity", 0.2);
+        .selectAll("violin")
+        .data([density_topA])
+        .join("path")
+        .attr("fill", "var(--alv)")
+        .attr("fill-opacity", 0.3)
+        .attr("stroke", 2)
+        .attr(
+          "d",
+          d3
+            .area()
+            .x0(function (d) {
+              return xScale_A("top") + violinScale(-d[1]);
+            })
+            .x1(function (d) {
+              return xScale_A("top") + violinScale(d[1]);
+            })
+            .y(function (d) {
+              return yScale(d[0]);
+            })
+            .curve(d3.curveCatmullRom)
+        );
 
       this.box_A
-        .selectAll("bars")
-        .data([botmin_A, botmax_A])
-        .enter()
-        .append("line")
-        .attr("x1", xScale_A("bot") - boxwidth / 4)
-        .attr("x2", xScale_A("bot") + boxwidth / 4)
-        .attr("y1", function (d) {
-          return yScale(d);
-        })
-        .attr("y2", function (d) {
-          return yScale(d);
-        })
-        .attr("stroke", "#C1C1C1");
+        .selectAll("violin")
+        .data([density_botA])
+        .join("path")
+        .attr("fill", "var(--alv)")
+        .attr("fill-opacity", 0.3)
+        .attr("stroke", 2)
+        .attr(
+          "d",
+          d3
+            .area()
+            .x0(function (d) {
+              return xScale_A("bot") + violinScale(-d[1]);
+            })
+            .x1(function (d) {
+              return xScale_A("bot") + violinScale(d[1]);
+            })
+            .y(function (d) {
+              return yScale(d[0]);
+            })
+            .curve(d3.curveCatmullRom)
+        );
 
-      this.box_A
-        .append("line")
-        .attr("x1", xScale_A("bot") - boxwidth / 2)
-        .attr("x2", xScale_A("bot") + boxwidth / 2)
-        .attr("y1", yScale(botq2_A))
-        .attr("y2", yScale(botq2_A))
-        .attr("stroke", "#C1C1C1");
-
-      //Box for Neutrophil area
-      //top
+      this.box_N;
+      //violin for interstitial area
       this.box_N
-        .append("line")
-        .attr("x1", xScale_N("top"))
-        .attr("x2", xScale_N("top"))
-        .attr("y1", yScale_N(topmin_N))
-        .attr("y2", yScale_N(topq1_N))
-        .attr("stroke", "#9CCC9C");
-
-      this.box_N
-        .append("line")
-        .attr("x1", xScale_N("top"))
-        .attr("x2", xScale_N("top"))
-        .attr("y1", yScale_N(topq3_N))
-        .attr("y2", yScale_N(topmax_N))
-        .attr("stroke", "#9CCC9C");
-
-      this.box_N
-        .append("rect")
-        .attr("x", xScale_N("top") - boxwidth / 2)
-        .attr("y", yScale_N(topq3_N))
-        .attr("height", yScale_N(topq1_N) - yScale_N(topq3_N))
-        .attr("width", boxwidth)
-        .attr("stroke", "#9CCC9C")
-        .style("fill", "#9CCC9C")
-        .attr("fill-opacity", 0.2);
+        .selectAll("violin")
+        .data([density_topN])
+        .join("path")
+        .attr("fill", "var(--neut)")
+        .attr("fill-opacity", 0.3)
+        .attr("stroke", 2)
+        .attr(
+          "d",
+          d3
+            .area()
+            .x0(function (d) {
+              return xScale_N("top") + violinScale_N(-d[1]);
+            })
+            .x1(function (d) {
+              return xScale_N("top") + violinScale_N(d[1]);
+            })
+            .y(function (d) {
+              return yScale_N(d[0]);
+            })
+            .curve(d3.curveCatmullRom)
+        );
 
       this.box_N
-        .selectAll("bars")
-        .data([topmin_N, topmax_N])
-        .enter()
-        .append("line")
-        .attr("x1", xScale_N("top") - boxwidth / 4)
-        .attr("x2", xScale_N("top") + boxwidth / 4)
-        .attr("y1", function (d) {
-          return yScale_N(d);
-        })
-        .attr("y2", function (d) {
-          return yScale_N(d);
-        })
-        .attr("stroke", "#9CCC9C");
+        .selectAll("violin")
+        .data([density_botN])
+        .join("path")
+        .attr("fill", "var(--neut)")
+        .attr("fill-opacity", 0.3)
+        .attr("stroke", 2)
+        .attr(
+          "d",
+          d3
+            .area()
+            .x0(function (d) {
+              return xScale_N("bot") + violinScale_N(-d[1]);
+            })
+            .x1(function (d) {
+              return xScale_N("bot") + violinScale_N(d[1]);
+            })
+            .y(function (d) {
+              return yScale_N(d[0]);
+            })
+            .curve(d3.curveCatmullRom)
+        );
 
-      this.box_N
-        .append("line")
-        .attr("x1", xScale_N("top") - boxwidth / 2)
-        .attr("x2", xScale_N("top") + boxwidth / 2)
-        .attr("y1", yScale_N(topq2_N))
-        .attr("y2", yScale_N(topq2_N))
-        .attr("stroke", "#9CCC9C");
-
-      //bottom
-      this.box_N
-        .append("line")
-        .attr("x1", xScale_N("bot"))
-        .attr("x2", xScale_N("bot"))
-        .attr("y1", yScale_N(botmin_N))
-        .attr("y2", yScale_N(botq1_N))
-        .attr("stroke", "#9CCC9C");
-
-      this.box_N
-        .append("line")
-        .attr("x1", xScale_N("bot"))
-        .attr("x2", xScale_N("bot"))
-        .attr("y1", yScale_N(botq3_N))
-        .attr("y2", yScale_N(botmax_N))
-        .attr("stroke", "#9CCC9C");
-
-      this.box_N
-        .append("rect")
-        .attr("x", xScale_N("bot") - boxwidth / 2)
-        .attr("y", yScale_N(botq3_N))
-        .attr("height", yScale_N(botq1_N) - yScale_N(botq3_N))
-        .attr("width", boxwidth)
-        .attr("stroke", "#9CCC9C")
-        .style("fill", "#9CCC9C")
-        .attr("fill-opacity", 0.2);
-
-      this.box_N
-        .selectAll("bars")
-        .data([botmin_N, botmax_N])
-        .enter()
-        .append("line")
-        .attr("x1", xScale_N("bot") - boxwidth / 4)
-        .attr("x2", xScale_N("bot") + boxwidth / 4)
-        .attr("y1", function (d) {
-          return yScale_N(d);
-        })
-        .attr("y2", function (d) {
-          return yScale_N(d);
-        })
-        .attr("stroke", "#9CCC9C");
-
-      this.box_N
-        .append("line")
-        .attr("x1", xScale_N("bot") - boxwidth / 2)
-        .attr("x2", xScale_N("bot") + boxwidth / 2)
-        .attr("y1", yScale_N(botq2_N))
-        .attr("y2", yScale_N(botq2_N))
-        .attr("stroke", "#9CCC9C");
-
-      //console.log("topFeatures", this.topname);
+      console.log("density_topI", density_topI);
     });
   }
 }
