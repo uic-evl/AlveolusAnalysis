@@ -290,6 +290,7 @@ export class FeatureView {
             "visibility",
             fullCycles[cycleLocation.c - 1] ? "visible" : "hidden"
           )
+          .attr("r", 6)
           .attr("cx", this.xScale(cycleLocation.c))
           .attr("cy", this.yScaleAlv(alveoli.mean[cycleLocation.c - 1] || 0));
 
@@ -323,6 +324,7 @@ export class FeatureView {
             "visibility",
             fullCycles[cycleLocation.c - 1] ? "visible" : "hidden"
           )
+          .attr("r", 6)
           .attr("cx", this.xScale(cycleLocation.c))
           .attr(
             "cy",
