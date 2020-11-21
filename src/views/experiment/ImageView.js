@@ -135,8 +135,6 @@ export class ImageView {
           "href",
           `${IMAGE_FOLDER}/${this.name}/${t.toString().padStart(6, "0")}.png`
         );
-    } else {
-      console.log("skip", t);
     }
   }
 }
