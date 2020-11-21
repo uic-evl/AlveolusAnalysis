@@ -7,6 +7,8 @@ export class ImageView {
   contours = [];
   currentTime = 1;
 
+  lastUpdate = performance.now();
+
   constructor({ name, container, data }) {
     this.name = name;
     this.container = container;
@@ -48,80 +50,91 @@ export class ImageView {
   setTime(t) {
     this.currentTime = t;
 
-    this.image.attr(
-      "href",
-      `${IMAGE_FOLDER}/${this.name}/${t.toString().padStart(6, "0")}.png`
-    );
+    const now = performance.now();
 
-    if (this.contours[t - 1]) {
-      this.featureG.attr("visibility", "visible");
-      const {
-        alveoli_location: centers,
-        alveoli_contour_outlines: paths,
-        neutrophil_location: neutCenters,
-        neutrophil_contour_outlines: neutPaths,
-      } = this.contours[t - 1];
+    if (now - this.lastUpdate > 40) {
+      this.container.select(".loader").style("opacity", 1);
 
-      this.featureG
-        .selectAll(".feature")
-        .data(Object.keys(centers))
-        .join("g")
-        .attr("class", "feature")
-        .each(function (id) {
-          const g = d3.select(this);
-          const center = centers[id];
-          const points = paths[id];
+      this.image
+        .on("load", () => {
+          this.lastUpdate = now;
+          this.container.select(".loader").style("opacity", 0);
 
-          g.selectAll("circle")
-            .data([null])
-            .join("circle")
-            .attr("cx", center[0])
-            .attr("cy", center[1])
-            .attr("r", 2)
-            .attr("fill", "white");
+          if (this.contours[t - 1]) {
+            this.featureG.attr("visibility", "visible");
+            const {
+              alveoli_location: centers,
+              alveoli_contour_outlines: paths,
+              neutrophil_location: neutCenters,
+              neutrophil_contour_outlines: neutPaths,
+            } = this.contours[t - 1];
 
-          g.selectAll("path")
-            .data([null])
-            .join("path")
-            .attr(
-              "d",
-              "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
-            )
-            .attr("fill", "none")
-            .attr("stroke", "white")
-            .style("stroke-linejoin", "round");
-        });
+            this.featureG
+              .selectAll(".feature")
+              .data(Object.keys(centers))
+              .join("g")
+              .attr("class", "feature")
+              .each(function (id) {
+                const g = d3.select(this);
+                const center = centers[id];
+                const points = paths[id];
 
-      this.featureG
-        .selectAll(".neut")
-        .data(Object.keys(neutCenters))
-        .join("g")
-        .attr("class", "neut")
-        .each(function (id) {
-          const g = d3.select(this);
-          const points = neutPaths[id];
-          const center = neutCenters[id];
+                g.selectAll("circle")
+                  .data([null])
+                  .join("circle")
+                  .attr("cx", center[0])
+                  .attr("cy", center[1])
+                  .attr("r", 2)
+                  .attr("fill", "white");
 
-          g.selectAll("circle")
-            .data([null])
-            .join("circle")
-            .attr("cx", center[0])
-            .attr("cy", center[1])
-            .attr("r", 2)
-            .attr("fill", "#f00");
+                g.selectAll("path")
+                  .data([null])
+                  .join("path")
+                  .attr(
+                    "d",
+                    "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
+                  )
+                  .attr("fill", "none")
+                  .attr("stroke", "white")
+                  .style("stroke-linejoin", "round");
+              });
 
-          // g.selectAll("path")
-          //   .data([null])
-          //   .join("path")
-          //   .attr(
-          //     "d",
-          //     "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
-          //   )
-          //   .attr("fill", "#f00")
-          //   .style("stroke-linejoin", "round");
-        });
-    } else {
-      this.featureG.attr("visibility", "hidden");
+            this.featureG
+              .selectAll(".neut")
+              .data(Object.keys(neutCenters))
+              .join("g")
+              .attr("class", "neut")
+              .each(function (id) {
+                const g = d3.select(this);
+                const points = neutPaths[id];
+                const center = neutCenters[id];
+
+                g.selectAll("circle")
+                  .data([null])
+                  .join("circle")
+                  .attr("cx", center[0])
+                  .attr("cy", center[1])
+                  .attr("r", 2)
+                  .attr("fill", "#f00");
+
+                // g.selectAll("path")
+                //   .data([null])
+                //   .join("path")
+                //   .attr(
+                //     "d",
+                //     "M " + points.map((p) => p[0].join(", ")).join("L ") + " Z"
+                //   )
+                //   .attr("fill", "#f00")
+                //   .style("stroke-linejoin", "round");
+              });
+          } else {
+            this.featureG.attr("visibility", "hidden");
+          }
+        })
+        .attr(
+          "href",
+          `${IMAGE_FOLDER}/${this.name}/${t.toString().padStart(6, "0")}.png`
+        );
     }
   }
 }

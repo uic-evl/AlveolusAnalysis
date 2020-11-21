@@ -5,6 +5,8 @@ import { FeatureView } from "../views/experiment/FeatureView.js";
 import { FeatureModel } from "../models/FeatureModel.js";
 
 export class ExperimentController {
+  currentTime = 1;
+
   constructor({ name, container }) {
     this.name = name;
     this.data = new FeatureModel({ name });
@@ -28,8 +30,12 @@ export class ExperimentController {
   }
 
   setTime(t) {
-    this.image.setTime(t);
-    this.resp.setTime(t);
-    this.features.setTime(t);
+    if (t !== this.currentTime) {
+      this.currentTime = t;
+
+      this.image.setTime(t);
+      this.resp.setTime(t);
+      this.features.setTime(t);
+    }
   }
 }
