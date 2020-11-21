@@ -68,7 +68,6 @@
   fill: var(--selected);
   stroke-width: 2;
   stroke: white;
-  r: 6;
 }
 
 /* RESPIRATORY CYCLE CHART */
@@ -161,7 +160,7 @@
   margin: 2px 0;
 }
 
-.experiment .image-wrapper .filter-dropdown:focus-within .options {
+.experiment .image-wrapper .filter-dropdown:hover .options {
   display: flex;
   width: 100%;
 }

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <link rel="stylesheet" href="./css/base.css" />
+    <link rel="stylesheet" href="./css/loader.css" />
 
     <link
       rel="apple-touch-icon"
@@ -67,7 +68,7 @@
       </div>
       <div id="top-experiment" class="box dp-1 experiment">
         <div class="feature-charts">
-          <div class="view-title">experiment</div>
+          <div class="view-title">select <strong>top</strong> experiment</div>
           <div class="svg-wrapper">
             <svg width="0" height="0"></svg>
           </div>
@@ -113,6 +114,7 @@
               <button data-value="url(#blue-only)">Blue</button>
             </div>
           </div>
+          <div class="loader lds-dual-ring"></div>
         </div>
       </div>
       <div id="timeline-control" class="box dp-1">
@@ -129,12 +131,18 @@
               background: rgba(31, 120, 180, 0.2);
               padding: 2px 8px;
               margin: 1px;
+              border-radius: 2px;
             "
           >
             interstitial
           </div>
           <div
-            style="border: 1px solid var(--alv); padding: 2px 8px; margin: 1px"
+            style="
+              border: 1px solid var(--alv);
+              padding: 2px 8px;
+              margin: 1px;
+              border-radius: 2px;
+            "
           >
             alveoli
           </div>
@@ -143,6 +151,7 @@
               border: 1px dashed var(--accent);
               padding: 2px 8px;
               margin: 1px;
+              border-radius: 2px;
             "
           >
             resp. cycle
@@ -154,7 +163,7 @@
       </div>
       <div id="bot-experiment" class="box dp-1 experiment">
         <div class="feature-charts">
-          <div class="view-title">experiment</div>
+          <div class="view-title">select <strong>bot</strong> experiment</div>
           <div class="svg-wrapper">
             <svg width="0" height="0"></svg>
           </div>
@@ -177,6 +186,7 @@
               <button data-value="url(#blue-only)">Blue</button>
             </div>
           </div>
+          <div class="loader lds-dual-ring"></div>
         </div>
       </div>
     </div>

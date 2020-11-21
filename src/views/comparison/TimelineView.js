@@ -39,9 +39,17 @@ export class TimelineView {
     this.botTime = bot;
 
     this.topSliderG.attr("transform", `translate(${this.xScale(top)}, 0)`);
-    this.topSliderG.select(".slider-label text").text(top);
+    this.topSliderG
+      .select(".slider-label text")
+      .html(
+        `<tspan style="font-style: italic; font-weight: lighter;">t=</tspan>${top}`
+      );
     this.botSliderG.attr("transform", `translate(${this.xScale(bot)}, 0)`);
-    this.botSliderG.select(".slider-label text").text(bot);
+    this.botSliderG
+      .select(".slider-label text")
+      .html(
+        `<tspan style="font-style: italic; font-weight: lighter;">t=</tspan>${bot}`
+      );
 
     this.onChange({
       top,
@@ -115,7 +123,7 @@ export class TimelineView {
 
     this.yScaleTop = d3
       .scaleLinear()
-      .domain([0, 0.6])
+      .domain([0, 0.5])
       .range([midpoint, MARGINS.top]);
 
     const yAxisTop = d3
@@ -131,7 +139,7 @@ export class TimelineView {
 
     this.yScaleBot = d3
       .scaleLinear()
-      .domain([0, 0.6])
+      .domain([0, 0.5])
       .range([midpoint, this.height - MARGINS.bottom]);
 
     const yAxisBot = d3
@@ -224,7 +232,9 @@ export class TimelineView {
 
     topLabel
       .append("text")
-      .text("1")
+      .html(
+        `<tspan style="font-style: italic; font-weight: lighter;">t=</tspan>1`
+      )
       .attr("font-size", 12)
       .attr("y", -3)
       .attr("text-anchor", "middle");
@@ -267,14 +277,16 @@ export class TimelineView {
 
     botLabel
       .append("text")
-      .text("1")
+      .html(
+        `<tspan style="font-style: italic; font-weight: lighter;">t=</tspan>1`
+      )
       .attr("font-size", 12)
       .attr("y", 11)
       .attr("text-anchor", "middle");
   }
 
   drawPath({ data, scale, name }) {
-    const interstitial = d3.area().y0(scale(0.6)).curve(d3.curveMonotoneX);
+    const interstitial = d3.area().y0(scale(0.5)).curve(d3.curveMonotoneX);
     const air = d3.line().curve(d3.curveMonotoneX);
 
     data
@@ -284,7 +296,7 @@ export class TimelineView {
 
         const ratios = features.map(
           ({ alveoli_area, interstitial_area }) =>
-            alveoli_area / interstitial_area
+            alveoli_area / (alveoli_area + interstitial_area)
         );
 
         this.paths
@@ -320,7 +332,7 @@ export class TimelineView {
           .attr("class", `${name}-minima`)
           .attr("x1", this.xScale)
           .attr("x2", this.xScale)
-          .attr("y1", scale(0.6))
+          .attr("y1", scale(0.5))
           .attr("y2", scale(0))
           .attr("stroke-width", 1)
           .attr("stroke", "var(--accent)")

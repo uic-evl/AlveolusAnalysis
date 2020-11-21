@@ -51,7 +51,10 @@ export class RespCycleView {
           .attr("cx", this.timeScale(loc.t / (cyc.length - 1)))
           .attr(
             "cy",
-            this.yScale(cyc[loc.t].alveoli_area / cyc[loc.t].interstitial_area)
+            this.yScale(
+              cyc[loc.t].alveoli_area /
+                (cyc[loc.t].alveoli_area + cyc[loc.t].interstitial_area)
+            )
           );
       } else {
         this.timePoint.attr("visibility", "hidden");
@@ -124,7 +127,7 @@ export class RespCycleView {
 
     this.yScale = d3
       .scaleLinear()
-      .domain([0, 0.6])
+      .domain([0, 0.5])
       .range([this.height - MARGINS.bottom, MARGINS.top]);
 
     this.colorScale = d3.scaleSequential(d3.interpolatePuBu).domain([0, 1.25]);
@@ -179,9 +182,9 @@ export class RespCycleView {
           .attr("class", (d, i) => `cycle cycle-${i + 1}`)
           .attr("d", (cyc, i) =>
             this.line(
-              cyc.map((t, i) => [
+              cyc.map(({ alveoli_area, interstitial_area }, i) => [
                 this.timeScale(i / (cyc.length - 1)),
-                this.yScale(t.alveoli_area / t.interstitial_area),
+                this.yScale(alveoli_area / (alveoli_area + interstitial_area)),
               ])
             )
           )

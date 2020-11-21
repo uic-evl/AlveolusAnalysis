@@ -149,6 +149,10 @@ button {
   color: #e0e0e0;
   border-radius: 4px;
   padding: 4px;
+
+  box-shadow: 0 0 0 0 var(--accent);
+
+  transition: box-shadow 250ms ease-out;
 }
 
 button:hover {
@@ -156,7 +160,13 @@ button:hover {
   cursor: pointer;
 
   color: white;
-  border-color: var(--accent);
+  /* border-color: var(--accent); */
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--accent);
+  /* border-color: var(--accent); */
 }
 
 #compare {
