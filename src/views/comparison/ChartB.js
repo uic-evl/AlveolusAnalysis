@@ -1,4 +1,4 @@
-//import { ITEMS } from "../../global.js";
+import { NUM_TIMESTEPS } from "../../global.js";
 
 const MARGINS = {
   left: 45,
@@ -224,36 +224,35 @@ export class ChartB {
       //const boxwidth = (this.width - MARGINS.left - MARGINS.right) / 12;
 
       //function for kernel density estimator
-      function kernelDensityEstimator(kernel, X) {
-        return function (V) {
-          return X.map(function (x) {
+      function kernelDensityEstimator(kernel, target) {
+        return function (data) {
+          const dev = d3.deviation(data);
+          return target.map(function (x) {
             return [
               x,
-              d3.mean(V, function (v) {
-                return kernel(x - v);
+              d3.mean(data, function (v) {
+                return kernel(
+                  x - v,
+                  1.06 * Math.pow(NUM_TIMESTEPS, -1 / 5) * dev
+                );
               }),
             ];
           });
         };
       }
-      function kernelGaussian(k) {
-        return function (v) {
+
+      function kernelGaussian() {
+        return function (v, bandwidth) {
           return (
             (1 / Math.sqrt(2 * Math.PI)) *
-            (1 / k) *
-            Math.exp(-0.5 * (v / k) * (v / k))
+            (1 / bandwidth) *
+            Math.exp(-0.5 * (v / bandwidth) * (v / bandwidth))
           );
         };
       }
 
-      this.kde = kernelDensityEstimator(
-        kernelGaussian(max_AI / 100),
-        yScale.ticks(50)
-      );
-      this.kde_N = kernelDensityEstimator(
-        kernelGaussian(max_N / 100),
-        yScale_N.ticks(50)
-      );
+      this.kde = kernelDensityEstimator(kernelGaussian(), yScale.ticks(50));
+      this.kde_N = kernelDensityEstimator(kernelGaussian(), yScale_N.ticks(50));
 
       //get data for each of them
 
