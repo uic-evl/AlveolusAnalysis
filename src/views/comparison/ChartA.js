@@ -41,33 +41,11 @@ export class ChartA {
       .attr("text-anchor", "end")
       .text("Top subtracts bottom");
 
-    console.log("ChartA", this);
-  }
-
-  setTopData({ data }) {
-    this.topData = data;
-
-    this.drawChart();
-  }
-
-  setBotData({ data }) {
-    this.botData = data;
-
-    this.drawChart();
-  }
-
-  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_images }) {
-    this.svg.selectAll("g").remove();
-
-    this.xAxis = this.svg.append("g");
-    this.yAxis = this.svg.append("g");
-
     const gap = 15;
     const titlegap =
       0.1 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
     const yScale_length =
       0.9 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
-
     this.svg
       .append("text")
       .attr("x", MARGINS.left)
@@ -97,6 +75,33 @@ export class ChartA {
       .style("font-style", "italic")
       .style("color", "var(--neut)")
       .text("Neutrophil Area Difference");
+
+    console.log("ChartA", this);
+  }
+
+  setTopData({ data }) {
+    this.topData = data;
+
+    this.drawChart();
+  }
+
+  setBotData({ data }) {
+    this.botData = data;
+
+    this.drawChart();
+  }
+
+  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_images }) {
+    this.svg.selectAll("g").remove();
+
+    this.xAxis = this.svg.append("g");
+    this.yAxis = this.svg.append("g");
+
+    const gap = 15;
+    const titlegap =
+      0.1 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
+    const yScale_length =
+      0.9 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
 
     //y-axis for interstitial area
     this.yScale_I = d3
