@@ -41,33 +41,11 @@ export class ChartA {
       .attr("text-anchor", "end")
       .text("Top subtracts bottom");
 
-    console.log("ChartA", this);
-  }
-
-  setTopData({ data }) {
-    this.topData = data;
-
-    this.drawChart();
-  }
-
-  setBotData({ data }) {
-    this.botData = data;
-
-    this.drawChart();
-  }
-
-  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_images }) {
-    this.svg.selectAll("g").remove();
-
-    this.xAxis = this.svg.append("g");
-    this.yAxis = this.svg.append("g");
-
     const gap = 15;
     const titlegap =
       0.1 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
     const yScale_length =
       0.9 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
-
     this.svg
       .append("text")
       .attr("x", MARGINS.left)
@@ -97,6 +75,33 @@ export class ChartA {
       .style("font-style", "italic")
       .style("color", "var(--neut)")
       .text("Neutrophil Area Difference");
+
+    console.log("ChartA", this);
+  }
+
+  setTopData({ data }) {
+    this.topData = data;
+
+    this.drawChart();
+  }
+
+  setBotData({ data }) {
+    this.botData = data;
+
+    this.drawChart();
+  }
+
+  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_images }) {
+    this.svg.selectAll("g").remove();
+
+    this.xAxis = this.svg.append("g");
+    this.yAxis = this.svg.append("g");
+
+    const gap = 15;
+    const titlegap =
+      0.1 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
+    const yScale_length =
+      0.9 * ((this.height - MARGINS.top - MARGINS.bottom - 3 * gap) / 3);
 
     //y-axis for interstitial area
     this.yScale_I = d3
@@ -237,9 +242,9 @@ export class ChartA {
 
       const { timeScale, yScale_I, yScale_N, yScale_A } = this;
 
-      this.paths_I = this.svg.append("g");
-      this.paths_A = this.svg.append("g");
-      this.paths_N = this.svg.append("g");
+      this.paths_I = this.svg.append("g").attr("class", "interstitial");
+      this.paths_A = this.svg.append("g").attr("class", "alveoli");
+      this.paths_N = this.svg.append("g").attr("class", "neutrophil");
 
       //draw line for interstitial area
       this.paths_I;
@@ -248,9 +253,10 @@ export class ChartA {
         .selectAll("patharea")
         .data([this.diff])
         .join("path")
-        .attr("fill", "#1f78b4")
-        .attr("fill-opacity", 0.2)
-        .attr("stroke", "none")
+        .attr("class", "area")
+        //.attr("fill", "#1f78b4")
+        //.attr("fill-opacity", 0.2)
+        //.attr("stroke", "none")
         .attr(
           "d",
           d3
@@ -271,9 +277,10 @@ export class ChartA {
         .selectAll("pathline")
         .data([this.diff])
         .join("path")
-        .attr("fill", "none")
-        .attr("stroke", "#1f78b4")
-        .attr("stroke-width", 2)
+        .attr("class", "thickline")
+        //.attr("fill", "none")
+        //.attr("stroke", "#1f78b4")
+        //.attr("stroke-width", 2)
         .attr(
           "d",
           d3
@@ -295,9 +302,10 @@ export class ChartA {
         .selectAll("patharea")
         .data([this.diff])
         .join("path")
-        .attr("fill", "#C1C1C1")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", "none")
+        .attr("class", "area")
+        //.attr("fill", "#C1C1C1")
+        //.attr("fill-opacity", 0.3)
+        //.attr("stroke", "none")
         .attr(
           "d",
           d3
@@ -318,9 +326,10 @@ export class ChartA {
         .selectAll("pathline")
         .data([this.diff])
         .join("path")
-        .attr("fill", "none")
-        .attr("stroke", "#C1C1C1")
-        .attr("stroke-width", 2)
+        .attr("class", "thickline")
+        //.attr("fill", "none")
+        //.attr("stroke", "#C1C1C1")
+        //.attr("stroke-width", 2)
         .attr(
           "d",
           d3
@@ -342,9 +351,10 @@ export class ChartA {
         .selectAll("patharea")
         .data([this.diff])
         .join("path")
-        .attr("fill", "#9CCC9C")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", "none")
+        .attr("class", "area")
+        //.attr("fill", "#9CCC9C")
+        //.attr("fill-opacity", 0.3)
+        //.attr("stroke", "none")
         .attr(
           "d",
           d3
@@ -365,9 +375,10 @@ export class ChartA {
         .selectAll("pathline")
         .data([this.diff])
         .join("path")
-        .attr("fill", "none")
-        .attr("stroke", "#9CCC9C")
-        .attr("stroke-width", 2)
+        .attr("class", "thickline")
+        //.attr("fill", "none")
+        //.attr("stroke", "#9CCC9C")
+        //.attr("stroke-width", 2)
         .attr(
           "d",
           d3
@@ -385,7 +396,7 @@ export class ChartA {
         .selectAll(".subtracts-label")
         .text(`difference: ${this.topData.name} – ${this.botData.name}`);
 
-      //console.log("allcycles", topaligned);
+      //console.log("diff", this.diff);
     });
   }
 }

@@ -31,74 +31,6 @@ export class ChartC {
       .attr("font-weight", 300)
       .text("Experiments Trend Comparison");
 
-    console.log("ChartC", this);
-  }
-
-  setTopData({ data }) {
-    this.topData = data;
-
-    this.drawChart();
-  }
-
-  setBotData({ data }) {
-    this.botData = data;
-
-    this.drawChart();
-  }
-
-  drawCoordinate({ min_AI, max_AI, min_N, max_N }) {
-    this.svg.selectAll("g").remove();
-
-    const legendG = this.svg
-      .append("g")
-      .attr("transform", `translate(${MARGINS.left}, ${MARGINS.top - 36})`);
-
-    legendG
-      .append("line")
-      .attr("x1", 0)
-      .attr("y1", 0)
-      .attr("x2", 32)
-      .attr("y2", 0)
-      .attr("stroke", "#ccc")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", 4);
-
-    legendG
-      .append("text")
-      .attr("x", 40)
-      .attr("y", 4)
-      .attr("class", "top-label")
-      .attr("fill", "#ccc")
-      .attr("stroke-width", 4)
-      .attr("font-size", 14)
-      .text("TEST TEST");
-
-    legendG
-      .append("line")
-      .attr("x1", 120)
-      .attr("y1", 0)
-      .attr("x2", 120 + 32)
-      .attr("y2", 0)
-      .attr("stroke", "#ccc")
-      .attr("stroke-dasharray", "5 8")
-      .attr("stroke-linecap", "round")
-      .attr("stroke-width", 4);
-
-    legendG
-      .append("text")
-      .attr("x", 120 + 40)
-      .attr("y", 4)
-      .attr("class", "bot-label")
-      .attr("fill", "#ccc")
-      .attr("stroke-width", 4)
-      .attr("font-size", 14)
-      .text("TEST TEST");
-
-    this.yAxis = this.svg.append("g");
-
-    //const gap =  0.1*(this.height-MARGINS.bottom-MARGINS.top);
-    //const gap =  0.1*(this.width-2*MARGINS.left-2*MARGINS.right);
-    //const ylength = 0.45*(this.height-MARGINS.bottom-MARGINS.top);
     const xlength = 0.5 * (this.width - 2 * MARGINS.left - 2 * MARGINS.right);
 
     const ratioLabel = this.svg
@@ -169,6 +101,76 @@ export class ChartC {
       .attr("font-size", 10)
       .attr("text-anchor", "middle")
       .text("End");
+
+    console.log("ChartC", this);
+  }
+
+  setTopData({ data }) {
+    this.topData = data;
+
+    this.drawChart();
+  }
+
+  setBotData({ data }) {
+    this.botData = data;
+
+    this.drawChart();
+  }
+
+  drawCoordinate({ min_AI, max_AI, min_N, max_N }) {
+    this.svg.selectAll("g").remove();
+
+    const legendG = this.svg
+      .append("g")
+      .attr("transform", `translate(${MARGINS.left}, ${MARGINS.top - 36})`);
+
+    legendG
+      .append("line")
+      .attr("x1", 0)
+      .attr("y1", 0)
+      .attr("x2", 32)
+      .attr("y2", 0)
+      .attr("stroke", "#ccc")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 4);
+
+    legendG
+      .append("text")
+      .attr("x", 40)
+      .attr("y", 4)
+      .attr("class", "top-label")
+      .attr("fill", "#ccc")
+      .attr("stroke-width", 4)
+      .attr("font-size", 14)
+      .text("TEST TEST");
+
+    legendG
+      .append("line")
+      .attr("x1", 120)
+      .attr("y1", 0)
+      .attr("x2", 120 + 32)
+      .attr("y2", 0)
+      .attr("stroke", "#ccc")
+      .attr("stroke-dasharray", "5 8")
+      .attr("stroke-linecap", "round")
+      .attr("stroke-width", 4);
+
+    legendG
+      .append("text")
+      .attr("x", 120 + 40)
+      .attr("y", 4)
+      .attr("class", "bot-label")
+      .attr("fill", "#ccc")
+      .attr("stroke-width", 4)
+      .attr("font-size", 14)
+      .text("TEST TEST");
+
+    this.yAxis = this.svg.append("g");
+
+    //const gap =  0.1*(this.height-MARGINS.bottom-MARGINS.top);
+    //const gap =  0.1*(this.width-2*MARGINS.left-2*MARGINS.right);
+    //const ylength = 0.45*(this.height-MARGINS.bottom-MARGINS.top);
+    const xlength = 0.5 * (this.width - 2 * MARGINS.left - 2 * MARGINS.right);
 
     //y-axis for interstitial area
     this.yScale = d3
