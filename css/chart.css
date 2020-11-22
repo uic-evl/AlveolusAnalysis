@@ -1,0 +1,38 @@
+.compare-chart .interstitial {
+  --feature-color: var(--inter);
+}
+
+.compare-chart .alveoli {
+  --feature-color: var(--alv);
+}
+
+.compare-chart .neutrophil {
+  --feature-color: var(--neut);
+}
+
+.compare-chart .ratio {
+  --feature-color: var(--ratio);
+}
+
+.compare-chart .area {
+  fill: var(--feature-color);
+  fill-opacity: 0.2;
+}
+
+.compare-chart .line {
+  stroke: var(--feature-color);
+  stroke-width: 1;
+  fill: none;
+}
+
+.compare-chart .thickline {
+  stroke: var(--feature-color);
+  stroke-width: 2;
+  fill: none;
+}
+
+.compare-chart .dot {
+  stroke: var(--feature-color);
+  stroke-width: 0.5;
+  fill: black;
+}

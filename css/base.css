@@ -5,6 +5,7 @@
 @import "./animals.css";
 @import "./experiment.css";
 @import "./timeline.css";
+@import "./chart.css";
 
 :root {
   /* --background: #121212; */

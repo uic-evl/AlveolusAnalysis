@@ -97,7 +97,7 @@ export class ChartB {
 
     this.yAxis
       .append("g")
-      .attr("class", "y-axis chart2_yaxis")
+      .attr("class", "y-axis")
       .call(yAxis)
       .attr("transform", `translate(${MARGINS.left}, 0)`);
 
@@ -111,7 +111,7 @@ export class ChartB {
 
     this.yAxis
       .append("g")
-      .attr("class", "y-axis chart2_yaxis")
+      .attr("class", "y-axis")
       .call(yAxis_N)
       .attr("transform", `translate(${this.width - MARGINS.right}, 0)`);
 
@@ -121,7 +121,7 @@ export class ChartB {
       .scaleBand()
       .domain(["top", "bot"])
       .range([MARGINS.left, MARGINS.left + xScale_length])
-      .padding([0.1]);
+      .padding([0.3]);
 
     const xAxis_I = d3.axisBottom(this.xScale_I).tickFormat(function (d) {
       return d === "top" ? topname : botname;
@@ -138,7 +138,7 @@ export class ChartB {
       .scaleBand()
       .domain(["top", "bot"])
       .range([MARGINS.left + xScale_length, MARGINS.left + 2 * xScale_length])
-      .padding([0.1]);
+      .padding([0.3]);
 
     const xAxis_A = d3.axisBottom(this.xScale_A).tickFormat(function (d) {
       return d === "top" ? topname : botname;
@@ -158,7 +158,7 @@ export class ChartB {
         gap + MARGINS.left + 2 * xScale_length,
         gap + MARGINS.left + 3 * xScale_length,
       ])
-      .padding([0.1]);
+      .padding([0.3]);
 
     const xAxis_N = d3.axisBottom(this.xScale_N).tickFormat(function (d) {
       return d === "top" ? topname : botname;
@@ -179,6 +179,235 @@ export class ChartB {
       this.topData.getAllFeatures().catch((err) => []),
       this.botData.getAllFeatures().catch((err) => []),
     ]).then(([topFeatures, botFeatures]) => {
+      //function to draw violin plot for one experiments
+      function violin(
+        svg,
+        name,
+        position,
+        min_I,
+        max_I,
+        min_A,
+        max_A,
+        min_N,
+        max_N,
+        density_I,
+        density_A,
+        density_N
+      ) {
+        //get 5 statistics for interstitial area
+        const q1_I = d3.quantile(name, 0.25, (d) => d.interstitial_area);
+        const q2_I = d3.quantile(name, 0.5, (d) => d.interstitial_area);
+        const q3_I = d3.quantile(name, 0.75, (d) => d.interstitial_area);
+        const IQR_I = q3_I - q1_I;
+
+        //get 5-statistics for alveoli area
+        const q1_A = d3.quantile(name, 0.25, (d) => d.alveoli_area);
+        const q2_A = d3.quantile(name, 0.5, (d) => d.alveoli_area);
+        const q3_A = d3.quantile(name, 0.75, (d) => d.alveoli_area);
+        const IQR_A = q3_A - q1_A;
+
+        //get 5-statistics for neutrophil area
+        const q1_N = d3.quantile(name, 0.25, (d) => d.neutrophil_area);
+        const q2_N = d3.quantile(name, 0.5, (d) => d.neutrophil_area);
+        const q3_N = d3.quantile(name, 0.75, (d) => d.neutrophil_area);
+        const IQR_N = q3_N - q1_N;
+
+        const translate_I = xScale_I(`${position}`);
+        const translate_A = xScale_A(`${position}`);
+        const translate_N = xScale_N(`${position}`);
+
+        const box_I = svg
+          .append("g")
+          .attr("class", "interstitial")
+          .attr("transform", `translate(${translate_I}, 0)`);
+        const box_A = svg
+          .append("g")
+          .attr("transform", `translate(${translate_A}, 0)`)
+          .attr("class", "alveoli");
+        const box_N = svg
+          .append("g")
+          .attr("transform", `translate(${translate_N}, 0)`)
+          .attr("class", "neutrophil");
+
+        //violin for interstitial area
+        box_I
+          .selectAll("violin")
+          .data([density_I])
+          .join("path")
+          .attr("class", "area")
+          //.attr("fill", "var(--inter)")
+          //.attr("fill-opacity", 0.3)
+          //.attr("stroke", 2)
+          .attr(
+            "d",
+            d3
+              .area()
+              .x0(function (d) {
+                return violinScale(-d[1]);
+              })
+              .x1(function (d) {
+                return violinScale(d[1]);
+              })
+              .y(function (d) {
+                return yScale(d[0]);
+              })
+              .curve(d3.curveCatmullRom)
+          );
+        box_I
+          .append("line")
+          .attr("class", "line")
+          .attr("x1", 0.5 * xScale_I.bandwidth())
+          .attr("x2", 0.5 * xScale_I.bandwidth())
+          .attr("y1", yScale(Math.max(q1_I - 1.5 * IQR_I, min_I)))
+          .attr("y2", yScale(q1_I));
+        //.attr("stroke", "var(--inter)");
+        box_I
+          .append("line")
+          .attr("class", "line")
+          .attr("x1", 0.5 * xScale_I.bandwidth())
+          .attr("x2", 0.5 * xScale_I.bandwidth())
+          .attr("y1", yScale(q3_I))
+          .attr("y2", yScale(Math.min(q3_I + 1.5 * IQR_I, max_I)));
+        //.attr("stroke", "var(--inter)");
+
+        box_I
+          .append("line")
+          .attr("class", "thickline")
+          .attr("x1", 0.5 * xScale_I.bandwidth())
+          .attr("x2", 0.5 * xScale_I.bandwidth())
+          .attr("y1", yScale(q3_I))
+          .attr("y2", yScale(q1_I));
+        //.attr("stroke-width", 2);
+        //.attr("stroke", "var(--inter)");
+
+        box_I
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", 0.5 * xScale_I.bandwidth())
+          .attr("cy", yScale(q2_I))
+          .attr("r", 1.5);
+        //.attr("fill", "black");
+
+        //violin for interstitial area
+        box_A
+          .selectAll("violin")
+          .data([density_A])
+          .join("path")
+          .attr("class", "area")
+          //.attr("fill", "var(--alv)")
+          //.attr("fill-opacity", 0.3)
+          //.attr("stroke", 2)
+          .attr(
+            "d",
+            d3
+              .area()
+              .x0(function (d) {
+                return violinScale(-d[1]);
+              })
+              .x1(function (d) {
+                return violinScale(d[1]);
+              })
+              .y(function (d) {
+                return yScale(d[0]);
+              })
+              .curve(d3.curveCatmullRom)
+          );
+        box_A
+          .append("line")
+          .attr("class", "line")
+          .attr("x1", 0.5 * xScale_A.bandwidth())
+          .attr("x2", 0.5 * xScale_A.bandwidth())
+          .attr("y1", yScale(Math.max(q1_A - 1.5 * IQR_A, min_A)))
+          .attr("y2", yScale(q1_A));
+        //.attr("stroke", "#C1C1C1");
+
+        box_A
+          .append("line")
+          .attr("class", "line")
+          .attr("x1", 0.5 * xScale_A.bandwidth())
+          .attr("x2", 0.5 * xScale_A.bandwidth())
+          .attr("y1", yScale(q3_A))
+          .attr("y2", yScale(Math.min(q3_A + 1.5 * IQR_A, max_A)));
+        //.attr("stroke", "#C1C1C1");
+
+        box_A
+          .append("line")
+          .attr("class", "thickline")
+          .attr("x1", 0.5 * xScale_A.bandwidth())
+          .attr("x2", 0.5 * xScale_A.bandwidth())
+          .attr("y1", yScale(q3_A))
+          .attr("y2", yScale(q1_A));
+        //.attr("stroke-width", 2)
+        //.attr("stroke", "#C1C1C1");
+
+        box_A
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", 0.5 * xScale_A.bandwidth())
+          .attr("cy", yScale(q2_A))
+          .attr("r", 1.5);
+        //.attr("fill", "black");
+
+        //violin for interstitial area
+        box_N
+          .selectAll("violin")
+          .data([density_N])
+          .join("path")
+          .attr("class", "area")
+          //.attr("fill", "var(--neut)")
+          //.attr("fill-opacity", 0.3)
+          //.attr("stroke", 2)
+          .attr(
+            "d",
+            d3
+              .area()
+              .x0(function (d) {
+                return violinScale_N(-d[1]);
+              })
+              .x1(function (d) {
+                return violinScale_N(d[1]);
+              })
+              .y(function (d) {
+                return yScale_N(d[0]);
+              })
+              .curve(d3.curveCatmullRom)
+          );
+        box_N
+          .append("line")
+          .attr("class", "line")
+          .attr("x1", 0.5 * xScale_N.bandwidth())
+          .attr("x2", 0.5 * xScale_N.bandwidth())
+          .attr("y1", yScale_N(Math.max(q1_N - 1.5 * IQR_N, min_N)))
+          .attr("y2", yScale_N(q1_N));
+        //.attr("stroke", "var(--neut)");
+        box_N
+          .append("line")
+          .attr("class", "line")
+          .attr("x1", 0.5 * xScale_N.bandwidth())
+          .attr("x2", 0.5 * xScale_N.bandwidth())
+          .attr("y1", yScale_N(q3_N))
+          .attr("y2", yScale_N(Math.min(q3_N + 1.5 * IQR_N, max_N)));
+        //.attr("stroke", "var(--neut)");
+
+        box_N
+          .append("line")
+          .attr("class", "thickline")
+          .attr("x1", 0.5 * xScale_N.bandwidth())
+          .attr("x2", 0.5 * xScale_N.bandwidth())
+          .attr("y1", yScale_N(q3_N))
+          .attr("y2", yScale_N(q1_N));
+        //.attr("stroke-width", 2)
+        //.attr("stroke", "var(--neut)");
+
+        box_N
+          .append("circle")
+          .attr("class", "dot")
+          .attr("cx", 0.5 * xScale_N.bandwidth())
+          .attr("cy", yScale_N(q2_N))
+          .attr("r", 1.5);
+        //.attr("fill", "black");
+      }
+
       //get min max for interstitial area
       const [topmin_I, topmax_I] = d3.extent(
         topFeatures,
@@ -215,13 +444,8 @@ export class ChartB {
 
       //draw the coordinate
       this.drawCoordinate({ max_AI, max_N });
-      //draw the boxplot
-      this.box_I = this.svg.append("g");
-      this.box_A = this.svg.append("g");
-      this.box_N = this.svg.append("g");
 
       const { yScale, yScale_N, xScale_I, xScale_N, xScale_A } = this;
-      //const boxwidth = (this.width - MARGINS.left - MARGINS.right) / 12;
 
       //function for kernel density estimator
       function kernelDensityEstimator(kernel, target) {
@@ -254,8 +478,7 @@ export class ChartB {
       this.kde = kernelDensityEstimator(kernelGaussian(), yScale.ticks(50));
       this.kde_N = kernelDensityEstimator(kernelGaussian(), yScale_N.ticks(50));
 
-      //get data for each of them
-
+      //get the density
       const density_topI = this.kde(
         topFeatures.map(function (g) {
           return g.interstitial_area;
@@ -324,151 +547,38 @@ export class ChartB {
         .domain([-maxValue_N, maxValue_N]);
 
       const { violinScale, violinScale_N } = this;
-      this.box_I;
-      //violin for interstitial area
-      this.box_I
-        .selectAll("violin")
-        .data([density_topI])
-        .join("path")
-        .attr("fill", "var(--inter)")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", 2)
-        .attr(
-          "d",
-          d3
-            .area()
-            .x0(function (d) {
-              return xScale_I("top") + violinScale(-d[1]);
-            })
-            .x1(function (d) {
-              return xScale_I("top") + violinScale(d[1]);
-            })
-            .y(function (d) {
-              return yScale(d[0]);
-            })
-            .curve(d3.curveCatmullRom)
-        );
 
-      this.box_I
-        .selectAll("violin")
-        .data([density_botI])
-        .join("path")
-        .attr("fill", "var(--inter)")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", 2)
-        .attr(
-          "d",
-          d3
-            .area()
-            .x0(function (d) {
-              return xScale_I("bot") + violinScale(-d[1]);
-            })
-            .x1(function (d) {
-              return xScale_I("bot") + violinScale(d[1]);
-            })
-            .y(function (d) {
-              return yScale(d[0]);
-            })
-            .curve(d3.curveCatmullRom)
-        );
+      this.svg.call(
+        violin,
+        topFeatures,
+        "top",
+        topmin_I,
+        topmax_I,
+        topmin_A,
+        topmax_A,
+        topmin_N,
+        topmax_N,
+        density_topI,
+        density_topA,
+        density_topN
+      );
 
-      this.box_A;
-      //violin for interstitial area
-      this.box_A
-        .selectAll("violin")
-        .data([density_topA])
-        .join("path")
-        .attr("fill", "var(--alv)")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", 2)
-        .attr(
-          "d",
-          d3
-            .area()
-            .x0(function (d) {
-              return xScale_A("top") + violinScale(-d[1]);
-            })
-            .x1(function (d) {
-              return xScale_A("top") + violinScale(d[1]);
-            })
-            .y(function (d) {
-              return yScale(d[0]);
-            })
-            .curve(d3.curveCatmullRom)
-        );
+      this.svg.call(
+        violin,
+        botFeatures,
+        "bot",
+        botmin_I,
+        botmax_I,
+        botmin_A,
+        botmax_A,
+        botmin_N,
+        botmax_N,
+        density_botI,
+        density_botA,
+        density_botN
+      );
 
-      this.box_A
-        .selectAll("violin")
-        .data([density_botA])
-        .join("path")
-        .attr("fill", "var(--alv)")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", 2)
-        .attr(
-          "d",
-          d3
-            .area()
-            .x0(function (d) {
-              return xScale_A("bot") + violinScale(-d[1]);
-            })
-            .x1(function (d) {
-              return xScale_A("bot") + violinScale(d[1]);
-            })
-            .y(function (d) {
-              return yScale(d[0]);
-            })
-            .curve(d3.curveCatmullRom)
-        );
-
-      this.box_N;
-      //violin for interstitial area
-      this.box_N
-        .selectAll("violin")
-        .data([density_topN])
-        .join("path")
-        .attr("fill", "var(--neut)")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", 2)
-        .attr(
-          "d",
-          d3
-            .area()
-            .x0(function (d) {
-              return xScale_N("top") + violinScale_N(-d[1]);
-            })
-            .x1(function (d) {
-              return xScale_N("top") + violinScale_N(d[1]);
-            })
-            .y(function (d) {
-              return yScale_N(d[0]);
-            })
-            .curve(d3.curveCatmullRom)
-        );
-
-      this.box_N
-        .selectAll("violin")
-        .data([density_botN])
-        .join("path")
-        .attr("fill", "var(--neut)")
-        .attr("fill-opacity", 0.3)
-        .attr("stroke", 2)
-        .attr(
-          "d",
-          d3
-            .area()
-            .x0(function (d) {
-              return xScale_N("bot") + violinScale_N(-d[1]);
-            })
-            .x1(function (d) {
-              return xScale_N("bot") + violinScale_N(d[1]);
-            })
-            .y(function (d) {
-              return yScale_N(d[0]);
-            })
-            .curve(d3.curveCatmullRom)
-        );
-
-      console.log("density_topI", density_topI);
+      console.log("topmin_A", topmin_A);
     });
   }
 }
