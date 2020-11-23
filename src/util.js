@@ -33,7 +33,7 @@ export function findTimeInCycles(t, cycles) {
   for (let c in cycles) {
     const cycle = cycles[c];
 
-    if (currInd + cycle.length - 1 < t) {
+    if (currInd + cycle.length - 1 <= t) {
       // in next cycle
       currInd += cycle.length - 1;
     } else {
@@ -64,4 +64,10 @@ export function getValueAcrossCycles(
       return func(c[begin]) * weight + func(c[end]) * (1 - weight);
     }
   });
+}
+
+export function getTimeFromCyclePoint(c, progress, cycles) {
+  const cycleOffset = d3.sum(cycles.slice(0, c), (cycle) => cycle.length - 1);
+
+  return cycleOffset + Math.floor(progress * (cycles[c].length - 1)) + 1;
 }

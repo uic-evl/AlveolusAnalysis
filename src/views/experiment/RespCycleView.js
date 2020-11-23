@@ -3,6 +3,7 @@ import {
   chuckFeaturesByMinima,
   findMinimaLocations,
   findTimeInCycles,
+  getTimeFromCyclePoint,
 } from "../../util.js";
 
 const MARGINS = {
@@ -15,9 +16,10 @@ const MARGINS = {
 export class RespCycleView {
   cycles = null;
 
-  constructor({ data, container }) {
+  constructor({ data, container, onSelectTime }) {
     this.data = data;
     this.container = container;
+    this.onSelectTime = onSelectTime;
 
     this.svg = container.select("svg");
     this.svg.selectAll("*").remove();
@@ -177,10 +179,10 @@ export class RespCycleView {
 
         this.paths
           .selectAll(".cycle")
-          .data(cycles.slice(1, -1))
+          .data(cycles.slice(1, -1).map((cyc, i) => ({ cyc, c: i + 1 })))
           .join("path")
-          .attr("class", (d, i) => `cycle cycle-${i + 1}`)
-          .attr("d", (cyc, i) =>
+          .attr("class", ({ c }) => `cycle cycle-${c}`)
+          .attr("d", ({ cyc }, i) =>
             this.line(
               cyc.map(({ alveoli_area, interstitial_area }, i) => [
                 this.timeScale(i / (cyc.length - 1)),
@@ -188,7 +190,17 @@ export class RespCycleView {
               ])
             )
           )
-          .attr("stroke", (d, i) => this.colorScale(i / (cycles.length - 1)));
+          .attr("stroke", (d, i) => this.colorScale(i / (cycles.length - 1)))
+          .on("mouseover", function () {
+            d3.select(this).classed("hovered", true).raise();
+          })
+          .on("mouseleave", function () {
+            !d3.select(this).classed("hovered", false).classed("highlighted") &&
+              d3.select(this).lower();
+          })
+          .on("click", (evt, { c }) =>
+            this.onSelectTime(getTimeFromCyclePoint(c, 0, cycles))
+          );
       })
       .catch(console.error);
   }

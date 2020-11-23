@@ -82,30 +82,7 @@
             height="100%"
             viewBox="0,0,512,512"
             preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <filter id="blue-only">
-                <feColorMatrix
-                  in="SourceGraphic"
-                  type="matrix"
-                  values="0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0.5 0 0
-                      0 0 0 1 0"
-                />
-              </filter>
-              <filter id="red-only">
-                <feColorMatrix
-                  in="SourceGraphic"
-                  type="matrix"
-                  values="1 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
-                />
-              </filter>
-            </defs>
-          </svg>
+          ></svg>
           <div class="filter-dropdown">
             <button class="button">channel ▼</button>
             <div class="options">
@@ -207,5 +184,32 @@
       }
     </script>
     <script src="./src/main.js" type="module"></script>
+    <svg style="width: 0; height: 0; position: absolute">
+      <defs>
+        <filter id="blue-only">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0.5 0 0
+                0 0 0 1 0"
+          />
+        </filter>
+        <filter id="red-only">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 1 0"
+          />
+        </filter>
+        <filter id="blur">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+        </filter>
+      </defs>
+    </svg>
   </body>
 </html>

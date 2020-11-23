@@ -50,11 +50,6 @@ export class TimelineView {
       .html(
         `<tspan style="font-style: italic; font-weight: lighter;">t=</tspan>${bot}`
       );
-
-    this.onChange({
-      top,
-      bot,
-    });
   }
 
   setTopData({ data }) {
@@ -80,7 +75,7 @@ export class TimelineView {
         button.text("Play");
       } else {
         view.playInterval = setInterval(() => {
-          view.setTime({
+          view.onChange({
             top: 1 + (view.topTime % NUM_TIMESTEPS),
             bot: 1 + (view.botTime % NUM_TIMESTEPS),
           });
@@ -92,15 +87,6 @@ export class TimelineView {
   }
 
   setupTimeline() {
-    // this.svg
-    //   .append("rect")
-    //   .attr("x", MARGINS.left)
-    //   .attr("y", MARGINS.top)
-    //   .attr("width", this.width - MARGINS.left - MARGINS.right)
-    //   .attr("height", this.height - MARGINS.top - MARGINS.bottom)
-    //   .style("fill", "none")
-    //   .style("stroke", "orange");
-
     this.paths = this.svg.append("g");
 
     this.axes = this.svg.append("g");
@@ -170,8 +156,7 @@ export class TimelineView {
             Math.min(NUM_TIMESTEPS, Math.round(this.xScale.invert(e.x)))
           );
 
-          // this.topTime = t;
-          this.setTime({ top: t, bot: this.botTime });
+          this.onChange({ top: t, bot: this.botTime });
         })
       );
 
@@ -189,8 +174,7 @@ export class TimelineView {
             Math.min(NUM_TIMESTEPS, Math.round(this.xScale.invert(e.x)))
           );
 
-          // this.topTime = t;
-          this.setTime({ bot: t, top: this.topTime });
+          this.onChange({ bot: t, top: this.topTime });
         })
       );
 

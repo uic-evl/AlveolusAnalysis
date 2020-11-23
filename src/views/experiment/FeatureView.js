@@ -3,6 +3,7 @@ import {
   chuckFeaturesByMinima,
   findTimeInCycles,
   getValueAcrossCycles,
+  getTimeFromCyclePoint,
 } from "../../util.js";
 
 const MARGINS = {
@@ -17,10 +18,11 @@ const PADDING = 12;
 export class FeatureView {
   time = 1;
 
-  constructor({ name, data, container }) {
+  constructor({ name, data, container, onSelectTime }) {
     this.name = name;
     this.data = data;
     this.container = container;
+    this.onSelectTime = onSelectTime;
 
     this.svg = container.select("svg");
     this.svg.selectAll("*").remove();
@@ -174,15 +176,6 @@ export class FeatureView {
       .x((d) => d[0])
       .y0((d) => d[1])
       .y1((d) => d[2]);
-
-    this.alvG
-      .append("circle")
-      .attr("class", "highlighted-cycle")
-      .attr("visibility", "hidden");
-    this.neuG
-      .append("circle")
-      .attr("class", "highlighted-cycle")
-      .attr("visibility", "hidden");
   }
 
   drawChart() {
@@ -225,12 +218,6 @@ export class FeatureView {
 
         const alvExtent = [
           0,
-          // d3.min(
-          //   features,
-          //   ({ areas_per_alveoli }, i) =>
-          //     d3.mean(Object.values(areas_per_alveoli)) -
-          //     2 * d3.deviation(Object.values(areas_per_alveoli))
-          // ),
           d3.max(
             features,
             ({ areas_per_alveoli }, i) =>
@@ -241,12 +228,6 @@ export class FeatureView {
 
         const neuExtent = [
           0,
-          // d3.min(
-          //   features,
-          //   ({ areas_per_neutrophil }, i) =>
-          //     d3.mean(Object.values(areas_per_neutrophil)) -
-          //     2 * d3.deviation(Object.values(areas_per_neutrophil))
-          // ),
           d3.max(
             features,
             ({ areas_per_neutrophil }, i) =>
@@ -258,7 +239,6 @@ export class FeatureView {
         this.updateXAxis([1, fullCycles.length]);
         this.updateYAxisAlv(alvExtent);
         this.updateYAxisNeu(neuExtent);
-        // console.log()
 
         this.alvG
           .select(".ci-area")
@@ -285,14 +265,19 @@ export class FeatureView {
           );
 
         this.alvG
-          .select(".highlighted-cycle")
-          .attr(
-            "visibility",
-            fullCycles[cycleLocation.c - 1] ? "visible" : "hidden"
+          .selectAll(".cycle-dot")
+          .data(d3.range(1, fullCycles.length + 1))
+          .join("circle")
+          .attr("class", "cycle-dot")
+          .classed("highlighted-cycle", (d) => d === cycleLocation.c)
+          .attr("cx", (d) => this.xScale(d))
+          .attr("cy", (d) => this.yScaleAlv(alveoli.mean[d - 1]))
+          .on("click", (evt, d) =>
+            this.onSelectTime(getTimeFromCyclePoint(d, progress, allCycles))
           )
-          .attr("r", 6)
-          .attr("cx", this.xScale(cycleLocation.c))
-          .attr("cy", this.yScaleAlv(alveoli.mean[cycleLocation.c - 1] || 0));
+          .transition()
+          .duration(100)
+          .attr("r", (d) => (d === cycleLocation.c ? 6 : 4));
 
         this.neuG
           .select(".ci-area")
@@ -319,17 +304,19 @@ export class FeatureView {
           );
 
         this.neuG
-          .select(".highlighted-cycle")
-          .attr(
-            "visibility",
-            fullCycles[cycleLocation.c - 1] ? "visible" : "hidden"
+          .selectAll(".cycle-dot")
+          .data(d3.range(1, fullCycles.length + 1))
+          .join("circle")
+          .attr("class", "cycle-dot")
+          .classed("highlighted-cycle", (d) => d === cycleLocation.c)
+          .attr("cx", (d) => this.xScale(d))
+          .attr("cy", (d) => this.yScaleNeu(neutrophil.mean[d - 1]))
+          .on("click", (evt, d) =>
+            this.onSelectTime(getTimeFromCyclePoint(d, progress, allCycles))
           )
-          .attr("r", 6)
-          .attr("cx", this.xScale(cycleLocation.c))
-          .attr(
-            "cy",
-            this.yScaleNeu(neutrophil.mean[cycleLocation.c - 1] || 0)
-          );
+          .transition()
+          .duration(100)
+          .attr("r", (d) => (d === cycleLocation.c ? 6 : 4));
       })
       .catch(console.error);
   }

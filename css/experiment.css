@@ -64,6 +64,19 @@
   fill: none;
 }
 
+.experiment .feature-charts .cycle-dot {
+  fill: var(--feature-color);
+  stroke-width: 4px;
+  stroke: transparent;
+}
+
+.experiment .feature-charts .cycle-dot:hover {
+  /* fill: var(--feature-color); */
+  stroke-width: 4px;
+  stroke: var(--feature-color);
+  cursor: pointer;
+}
+
 .experiment .feature-charts .highlighted-cycle {
   fill: var(--selected);
   stroke-width: 2;
@@ -99,16 +112,32 @@
 
 .experiment .resp-cycle .cycle {
   fill: none;
-  stroke-opacity: 0.5;
+  stroke-opacity: 0.3;
   stroke-width: 2;
 
   transition: stroke 250ms ease-out;
+
+  pointer-events: visibleStroke;
+  cursor: pointer;
+
+  filter: url(#blur);
+}
+
+.experiment .resp-cycle .cycle.hovered {
+  stroke: white;
+  stroke-opacity: 1;
+  stroke-width: 4;
+
+  filter: none;
 }
 
 .experiment .resp-cycle .cycle.highlighted {
   stroke: var(--selected);
   stroke-opacity: 1;
   stroke-width: 6;
+
+  pointer-events: none;
+  filter: none;
 }
 
 /* IMAGE VIEWER */

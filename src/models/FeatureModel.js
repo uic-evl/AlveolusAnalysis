@@ -1,3 +1,5 @@
+import { NUM_TIMESTEPS } from "../global.js";
+
 const FEATURE_SETS = {};
 
 export class FeatureModel {
@@ -9,7 +11,10 @@ export class FeatureModel {
     if (!FEATURE_SETS[this.name]) {
       FEATURE_SETS[this.name] = fetch(`./test_data/features/${this.name}.json`)
         .then((res) => res.json())
-        .then((features) => (FEATURE_SETS[this.name] = features));
+        .then(
+          (features) =>
+            (FEATURE_SETS[this.name] = features.slice(0, NUM_TIMESTEPS))
+        );
     }
 
     if (FEATURE_SETS[this.name] instanceof Promise) {
