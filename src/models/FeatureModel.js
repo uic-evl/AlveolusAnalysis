@@ -13,7 +13,7 @@ export class FeatureModel {
         .then((res) => res.json())
         .then(
           (features) =>
-            (FEATURE_SETS[this.name] = features.slice(0, NUM_TIMESTEPS))
+            (FEATURE_SETS[this.name] = features.slice(0, NUM_TIMESTEPS + 1))
         );
     }
 

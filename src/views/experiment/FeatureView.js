@@ -84,6 +84,8 @@ export class FeatureView {
       .attr("y", MARGINS.top - 6)
       .attr("font-size", 12)
       .attr("font-weight", 300)
+      .attr("font-style", "italic")
+      .style("fill", "var(--alv)")
       .text("Mean Alveolus Area");
 
     this.alvG
@@ -119,6 +121,8 @@ export class FeatureView {
       .attr("y", MARGINS.top - 6)
       .attr("font-size", 12)
       .attr("font-weight", 300)
+      .attr("font-style", "italic")
+      .style("fill", "var(--neut)")
       .text("Mean Neutrophil Area");
 
     this.neuG

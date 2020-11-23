@@ -38,13 +38,48 @@ export class TimelineView {
     this.topTime = top;
     this.botTime = bot;
 
-    this.topSliderG.attr("transform", `translate(${this.xScale(top)}, 0)`);
+    this.topSliderG.attr(
+      "transform",
+      `translate(${this.xScale(top)}, ${this.yScaleTop.range()[1] - 2})`
+    );
+
+    this.topSliderG
+      .select(".slider-label")
+      .style(
+        "transform",
+        `translate(${
+          this.xScale(top) - 20 < this.xScale.range()[0]
+            ? 20 - (this.xScale(top) - this.xScale.range()[0])
+            : this.xScale.range()[1] - this.xScale(top) < 20
+            ? -20 + (this.xScale.range()[1] - this.xScale(top))
+            : 0
+        }px, 0px)`
+      );
+
     this.topSliderG
       .select(".slider-label text")
       .html(
         `<tspan style="font-style: italic; font-weight: lighter;">t=</tspan>${top}`
       );
-    this.botSliderG.attr("transform", `translate(${this.xScale(bot)}, 0)`);
+
+    this.botSliderG.attr(
+      "transform",
+      `translate(${this.xScale(bot)}, ${this.yScaleBot.range()[1] + 2})`
+    );
+
+    this.botSliderG
+      .select(".slider-label")
+      .style(
+        "transform",
+        `translate(${
+          this.xScale(bot) - 20 < this.xScale.range()[0]
+            ? 20 - (this.xScale(bot) - this.xScale.range()[0])
+            : this.xScale.range()[1] - this.xScale(bot) < 20
+            ? -20 + (this.xScale.range()[1] - this.xScale(bot))
+            : 0
+        }px, 0px)`
+      );
+
     this.botSliderG
       .select(".slider-label text")
       .html(
@@ -181,28 +216,28 @@ export class TimelineView {
     this.topSliderG = this.svg
       .append("g")
       .attr("class", "slider")
-      .attr("transform", `translate(${MARGINS.left}, 0)`);
+      .attr("transform", `translate(${MARGINS.left}, ${topRange[1] - 2})`);
 
     this.topSliderG
       .append("line")
       .attr("class", "slider-bg")
-      .attr("y1", topRange[1] - 2)
-      .attr("y2", topRange[0])
+      .attr("y1", 0)
+      .attr("y2", topRange[0] - topRange[1] + 2)
       .attr("x1", 0)
       .attr("x2", 0);
 
     this.topSliderG
       .append("line")
       .attr("class", "slider-line")
-      .attr("y1", topRange[1] - 2)
-      .attr("y2", topRange[0])
+      .attr("y1", 0)
+      .attr("y2", topRange[0] - topRange[1] + 2)
       .attr("x1", 0)
       .attr("x2", 0);
 
     const topLabel = this.topSliderG
       .append("g")
       .attr("class", "slider-label")
-      .attr("transform", `translate(0, ${topRange[1] - 2})`);
+      .style("transform", `translate(0px, 0px)`);
 
     topLabel
       .append("rect")
@@ -226,28 +261,28 @@ export class TimelineView {
     this.botSliderG = this.svg
       .append("g")
       .attr("class", "slider")
-      .attr("transform", `translate(${MARGINS.left}, 0)`);
+      .attr("transform", `translate(${MARGINS.left}, ${botRange[1] + 2})`);
 
     this.botSliderG
       .append("line")
       .attr("class", "slider-bg")
-      .attr("y1", botRange[1] + 2)
-      .attr("y2", botRange[0])
+      .attr("y1", 0)
+      .attr("y2", botRange[0] - botRange[1] - 2)
       .attr("x1", 0)
       .attr("x2", 0);
 
     this.botSliderG
       .append("line")
       .attr("class", "slider-line")
-      .attr("y1", botRange[1])
-      .attr("y2", botRange[0])
+      .attr("y1", 0)
+      .attr("y2", botRange[0] - botRange[1] - 2)
       .attr("x1", 0)
       .attr("x2", 0);
 
     const botLabel = this.botSliderG
       .append("g")
       .attr("class", "slider-label")
-      .attr("transform", `translate(0, ${botRange[1] + 2})`);
+      .style("transform", `translate(0px, 0px)`);
 
     botLabel
       .append("rect")

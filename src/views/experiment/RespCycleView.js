@@ -94,15 +94,15 @@ export class RespCycleView {
       .append("tspan")
       .style("color", "var(--alv)")
       .style("font-style", "italic")
-      .text("Alveolar");
+      .text("Alveolar Area %");
 
-    axisLabel.append("tspan").text(" / ");
+    // axisLabel.append("tspan").text(" / ");
 
-    axisLabel
-      .append("tspan")
-      .style("font-style", "italic")
-      .style("color", "var(--inter)")
-      .text("Interstitial");
+    // axisLabel
+    //   .append("tspan")
+    //   .style("font-style", "italic")
+    //   .style("color", "var(--inter)")
+    //   .text("Interstitial");
 
     this.svg
       .append("line")
