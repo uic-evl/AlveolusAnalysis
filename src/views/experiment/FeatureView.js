@@ -71,7 +71,7 @@ export class FeatureView {
 
     this.svg
       .append("circle")
-      .attr("class", "highlighted-cycle")
+      .attr("class", "cycle-dot highlighted-cycle")
       .attr("r", 6)
       .attr("cx", this.width - 12)
       .attr("cy", MARGINS.top + 6);

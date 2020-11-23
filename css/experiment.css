@@ -77,7 +77,7 @@
   cursor: pointer;
 }
 
-.experiment .feature-charts .highlighted-cycle {
+.experiment .feature-charts .cycle-dot.highlighted-cycle {
   fill: var(--selected);
   stroke-width: 2;
   stroke: white;
