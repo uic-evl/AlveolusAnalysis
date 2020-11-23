@@ -15,6 +15,7 @@ export class TimelineView {
   botTime = 1;
   topTime = 1;
   playInterval = undefined;
+  playSpeed = 10; // images per second
 
   constructor({ container, onChange }) {
     this.container = container;
@@ -32,6 +33,7 @@ export class TimelineView {
 
     this.setupControls();
     this.setupTimeline();
+    this.setTime({ top: 1, bot: 1 });
   }
 
   setTime({ top, bot }) {
@@ -97,6 +99,32 @@ export class TimelineView {
     this.drawPath({ data, scale: this.yScaleBot, name: "bot-path" });
   }
 
+  play() {
+    if (this.playInterval) {
+      clearInterval(this.playInterval);
+      this.playInterval = undefined;
+    }
+
+    this.onChange({
+      top: 1 + (this.topTime % NUM_TIMESTEPS),
+      bot: 1 + (this.botTime % NUM_TIMESTEPS),
+    });
+
+    this.playInterval = setInterval(() => {
+      this.onChange({
+        top: 1 + (this.topTime % NUM_TIMESTEPS),
+        bot: 1 + (this.botTime % NUM_TIMESTEPS),
+      });
+    }, 1000 / this.playSpeed);
+  }
+
+  pause() {
+    if (this.playInterval) {
+      clearInterval(this.playInterval);
+      this.playInterval = undefined;
+    }
+  }
+
   setupControls() {
     const view = this;
 
@@ -104,19 +132,49 @@ export class TimelineView {
       const button = d3.select(this);
 
       if (view.playInterval) {
-        clearInterval(view.playInterval);
-        view.playInterval = undefined;
-
+        view.pause();
         button.text("Play");
       } else {
-        view.playInterval = setInterval(() => {
-          view.onChange({
-            top: 1 + (view.topTime % NUM_TIMESTEPS),
-            bot: 1 + (view.botTime % NUM_TIMESTEPS),
-          });
-        }, 100);
-
+        view.play();
         button.text("Pause");
+      }
+    });
+
+    this.container.select("#step-forward").on("click", function () {
+      view.onChange({
+        top: (view.topTime + 1) % NUM_TIMESTEPS,
+        bot: (view.botTime + 1) % NUM_TIMESTEPS,
+      });
+    });
+
+    this.container.select("#step-back").on("click", function () {
+      view.onChange({
+        top: (NUM_TIMESTEPS + view.topTime - 1) % NUM_TIMESTEPS,
+        bot: (NUM_TIMESTEPS + view.botTime - 1) % NUM_TIMESTEPS,
+      });
+    });
+
+    this.container.select("#slow-down").on("click", function () {
+      if (view.playSpeed > 1) {
+        view.playSpeed--;
+
+        if (view.playInterval) {
+          view.play();
+        }
+
+        view.container.select("#speed-label").text(`${view.playSpeed}/s`);
+      }
+    });
+
+    this.container.select("#speed-up").on("click", function () {
+      if (view.playSpeed < 20) {
+        view.playSpeed++;
+
+        if (view.playInterval) {
+          view.play();
+        }
+
+        view.container.select("#speed-label").text(`${view.playSpeed}/s`);
       }
     });
   }
