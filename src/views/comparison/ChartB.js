@@ -1,4 +1,5 @@
 import { NUM_TIMESTEPS } from "../../global.js";
+import { findMaximaLocations } from "../../util.js";
 
 const MARGINS = {
   left: 45,
@@ -62,6 +63,11 @@ export class ChartB {
       .style("color", "var(--neut)")
       .attr("text-anchor", "middle")
       .text("Neutrophil Area");
+
+    this.container.select("#violin-maxima").on("click", (event) => {
+      this.checkvalue = event.target.checked;
+      this.drawChart();
+    });
 
     console.log("ChartB", this);
   }
@@ -182,6 +188,13 @@ export class ChartB {
       this.topData.getAllFeatures().catch((err) => []),
       this.botData.getAllFeatures().catch((err) => []),
     ]).then(([topFeatures, botFeatures]) => {
+      if (this.checkvalue) {
+        const topmaxima = findMaximaLocations(topFeatures);
+        const botmaxima = findMaximaLocations(botFeatures);
+        topFeatures = topmaxima.map((m) => topFeatures[m]);
+        botFeatures = botmaxima.map((m) => botFeatures[m]);
+      } else {
+      }
       //function to draw violin plot for one experiments
       function violin(
         svg,
