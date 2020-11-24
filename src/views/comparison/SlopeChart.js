@@ -7,7 +7,7 @@ const MARGINS = {
   right: 45,
 };
 
-export class ChartC {
+export class SlopeChart {
   topData = null;
   botData = null;
 
@@ -29,7 +29,7 @@ export class ChartC {
       .attr("y", 24)
       .attr("font-size", 16)
       .attr("font-weight", 300)
-      .text("Experiments Trend Comparison");
+      .text("Area Change Start-to-End");
 
     const xlength = 0.5 * (this.width - 2 * MARGINS.left - 2 * MARGINS.right);
 
