@@ -52,12 +52,12 @@ export class ImageView {
 
     const now = performance.now();
 
-    if (now - this.lastUpdate > 40) {
+    if (now - this.lastUpdate > 20) {
       this.container.select(".loader").style("opacity", 1);
 
+      this.lastUpdate = now;
       this.image
         .on("load", () => {
-          this.lastUpdate = now;
           this.container.select(".loader").style("opacity", 0);
 
           if (this.contours[t - 1]) {

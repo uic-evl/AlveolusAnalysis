@@ -198,15 +198,15 @@ function rotatePoint(x, deg) {
 
 const domains = {
   // mean # alv across time
-  meanAlvCount: [15, 25],
+  meanAlvCount: [20, 50],
   // mean # neut across time
-  meanNeutCount: [0, 20],
+  meanNeutCount: [0, 10],
   // max diff min/max air %
-  maxAirPercent: [45, 55],
+  maxAirPercent: [45, 65],
   // max of (mean neut area per cycle) across cycles
   maxNeutArea: [0, 200],
   // abs difference in air % - start to end (max point in cycle)
-  absAirPercentChange: [-5, 5],
+  absAirPercentChange: [-10, 5],
   // neut area change % - start to end  (mean per cycle)
   neutAreaChange: [-500, 500],
 };

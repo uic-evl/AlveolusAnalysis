@@ -49,6 +49,9 @@
 
       <div id="animals" class="box image-pane dp-1">
         <div class="view-title">experiments</div>
+        <div class="view-title" style="font-size: 12px; padding: 2px 4px">
+          hover on axis for info
+        </div>
         <div class="list"></div>
       </div>
 
@@ -98,30 +101,7 @@
             height="100%"
             viewBox="0,0,512,512"
             preserveAspectRatio="xMidYMid meet"
-          >
-            <defs>
-              <filter id="blue-only">
-                <feColorMatrix
-                  in="SourceGraphic"
-                  type="matrix"
-                  values="0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0.5 0 0
-                      0 0 0 1 0"
-                />
-              </filter>
-              <filter id="red-only">
-                <feColorMatrix
-                  in="SourceGraphic"
-                  type="matrix"
-                  values="1 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 0 0
-                      0 0 0 1 0"
-                />
-              </filter>
-            </defs>
-          </svg>
+          ></svg>
           <div class="filter-dropdown">
             <button class="button">channel ▼</button>
             <div class="options">
@@ -135,8 +115,16 @@
       </div>
       <div id="timeline-control" class="box dp-1">
         <div class="controls">
-          <span>time controls</span>
-          <button id="play-button">play</button>
+          <div id="time-buttons">
+            <button id="step-back">&#9664;</button>
+            <button id="play-button">play</button>
+            <button id="step-forward">&#9654;</button>
+          </div>
+          <div id="speed-buttons">
+            <button id="slow-down">-</button>
+            <span id="speed-label">10/s</span>
+            <button id="speed-up">+</button>
+          </div>
 
           <span style="margin-top: auto; font-style: italic; margin-bottom: 2px"
             >legend</span
@@ -223,5 +211,32 @@
       }
     </script>
     <script src="./src/main.js" type="module"></script>
+    <svg style="width: 0; height: 0; position: absolute">
+      <defs>
+        <filter id="blue-only">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="0 0 0 0 0
+                0 0 0 0 0
+                0 0 0.5 0 0
+                0 0 0 1 0"
+          />
+        </filter>
+        <filter id="red-only">
+          <feColorMatrix
+            in="SourceGraphic"
+            type="matrix"
+            values="1 0 0 0 0
+                0 0 0 0 0
+                0 0 0 0 0
+                0 0 0 1 0"
+          />
+        </filter>
+        <filter id="blur">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="3" />
+        </filter>
+      </defs>
+    </svg>
   </body>
 </html>
