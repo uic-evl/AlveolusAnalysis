@@ -41,6 +41,8 @@ export class ComparisonController {
     this.topExperiment = new ExperimentController({
       name,
       container: d3.select("#top-experiment"),
+      onSelectTime: (t) =>
+        this.onTimeChange({ top: t, bot: this.botExperiment.currentTime }),
     });
 
     const data = new FeatureModel({ name });
@@ -55,6 +57,8 @@ export class ComparisonController {
     this.botExperiment = new ExperimentController({
       name,
       container: d3.select("#bot-experiment"),
+      onSelectTime: (t) =>
+        this.onTimeChange({ bot: t, top: this.topExperiment.currentTime }),
     });
 
     const data = new FeatureModel({ name });
@@ -73,5 +77,7 @@ export class ComparisonController {
     if (this.botExperiment) {
       this.botExperiment.setTime(bot);
     }
+
+    this.timeline.setTime({ top, bot });
   }
 }
