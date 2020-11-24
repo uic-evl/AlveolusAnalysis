@@ -37,6 +37,8 @@
   fill: black;
 }
 
+/*https://codepen.io/GeoffreyCrofte/pen/BiHzp*/
+
 /* Base for label styling */
 .compare-chart #violin-maxima:not(:checked),
 .compare-chart #violin-maxima:checked {
