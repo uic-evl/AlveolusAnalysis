@@ -36,3 +36,62 @@
   stroke-width: 0.5;
   fill: black;
 }
+
+/* Base for label styling */
+.compare-chart #violin-maxima:not(:checked),
+.compare-chart #violin-maxima:checked {
+  position: absolute;
+  left: -9999px;
+}
+.compare-chart #violin-maxima:not(:checked) + label,
+.compare-chart #violin-maxima:checked + label {
+  position: relative;
+  padding-left: 1.95em;
+  cursor: pointer;
+}
+
+/* checkbox aspect */
+.compare-chart #violin-maxima:not(:checked) + label:before,
+.compare-chart #violin-maxima:checked + label:before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: -1px;
+  width: 1em;
+  height: 1em;
+  background: #fff1;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  box-shadow: 0 0 0 0 var(--accent);
+  transition: box-shadow 250ms ease-out;
+}
+/* checked mark aspect */
+.compare-chart #violin-maxima:not(:checked) + label:after,
+.compare-chart #violin-maxima:checked + label:after {
+  content: "\2713\0020";
+  position: absolute;
+  top: 0.1em;
+  left: 0.6em;
+  font-size: 1em;
+  line-height: 0.8;
+  color: #00ffff77;
+  transition: all 0.2s;
+  font-family: "Lucida Sans Unicode", "Arial Unicode MS", Arial;
+}
+/* checked mark aspect changes */
+.compare-chart #violin-maxima:not(:checked) + label:after {
+  opacity: 0;
+  transform: scale(0);
+}
+.compare-chart #violin-maxima:checked + label:after {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* hover style just for information */
+.compare-chart label:hover:before {
+  box-shadow: 0 0 2px 1px var(--accent) !important;
+  cursor: pointer;
+
+  color: white;
+}
