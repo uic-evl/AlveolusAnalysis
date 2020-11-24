@@ -48,17 +48,17 @@ export class ChartC {
 
     ratioLabel
       .append("tspan")
-      .style("color", "var(--alv)")
       .style("font-style", "italic")
-      .text("Alveolar");
+      .style("color", "var(--inter)")
+      .text("Interstitial");
 
     ratioLabel.append("tspan").text(" / ");
 
     ratioLabel
       .append("tspan")
       .style("font-style", "italic")
-      .style("color", "var(--inter)")
-      .text("Interstitial");
+      .style("color", "white")
+      .text("Total");
 
     this.svg
       .append("text")
@@ -248,7 +248,7 @@ export class ChartC {
       const botstart_A = d3.mean(botcycles[1], (d) => d.alveoli_area);
       const botstart_N = d3.mean(botcycles[1], (d) => d.neutrophil_area);
 
-      //get mean values from first cycle
+      //get mean values from last cycle
       //top
       const topend_I = d3.mean(
         topcycles[topcycles.length - 2],
@@ -277,10 +277,10 @@ export class ChartC {
       );
 
       const [min_AI, max_AI] = d3.extent([
-        topstart_A / topstart_I,
-        botstart_A / botstart_I,
-        topend_A / topend_I,
-        botend_A / botend_I,
+        topstart_I / (topstart_I + topstart_A),
+        botstart_I / (botstart_I + botstart_A),
+        topend_I / (topend_I + topend_A),
+        botend_I / (botend_I + botend_A),
       ]);
       const [min_N, max_N] = d3.extent([
         topstart_N,
@@ -301,8 +301,8 @@ export class ChartC {
         .append("line")
         .attr("x1", MARGINS.left)
         .attr("x2", MARGINS.left + xlength)
-        .attr("y1", yScale(topstart_A / topstart_I))
-        .attr("y2", yScale(topend_A / topend_I))
+        .attr("y1", yScale(topstart_I / (topstart_I + topstart_A)))
+        .attr("y2", yScale(topend_I / (topend_I + topend_A)))
         .attr("stroke", "#F4BC1C")
         .attr("stroke-linecap", "round")
         .attr("stroke-width", 4);
@@ -311,8 +311,8 @@ export class ChartC {
         .append("line")
         .attr("x1", MARGINS.left)
         .attr("x2", MARGINS.left + xlength)
-        .attr("y1", yScale(botstart_A / botstart_I))
-        .attr("y2", yScale(botend_A / botend_I))
+        .attr("y1", yScale(botstart_I / (botstart_I + botstart_A)))
+        .attr("y2", yScale(botend_I / (botend_I + botend_A)))
         .attr("stroke", "#F4BC1C")
         .attr("stroke-dasharray", "5 8")
         .attr("stroke-linecap", "round")

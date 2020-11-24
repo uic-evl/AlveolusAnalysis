@@ -60,8 +60,23 @@
           <!--<div class="view-title">Chart 1</div>-->
           <svg width="0" height="0"></svg>
         </div>
-        <div id="compare-chart-b" class="box image-pane dp-1 compare-chart">
+        <div
+          id="compare-chart-b"
+          class="box image-pane dp-1 compare-chart"
+          style="position: relative"
+        >
           <!--<div class="view-title">Chart B</div>-->
+          <div
+            style="position: absolute; top: 10px; right: 10px; font-size: 12px"
+          >
+            <input
+              type="checkbox"
+              id="violin-maxima"
+              name="violin-maxima"
+              value="violin-maxima"
+            />
+            <label style="font-weight: 300" for="violin-maxima">Maxima</label>
+          </div>
           <svg width="0" height="0"></svg>
         </div>
         <div id="compare-chart-c" class="box image-pane dp-1 compare-chart">

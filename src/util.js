@@ -16,6 +16,24 @@ export function findMinimaLocations(features) {
   return minima;
 }
 
+export function findMaximaLocations(features) {
+  const maxima = [];
+
+  for (let i = 0; i < features.length; i++) {
+    const timesteps = d3
+      .range(i - 5, i + 6)
+      .filter((t) => t >= 0 && t < features.length);
+
+    const max = d3.maxIndex(timesteps, (t) => features[t].alveoli_area);
+
+    if (timesteps[max] === i && i !== 0 && i !== features.length - 1) {
+      maxima.push(i + 1);
+    }
+  }
+
+  return maxima;
+}
+
 export function chuckFeaturesByMinima(features, minima) {
   return [
     features.slice(0, minima[0]),
