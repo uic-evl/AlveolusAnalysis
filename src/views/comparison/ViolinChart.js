@@ -7,7 +7,7 @@ const MARGINS = {
   bottom: 25,
   right: 45,
 };
-export class ChartB {
+export class ViolinChart {
   topData = null;
   botData = null;
 
@@ -29,7 +29,7 @@ export class ChartB {
       .attr("y", MARGINS.top - 28)
       .attr("font-size", 16)
       .attr("font-weight", 300)
-      .text("Experiments Overall Comparison");
+      .text("Feature Area Distribution");
 
     const xScale_length = 0.3 * (this.width - MARGINS.left - MARGINS.right);
     const gap = 0.1 * (this.width - MARGINS.left - MARGINS.right);

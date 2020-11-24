@@ -5,9 +5,9 @@ import { FeatureModel } from "../models/FeatureModel.js";
 import { MouseView } from "../views/MouseView.js";
 import { TimelineView } from "../views/comparison/TimelineView.js";
 
-import { ChartA } from "../views/comparison/ChartA.js";
-import { ChartB } from "../views/comparison/ChartB.js";
-import { ChartC } from "../views/comparison/ChartC.js";
+import { DifferenceChart } from "../views/comparison/DifferenceChart.js";
+import { ViolinChart } from "../views/comparison/ViolinChart.js";
+import { SlopeChart } from "../views/comparison/SlopeChart.js";
 
 export class ComparisonController {
   topExperiment = null;
@@ -25,14 +25,15 @@ export class ComparisonController {
       onChange: this.onTimeChange.bind(this),
     });
 
-    // these names can change once we know exactly what they are
-    this.chartA = new ChartA({
+    this.diffChart = new DifferenceChart({
       container: d3.select("#compare #compare-chart-a"),
     });
-    this.chartB = new ChartB({
+
+    this.violinChart = new ViolinChart({
       container: d3.select("#compare #compare-chart-b"),
     });
-    this.chartC = new ChartC({
+
+    this.slopeChart = new SlopeChart({
       container: d3.select("#compare #compare-chart-c"),
     });
   }
@@ -48,9 +49,9 @@ export class ComparisonController {
     const data = new FeatureModel({ name });
 
     this.timeline.setTopData({ data });
-    this.chartA.setTopData({ data });
-    this.chartB.setTopData({ data, name });
-    this.chartC.setTopData({ data });
+    this.diffChart.setTopData({ data });
+    this.violinChart.setTopData({ data, name });
+    this.slopeChart.setTopData({ data });
   }
 
   setBotExperiment({ name }) {
@@ -64,9 +65,9 @@ export class ComparisonController {
     const data = new FeatureModel({ name });
 
     this.timeline.setBotData({ data });
-    this.chartA.setBotData({ data });
-    this.chartB.setBotData({ data, name });
-    this.chartC.setBotData({ data });
+    this.diffChart.setBotData({ data });
+    this.violinChart.setBotData({ data, name });
+    this.slopeChart.setBotData({ data });
   }
 
   onTimeChange({ top, bot }) {

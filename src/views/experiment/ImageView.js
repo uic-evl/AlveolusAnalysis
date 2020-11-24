@@ -79,13 +79,13 @@ export class ImageView {
                 const center = centers[id];
                 const points = paths[id];
 
-                g.selectAll("circle")
-                  .data([null])
-                  .join("circle")
-                  .attr("cx", center[0])
-                  .attr("cy", center[1])
-                  .attr("r", 2)
-                  .attr("fill", "white");
+                // g.selectAll("circle")
+                //   .data([null])
+                //   .join("circle")
+                //   .attr("cx", center[0])
+                //   .attr("cy", center[1])
+                //   .attr("r", 2)
+                //   .attr("fill", "white");
 
                 g.selectAll("path")
                   .data([null])

@@ -8,7 +8,7 @@ const MARGINS = {
   right: 10,
 };
 
-export class ChartA {
+export class DifferenceChart {
   topData = null;
   botData = null;
 
@@ -30,7 +30,7 @@ export class ChartA {
       .attr("y", MARGINS.top - 6)
       .attr("font-size", 16)
       .attr("font-weight", 300)
-      .text("Experiments Difference Over Time");
+      .text("Feature Area Difference Over Time");
 
     this.svg
       .append("text")
