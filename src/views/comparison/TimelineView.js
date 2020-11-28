@@ -2,7 +2,7 @@ import { NUM_TIMESTEPS } from "../../global.js";
 import { findMinimaLocations } from "../../util.js";
 
 const MARGINS = {
-  left: 40,
+  left: 100,
   top: 18,
   bottom: 18,
   right: 10,
@@ -96,6 +96,8 @@ export class TimelineView {
       top: 1,
       bot: this.botTime,
     });
+
+    this.svg.select(".top-label").text(data.name);
   }
 
   setBotData({ data }) {
@@ -105,6 +107,8 @@ export class TimelineView {
       top: this.topTime,
       bot: 1,
     });
+
+    this.svg.select(".bot-label").text(data.name);
   }
 
   play() {
@@ -199,19 +203,24 @@ export class TimelineView {
 
     const xAxis = d3.axisBottom(this.xScale);
 
+    const midPadding = 16;
+
     const midpoint =
       MARGINS.top + (this.height - MARGINS.top - MARGINS.bottom) / 2;
 
-    this.axes
-      .append("g")
-      .attr("class", "x-axis")
-      .call(xAxis)
-      .attr("transform", `translate(0, ${midpoint})`);
+    const top0 = midpoint - midPadding / 2;
+    const bot0 = midpoint + midPadding / 2;
+
+    // this.axes
+    //   .append("g")
+    //   .attr("class", "x-axis")
+    //   .call(xAxis)
+    //   .attr("transform", `translate(0, ${midpoint})`);
 
     this.yScaleTop = d3
       .scaleLinear()
       .domain([0, 0.5])
-      .range([midpoint, MARGINS.top]);
+      .range([top0, MARGINS.top]);
 
     const yAxisTop = d3
       .axisLeft(this.yScaleTop)
@@ -227,7 +236,7 @@ export class TimelineView {
     this.yScaleBot = d3
       .scaleLinear()
       .domain([0, 0.5])
-      .range([midpoint, this.height - MARGINS.bottom]);
+      .range([bot0, this.height - MARGINS.bottom]);
 
     const yAxisBot = d3
       .axisLeft(this.yScaleBot)
@@ -242,6 +251,56 @@ export class TimelineView {
 
     const topRange = this.yScaleTop.range();
     const botRange = this.yScaleBot.range();
+
+    this.svg
+      .append("line")
+      .attr("x1", MARGINS.left)
+      .attr("x2", this.width - MARGINS.right)
+      .attr("y1", topRange[0])
+      .attr("y2", topRange[0])
+      .style("stroke", "var(--alv)")
+      .style("stroke-opacity", 0.5)
+      .style("stroke-dasharray", "2 4");
+
+    this.svg
+      .append("line")
+      .attr("x1", MARGINS.left)
+      .attr("x2", this.width - MARGINS.right)
+      .attr("y1", botRange[0])
+      .attr("y2", botRange[0])
+      .style("stroke", "var(--alv)")
+      .style("stroke-opacity", 0.5)
+      .style("stroke-dasharray", "2 4");
+
+    this.svg
+      .append("text")
+      .attr("class", "top-label")
+      .attr("x", (MARGINS.left - 40) / 2)
+      .attr("y", (topRange[1] + topRange[0]) / 2 + 4)
+      .style("fill", "var(--alv)")
+      .style("font-weight", 300)
+      .style("text-anchor", "middle")
+      .text("top");
+
+    this.svg
+      .append("line")
+      .attr("x1", MARGINS.left)
+      .attr("x2", this.width - MARGINS.right)
+      .attr("y1", botRange[0])
+      .attr("y2", botRange[0])
+      .style("stroke", "var(--alv)")
+      .style("stroke-opacity", 0.5)
+      .style("stroke-dasharray", "2 4");
+
+    this.svg
+      .append("text")
+      .attr("class", "bot-label")
+      .attr("x", (MARGINS.left - 40) / 2)
+      .attr("y", (botRange[1] + botRange[0]) / 2 + 4)
+      .style("fill", "var(--alv)")
+      .style("font-weight", 300)
+      .style("text-anchor", "middle")
+      .text("bot");
 
     this.svg
       .append("rect")
