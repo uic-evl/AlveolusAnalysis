@@ -6,12 +6,9 @@
 }
 
 #animals .view-title {
-  font-size: 18px;
-  font-weight: 300;
   padding: 8px;
 
   text-align: center;
-
   flex-shrink: 0;
 }
 
