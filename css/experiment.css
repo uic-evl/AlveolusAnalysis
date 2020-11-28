@@ -1,5 +1,6 @@
 #top-experiment {
   grid-area: top;
+  margin-top: 0.5rem;
 }
 
 #bottom-experiment {

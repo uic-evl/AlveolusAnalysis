@@ -43,6 +43,8 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <body>
+    <div id="flow"><svg width="0" height="0"></svg></div>
+
     <div class="content">
       <div class="header dp-2">
         <img
@@ -69,43 +71,6 @@
           hover on axis for info
         </div>
         <div class="list"></div>
-      </div>
-
-      <div
-        id="compare"
-        class="dp-1 box"
-        style="justify-content: unset; align-items: unset"
-      >
-        <div class="view-title">
-          experiment <span class="emph">comparison</span>
-        </div>
-        <div id="compare-chart-c" class="box image-pane compare-chart">
-          <!--<div class="view-title">Chart III</div>-->
-          <svg width="0" height="0"></svg>
-        </div>
-        <div
-          id="compare-chart-b"
-          class="box image-pane compare-chart"
-          style="position: relative"
-        >
-          <!--<div class="view-title">Chart B</div>-->
-          <div
-            style="position: absolute; top: 10px; right: 10px; font-size: 12px"
-          >
-            <input
-              type="checkbox"
-              id="violin-maxima"
-              name="violin-maxima"
-              value="violin-maxima"
-            />
-            <label style="font-weight: 300" for="violin-maxima">Maxima</label>
-          </div>
-          <svg width="0" height="0"></svg>
-        </div>
-        <div id="compare-chart-a" class="box image-pane compare-chart">
-          <!--<div class="view-title">Chart 1</div>-->
-          <svg width="0" height="0"></svg>
-        </div>
       </div>
       <div id="top-experiment" class="box dp-1 experiment">
         <div class="feature-charts">
@@ -223,6 +188,45 @@
             </div>
           </div>
           <div class="loader lds-dual-ring"></div>
+        </div>
+      </div>
+
+      <div
+        id="compare"
+        class="dp-1 box"
+        style="justify-content: unset; align-items: unset"
+      >
+        <div class="view-title">
+          experiment <span class="emph">comparison</span>
+        </div>
+        <div id="compare-chart-c" class="box image-pane compare-chart">
+          <!--<div class="view-title">Chart III</div>-->
+          <svg width="0" height="0"></svg>
+        </div>
+        <div
+          id="compare-chart-b"
+          class="box image-pane compare-chart"
+          style="position: relative"
+        >
+          <!--<div class="view-title">Chart B</div>-->
+          <div
+            style="position: absolute; top: 10px; right: 10px; font-size: 12px"
+          >
+            <input
+              type="checkbox"
+              id="violin-maxima"
+              name="violin-maxima"
+              value="violin-maxima"
+            />
+            <label style="font-weight: 300" for="violin-maxima"
+              >Max Air Only</label
+            >
+          </div>
+          <svg width="0" height="0"></svg>
+        </div>
+        <div id="compare-chart-a" class="box image-pane compare-chart">
+          <!--<div class="view-title">Chart 1</div>-->
+          <svg width="0" height="0"></svg>
         </div>
       </div>
     </div>

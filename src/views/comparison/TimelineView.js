@@ -92,11 +92,19 @@ export class TimelineView {
   setTopData({ data }) {
     this.topData = data;
     this.drawPath({ data, scale: this.yScaleTop, name: "top-path" });
+    this.onChange({
+      top: 1,
+      bot: this.botTime,
+    });
   }
 
   setBotData({ data }) {
     this.botData = data;
     this.drawPath({ data, scale: this.yScaleBot, name: "bot-path" });
+    this.onChange({
+      top: this.topTime,
+      bot: 1,
+    });
   }
 
   play() {

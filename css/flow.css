@@ -1,0 +1,37 @@
+#flow {
+  position: absolute;
+
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  /* background: #fee3; */
+
+  /* pointer-events: none; */
+}
+
+#flow svg {
+  /* background: #fa04; */
+}
+
+#flow .wrapper-box {
+  fill: none;
+  /* fill: #fff3; */
+}
+
+#flow .flow-path {
+  fill: #000;
+  fill-opacity: 0.2;
+
+  stroke: var(--bg800);
+  stroke-opacity: 0;
+  stroke-width: 1.25;
+
+  transition: fill 150ms ease-out, stroke 150ms ease-out;
+}
+
+#flow .flow-path:hover {
+  fill: var(--accent);
+  stroke: var(--accent);
+}
