@@ -95,8 +95,8 @@ body.dark {
     2fr
     / 0.5fr 2fr 0.9fr;
 
-  gap: 0.2rem;
-  padding: 0.5rem;
+  gap: 0.3vmin;
+  padding: 0.8vmin;
 
   grid-template-areas:
     "header header header"
@@ -216,7 +216,7 @@ button:focus {
   gap: 0.2rem;
 
   margin-top: 0.4rem;
-  margin-left: 3rem;
+  margin-left: 2.25vw;
 }
 
 #compare .box {

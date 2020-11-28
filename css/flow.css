@@ -28,7 +28,7 @@
   stroke-opacity: 0.3;
   stroke-width: 2;
 
-  transition: fill 150ms ease-out, stroke 150ms ease-out;
+  transition: fill 250ms ease-out, stroke 250ms ease-out;
 }
 
 #flow .flow-path:hover {

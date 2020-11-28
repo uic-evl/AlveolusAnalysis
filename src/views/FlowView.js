@@ -127,14 +127,15 @@ function drawFlow(
     .attr("d", path)
     .on("mouseover", () => {
       startEl
+        .style("box-shadow", "0 0 0px 0px var(--accent)")
         .transition()
-        .duration(0)
-        .delay(200)
+        .delay(250)
         .style("box-shadow", "0 0 4px 1px var(--accent)");
+
       endEl
+        .style("box-shadow", "0 0 0px 0px var(--accent)")
         .transition()
-        .duration(0)
-        .delay(200)
+        .delay(250)
         .style("box-shadow", "0 0 4px 1px var(--accent)");
     })
     .on("mouseleave", () => {

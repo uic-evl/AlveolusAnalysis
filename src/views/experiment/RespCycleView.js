@@ -8,8 +8,8 @@ import {
 
 const MARGINS = {
   left: 30,
-  top: 50,
-  bottom: 36,
+  top: 80,
+  bottom: 26,
   right: 14,
 };
 
