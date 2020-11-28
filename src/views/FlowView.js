@@ -114,7 +114,6 @@ function drawFlow(selection, { startX, startY1, startY2, endX, endY1, endY2 }) {
 }
 
 function getFlowCoords(box1, box2) {
-  console.log(box1, box2);
   return {
     startX: box1.right,
     startY1: box1.top + PADDING_Y * box1.height,
