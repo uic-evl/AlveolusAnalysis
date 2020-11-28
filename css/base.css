@@ -161,7 +161,7 @@ svg text {
   font-size: 1.3rem;
   font-weight: 300;
 
-  text-decoration: underline var(--bg600);
+  /* text-decoration: underline var(--bg600); */
 }
 
 .view-title .emph {

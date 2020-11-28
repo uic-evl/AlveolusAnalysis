@@ -113,8 +113,8 @@ function drawFlow(
   startEl,
   endEl
 ) {
-  const xMid1 = startX + (2 * (endX - startX)) / 3;
-  const xMid2 = endX - (2 * (endX - startX)) / 3;
+  const xMid1 = startX + (1 * (endX - startX)) / 2;
+  const xMid2 = endX - (1 * (endX - startX)) / 2;
 
   const path = `
     M ${startX} ${startY2}
