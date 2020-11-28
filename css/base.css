@@ -120,9 +120,6 @@ svg text {
   color: var(--accent);
 
   font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   /* border-radius: 8px; */
   padding: 8px 16px;
 
@@ -135,6 +132,28 @@ svg text {
   font-weight: 600;
   display: flex;
   align-items: center;
+}
+
+.header a {
+  align-self: stretch;
+  /* height: 100%; */
+  margin-left: auto;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
+  font-family: var(--font);
+  font-weight: 400;
+
+  color: var(--accent);
+  font-size: 14px;
+  text-decoration: none;
+  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.header a:hover {
+  background: var(--accent);
+  color: var(--background);
 }
 
 .view-title {

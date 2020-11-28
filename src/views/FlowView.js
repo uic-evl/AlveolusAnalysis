@@ -126,12 +126,20 @@ function drawFlow(
   selection
     .attr("d", path)
     .on("mouseover", () => {
-      startEl.style("box-shadow", "0 0 4px 1px var(--accent)");
-      endEl.style("box-shadow", "0 0 4px 1px var(--accent)");
+      startEl
+        .transition()
+        .duration(0)
+        .delay(200)
+        .style("box-shadow", "0 0 4px 1px var(--accent)");
+      endEl
+        .transition()
+        .duration(0)
+        .delay(200)
+        .style("box-shadow", "0 0 4px 1px var(--accent)");
     })
     .on("mouseleave", () => {
-      startEl.style("box-shadow", null);
-      endEl.style("box-shadow", null);
+      startEl.interrupt().style("box-shadow", null);
+      endEl.interrupt().style("box-shadow", null);
     });
 }
 
