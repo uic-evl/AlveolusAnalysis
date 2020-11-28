@@ -225,6 +225,7 @@ button:focus {
 
 #compare .view-title {
   padding: 8px;
+  padding-bottom: 2px;
   text-align: center;
 }
 
