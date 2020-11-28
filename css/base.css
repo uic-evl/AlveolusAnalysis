@@ -209,8 +209,7 @@ button:focus {
   text-align: center;
 }
 
-.experiment,
-#timeline-control {
+.experiment {
   padding: 8px;
 }
 

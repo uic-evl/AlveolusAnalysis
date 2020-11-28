@@ -40,7 +40,9 @@ export class FlowView {
       .attr("class", "flow-path")
       .call(
         drawFlow,
-        getFlowCoords({ ...topSelLoc.toJSON(), right: expLoc.right }, topLoc)
+        getFlowCoords({ ...topSelLoc.toJSON(), right: expLoc.right }, topLoc),
+        this.topSelection,
+        this.top
       );
   }
 
@@ -58,7 +60,9 @@ export class FlowView {
       .attr("class", "flow-path")
       .call(
         drawFlow,
-        getFlowCoords({ ...botSelLoc.toJSON(), right: expLoc.right }, botLoc)
+        getFlowCoords({ ...botSelLoc.toJSON(), right: expLoc.right }, botLoc),
+        this.botSelection,
+        this.bot
       );
   }
 
@@ -82,8 +86,10 @@ export class FlowView {
         drawFlow,
         getFlowCoords(topLoc, {
           ...compLoc.toJSON(),
-          bottom: compLoc.bottom - compLoc.height * 0.12,
-        })
+          bottom: compLoc.bottom - compLoc.height * 0.2,
+        }),
+        this.top,
+        this.compare
       );
 
     this.compFlow
@@ -93,15 +99,22 @@ export class FlowView {
         drawFlow,
         getFlowCoords(botLoc, {
           ...compLoc.toJSON(),
-          top: compLoc.top + compLoc.height * 0.12,
-        })
+          top: compLoc.top + compLoc.height * 0.2,
+        }),
+        this.bot,
+        this.compare
       );
   }
 }
 
-function drawFlow(selection, { startX, startY1, startY2, endX, endY1, endY2 }) {
-  const xMid1 = startX + (1 * (endX - startX)) / 3;
-  const xMid2 = endX - (1 * (endX - startX)) / 3;
+function drawFlow(
+  selection,
+  { startX, startY1, startY2, endX, endY1, endY2 },
+  startEl,
+  endEl
+) {
+  const xMid1 = startX + (2 * (endX - startX)) / 3;
+  const xMid2 = endX - (2 * (endX - startX)) / 3;
 
   const path = `
     M ${startX} ${startY2}
@@ -110,7 +123,16 @@ function drawFlow(selection, { startX, startY1, startY2, endX, endY1, endY2 }) {
     C ${xMid1} ${endY1}, ${xMid2} ${startY1}, ${startX} ${startY1}
     Z`;
 
-  selection.attr("d", path);
+  selection
+    .attr("d", path)
+    .on("mouseover", () => {
+      startEl.style("box-shadow", "0 0 4px 1px var(--accent)");
+      endEl.style("box-shadow", "0 0 4px 1px var(--accent)");
+    })
+    .on("mouseleave", () => {
+      startEl.style("box-shadow", null);
+      endEl.style("box-shadow", null);
+    });
 }
 
 function getFlowCoords(box1, box2) {
