@@ -133,10 +133,10 @@ export class TimelineView {
 
       if (view.playInterval) {
         view.pause();
-        button.text("Play");
+        button.select("i").attr("class", "fas fa-play");
       } else {
         view.play();
-        button.text("Pause");
+        button.select("i").attr("class", "fas fa-pause");
       }
     });
 

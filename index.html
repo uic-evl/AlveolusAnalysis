@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="./css/loader.css" />
 
     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+    />
+
+    <link
       rel="apple-touch-icon"
       sizes="180x180"
       href="./apple-touch-icon.png"
@@ -130,15 +137,25 @@
       </div>
       <div id="timeline-control" class="box dp-1">
         <div class="controls">
-          <div id="time-buttons">
-            <button id="step-back">&#9664;</button>
-            <button id="play-button">play</button>
-            <button id="step-forward">&#9654;</button>
+          <div id="time-buttons" class="button-group">
+            <button id="step-back">
+              <i class="fas fa-step-backward"></i>
+            </button>
+            <button id="play-button">
+              <i class="fas fa-play"></i>
+            </button>
+            <button id="step-forward">
+              <i class="fas fa-step-forward"></i>
+            </button>
           </div>
-          <div id="speed-buttons">
-            <button id="slow-down">-</button>
+          <div id="speed-buttons" class="button-group">
+            <button id="slow-down">
+              <i class="fas fa-backward"></i>
+            </button>
             <span id="speed-label">10/s</span>
-            <button id="speed-up">+</button>
+            <button id="speed-up">
+              <i class="fas fa-forward"></i>
+            </button>
           </div>
 
           <span style="margin-top: auto; font-style: italic; margin-bottom: 2px"
