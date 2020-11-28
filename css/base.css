@@ -93,7 +93,7 @@ body.dark {
     2fr
     1fr
     2fr
-    / 0.6fr 2fr 1fr;
+    / 0.5fr 2fr 1fr;
 
   gap: 0.2rem;
   padding: 0.5rem;
@@ -141,6 +141,8 @@ svg text {
   font-family: var(--font-serif);
   font-size: 1.3rem;
   font-weight: 300;
+
+  text-decoration: underline var(--bg600);
 }
 
 .view-title .emph {

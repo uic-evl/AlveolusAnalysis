@@ -8,6 +8,7 @@ import { TimelineView } from "../views/comparison/TimelineView.js";
 import { DifferenceChart } from "../views/comparison/DifferenceChart.js";
 import { ViolinChart } from "../views/comparison/ViolinChart.js";
 import { SlopeChart } from "../views/comparison/SlopeChart.js";
+import { FlowView } from "../views/FlowView.js";
 
 export class ComparisonController {
   topExperiment = null;
@@ -36,6 +37,15 @@ export class ComparisonController {
     this.slopeChart = new SlopeChart({
       container: d3.select("#compare #compare-chart-c"),
     });
+
+    this.flowView = new FlowView({
+      flowContainer: d3.select("#flow"),
+
+      experimentsContainer: d3.select("#animals"),
+      topContainer: d3.select("#top-experiment"),
+      botContainer: d3.select("#bot-experiment"),
+      compareContainer: d3.select("#compare"),
+    });
   }
 
   setTopExperiment({ name }) {
@@ -45,6 +55,8 @@ export class ComparisonController {
       onSelectTime: (t) =>
         this.onTimeChange({ top: t, bot: this.botExperiment.currentTime }),
     });
+
+    this.flowView.setTopSelection({ topContainer: d3.select(`#${name}`) });
 
     const data = new FeatureModel({ name });
 
@@ -61,6 +73,8 @@ export class ComparisonController {
       onSelectTime: (t) =>
         this.onTimeChange({ bot: t, top: this.topExperiment.currentTime }),
     });
+
+    this.flowView.setBotSelection({ botContainer: d3.select(`#${name}`) });
 
     const data = new FeatureModel({ name });
 

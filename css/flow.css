@@ -24,9 +24,9 @@
   fill: #000;
   fill-opacity: 0.2;
 
-  stroke: var(--bg800);
-  stroke-opacity: 0;
-  stroke-width: 1.25;
+  stroke: var(--cg800);
+  stroke-opacity: 0.3;
+  stroke-width: 2;
 
   transition: fill 150ms ease-out, stroke 150ms ease-out;
 }

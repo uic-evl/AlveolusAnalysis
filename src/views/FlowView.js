@@ -1,5 +1,5 @@
 // const PADDING_Y = 12;
-const PADDING_Y = 0.3;
+const PADDING_Y = 0.25;
 
 export class FlowView {
   topSelection = d3.select("#control");
@@ -28,6 +28,7 @@ export class FlowView {
 
   setTopSelection({ topContainer }) {
     this.topSelection = topContainer;
+
     const expLoc = this.experiments.node().getBoundingClientRect();
     const topSelLoc = this.topSelection.node().getBoundingClientRect();
     const topLoc = this.top.node().getBoundingClientRect();
@@ -45,13 +46,23 @@ export class FlowView {
 
   setBotSelection({ botContainer }) {
     this.botSelection = botContainer;
-    this.draw();
+
+    const expLoc = this.experiments.node().getBoundingClientRect();
+    const botSelLoc = this.botSelection.node().getBoundingClientRect();
+    const botLoc = this.bot.node().getBoundingClientRect();
+
+    this.botFlow
+      .selectAll(".flow-path")
+      .data([null])
+      .join("path")
+      .attr("class", "flow-path")
+      .call(
+        drawFlow,
+        getFlowCoords({ ...botSelLoc.toJSON(), right: expLoc.right }, botLoc)
+      );
   }
 
   draw() {
-    const expLoc = this.experiments.node().getBoundingClientRect();
-    const topSelLoc = this.topSelection.node().getBoundingClientRect();
-    const botSelLoc = this.botSelection.node().getBoundingClientRect();
     const topLoc = this.top.node().getBoundingClientRect();
     const botLoc = this.bot.node().getBoundingClientRect();
     const compLoc = this.compare.node().getBoundingClientRect();
@@ -62,27 +73,9 @@ export class FlowView {
     this.svg.attr("width", this.width);
     this.svg.attr("height", this.height);
 
-    // this.svg
-    //   .append("rect")
-    //   .attr("class", "wrapper-box")
-    //   .call(sizeBox, topSelLoc);
-    // this.svg
-    //   .append("rect")
-    //   .attr("class", "wrapper-box")
-    //   .call(sizeBox, botSelLoc);
-    // this.svg.append("rect").attr("class", "wrapper-box").call(sizeBox, topLoc);
-    // this.svg.append("rect").attr("class", "wrapper-box").call(sizeBox, botLoc);
-    // this.svg.append("rect").attr("class", "wrapper-box").call(sizeBox, compLoc);
+    this.compFlow.selectAll("path").remove();
 
-    this.svg
-      .append("path")
-      .attr("class", "flow-path")
-      .call(
-        drawFlow,
-        getFlowCoords({ ...botSelLoc.toJSON(), right: expLoc.right }, botLoc)
-      );
-
-    this.svg
+    this.compFlow
       .append("path")
       .attr("class", "flow-path")
       .call(
@@ -93,7 +86,7 @@ export class FlowView {
         })
       );
 
-    this.svg
+    this.compFlow
       .append("path")
       .attr("class", "flow-path")
       .call(
@@ -106,20 +99,9 @@ export class FlowView {
   }
 }
 
-function sizeBox(selection, { top, left, width, height }) {
-  selection
-    .attr("rx", 8)
-    .attr("x", left)
-    .attr("y", top)
-    .attr("width", width)
-    .attr("height", height);
-}
-
 function drawFlow(selection, { startX, startY1, startY2, endX, endY1, endY2 }) {
   const xMid1 = startX + (1 * (endX - startX)) / 3;
   const xMid2 = endX - (1 * (endX - startX)) / 3;
-  // const xMid1 = startX;
-  // const xMid2 = endX;
 
   const path = `
     M ${startX} ${startY2}

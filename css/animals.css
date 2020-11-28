@@ -10,6 +10,7 @@
 
 #animals .view-title {
   padding: 8px;
+  padding-bottom: 2px;
 
   text-align: center;
   flex-shrink: 0;
