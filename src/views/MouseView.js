@@ -33,6 +33,7 @@ export class MouseView {
       .data(ITEMS)
       .join("div")
       .attr("class", "mouse dp-4")
+      .attr("id", (d) => d)
       .each(function (d) {
         const mouse = d3.select(this);
 

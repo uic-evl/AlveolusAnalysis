@@ -32,7 +32,9 @@ export class FeatureView {
 
     this.svg.attr("width", this.width).attr("height", this.height);
 
-    this.container.select(".view-title").text(`${name} experiment`);
+    this.container
+      .select(".view-title")
+      .html(`<span class="emph">${name}</span> experiment`);
 
     this.setupChart();
     this.drawChart();

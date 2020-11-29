@@ -8,6 +8,13 @@
     <link rel="stylesheet" href="./css/loader.css" />
 
     <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+    />
+
+    <link
       rel="apple-touch-icon"
       sizes="180x180"
       href="./apple-touch-icon.png"
@@ -36,6 +43,8 @@
     <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <body>
+    <div id="flow"><svg width="0" height="0"></svg></div>
+
     <div class="content">
       <div class="header dp-2">
         <img
@@ -45,46 +54,32 @@
           style="margin-right: 8px"
         />
         Alveolus Analysis
+
+        <a
+          href="https://github.com/dyushen/CS529_final_project/blob/main/README.md"
+          target="_blank"
+          rel="noopener noreferrer"
+          >About</a
+        >
       </div>
 
-      <div id="animals" class="box image-pane dp-1">
-        <div class="view-title">experiments</div>
-        <div class="view-title" style="font-size: 12px; padding: 2px 4px">
-          hover on axis for info
+      <div id="animals" class="box image-pane dp-2">
+        <div class="view-title">
+          <span class="emph">experiments</span>
+        </div>
+        <div
+          style="
+            font-size: 12px;
+            padding: 2px 4px;
+            font-style: italic;
+            text-align: center;
+          "
+        >
+          hover on an axis for info
         </div>
         <div class="list"></div>
       </div>
-
-      <div id="compare">
-        <div id="compare-chart-c" class="box image-pane dp-1 compare-chart">
-          <!--<div class="view-title">Chart III</div>-->
-          <svg width="0" height="0"></svg>
-        </div>
-        <div
-          id="compare-chart-b"
-          class="box image-pane dp-1 compare-chart"
-          style="position: relative"
-        >
-          <!--<div class="view-title">Chart B</div>-->
-          <div
-            style="position: absolute; top: 10px; right: 10px; font-size: 12px"
-          >
-            <input
-              type="checkbox"
-              id="violin-maxima"
-              name="violin-maxima"
-              value="violin-maxima"
-            />
-            <label style="font-weight: 300" for="violin-maxima">Maxima</label>
-          </div>
-          <svg width="0" height="0"></svg>
-        </div>
-        <div id="compare-chart-a" class="box image-pane dp-1 compare-chart">
-          <!--<div class="view-title">Chart 1</div>-->
-          <svg width="0" height="0"></svg>
-        </div>
-      </div>
-      <div id="top-experiment" class="box dp-1 experiment">
+      <div id="top-experiment" class="box dp-2 experiment">
         <div class="feature-charts">
           <div class="view-title">select <strong>top</strong> experiment</div>
           <div class="svg-wrapper">
@@ -112,59 +107,79 @@
           <div class="loader lds-dual-ring"></div>
         </div>
       </div>
-      <div id="timeline-control" class="box dp-1">
-        <div class="controls">
-          <div id="time-buttons">
-            <button id="step-back">&#9664;</button>
-            <button id="play-button">play</button>
-            <button id="step-forward">&#9654;</button>
+      <div id="timeline-control">
+        <div class="controls box dp-2">
+          <div id="time-buttons" class="button-group">
+            <button id="step-back">
+              <i class="fas fa-step-backward"></i>
+            </button>
+            <button id="play-button">
+              <i class="fas fa-play"></i>
+            </button>
+            <button id="step-forward">
+              <i class="fas fa-step-forward"></i>
+            </button>
           </div>
-          <div id="speed-buttons">
-            <button id="slow-down">-</button>
+          <div id="speed-buttons" class="button-group">
+            <button id="slow-down">
+              <i class="fas fa-backward"></i>
+            </button>
             <span id="speed-label">10/s</span>
-            <button id="speed-up">+</button>
+            <button id="speed-up">
+              <i class="fas fa-forward"></i>
+            </button>
           </div>
 
-          <span style="margin-top: auto; font-style: italic; margin-bottom: 2px"
-            >legend</span
-          >
           <div
             style="
-              border: 1px solid var(--inter);
-              background: rgba(31, 120, 180, 0.2);
-              padding: 2px 8px;
-              margin: 1px;
-              border-radius: 2px;
+              display: flex;
+              flex-flow: column;
+              align-items: stretch;
+              text-align: center;
             "
           >
-            interstitial
-          </div>
-          <div
-            style="
-              border: 1px solid var(--alv);
-              padding: 2px 8px;
-              margin: 1px;
-              border-radius: 2px;
-            "
-          >
-            alveoli
-          </div>
-          <div
-            style="
-              border: 1px dashed var(--accent);
-              padding: 2px 8px;
-              margin: 1px;
-              border-radius: 2px;
-            "
-          >
-            resp. cycle
+            <span
+              style="margin-top: auto; font-style: italic; margin-bottom: 2px"
+              >legend</span
+            >
+            <div
+              style="
+                border: 1px solid var(--inter);
+                background: rgba(31, 120, 180, 0.2);
+                padding: 2px 8px;
+                margin: 1px;
+                border-radius: 2px;
+              "
+            >
+              interstitial
+            </div>
+            <div
+              style="
+                border: 1px solid var(--alv);
+                padding: 2px 8px;
+                margin: 1px;
+                border-radius: 2px;
+              "
+            >
+              alveoli
+            </div>
+            <div
+              style="
+                border: 1px dashed var(--accent);
+                padding: 2px 8px;
+                margin: 1px;
+                border-radius: 2px;
+              "
+            >
+              resp. cycle
+            </div>
           </div>
         </div>
-        <div class="svg-wrapper">
+        <div class="svg-wrapper dp-1">
           <svg width="0" height="0"></svg>
         </div>
       </div>
-      <div id="bot-experiment" class="box dp-1 experiment">
+      <div id="bot-experiment" class="box dp-2 experiment">
         <div class="feature-charts">
           <div class="view-title">select <strong>bot</strong> experiment</div>
           <div class="svg-wrapper">
@@ -190,6 +205,45 @@
             </div>
           </div>
           <div class="loader lds-dual-ring"></div>
+        </div>
+      </div>
+
+      <div
+        id="compare"
+        class="dp-2 box"
+        style="justify-content: unset; align-items: unset"
+      >
+        <div class="view-title">
+          experiment <span class="emph">comparison</span>
+        </div>
+        <div id="compare-chart-c" class="box image-pane compare-chart">
+          <!--<div class="view-title">Chart III</div>-->
+          <svg width="0" height="0"></svg>
+        </div>
+        <div
+          id="compare-chart-b"
+          class="box image-pane compare-chart"
+          style="position: relative"
+        >
+          <!--<div class="view-title">Chart B</div>-->
+          <div
+            style="position: absolute; top: 10px; right: 10px; font-size: 12px"
+          >
+            <input
+              type="checkbox"
+              id="violin-maxima"
+              name="violin-maxima"
+              value="violin-maxima"
+            />
+            <label style="font-weight: 300" for="violin-maxima"
+              >Max Air Only</label
+            >
+          </div>
+          <svg width="0" height="0"></svg>
+        </div>
+        <div id="compare-chart-a" class="box image-pane compare-chart">
+          <!--<div class="view-title">Chart 1</div>-->
+          <svg width="0" height="0"></svg>
         </div>
       </div>
     </div>

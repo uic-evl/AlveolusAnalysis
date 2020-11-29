@@ -1,9 +1,13 @@
 #top-experiment {
   grid-area: top;
+  margin-top: 0.5rem;
+
+  /* border-bottom-right-radius: 0; */
 }
 
-#bottom-experiment {
+#bot-experiment {
   grid-area: bottom;
+  /* border-top-right-radius: 0; */
 }
 
 .experiment {

@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap");
 
 @import "./shadows.css";
 @import "./box.css";
@@ -6,6 +6,7 @@
 @import "./experiment.css";
 @import "./timeline.css";
 @import "./chart.css";
+@import "./flow.css";
 
 :root {
   /* --background: #121212; */
@@ -64,6 +65,7 @@ body {
 
   color: var(--bg700);
   --accent: #be123c;
+  position: relative;
 }
 
 body.dark {
@@ -74,6 +76,8 @@ body.dark {
 }
 
 .content {
+  position: absolute;
+
   top: 0;
   bottom: 0;
   left: 0;
@@ -89,16 +93,22 @@ body.dark {
     2fr
     1fr
     2fr
-    / 0.6fr 1fr 2fr;
+    / 0.5fr 2fr 0.9fr;
 
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: 0.3vmin;
+  padding: 0.8vmin;
 
   grid-template-areas:
     "header header header"
-    "animals compare top"
-    "animals compare timeline"
-    "animals compare bottom";
+    "animals top compare"
+    "animals timeline compare"
+    "animals bottom compare";
+
+  pointer-events: none;
+}
+
+.content > div {
+  pointer-events: all;
 }
 
 svg text {
@@ -110,9 +120,6 @@ svg text {
   color: var(--accent);
 
   font-size: 1.3rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   /* border-radius: 8px; */
   padding: 8px 16px;
 
@@ -127,10 +134,40 @@ svg text {
   align-items: center;
 }
 
-.view-title {
+.header a {
+  align-self: stretch;
+  /* height: 100%; */
+  margin-left: auto;
+  border-radius: 8px;
+  border: 1px solid var(--accent);
   font-family: var(--font);
+  font-weight: 400;
+
+  color: var(--accent);
   font-size: 14px;
+  text-decoration: none;
+  padding: 2px 8px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.header a:hover {
+  background: var(--accent);
+  color: var(--background);
+}
+
+.view-title {
+  font-family: var(--font-serif);
+  font-size: 1.3rem;
   font-weight: 300;
+
+  /* text-decoration: underline var(--bg600); */
+}
+
+.view-title .emph {
+  font-style: italic;
+  font-weight: 600;
+  color: var(--accent);
 }
 
 * {
@@ -174,15 +211,25 @@ button:focus {
   display: grid;
   grid-area: compare;
 
-  grid-template-rows: repeat(3, 1fr);
+  grid-template-rows: auto repeat(3, 1fr);
 
-  gap: 0.5rem;
+  gap: 0.2rem;
 
-  padding: 0 0.5rem;
+  margin-top: 0.4rem;
+  margin-left: 2.25vw;
 }
 
-.experiment,
-#timeline-control {
+#compare .box {
+  /* border: 1px solid red; */
+}
+
+#compare .view-title {
+  padding: 8px;
+  padding-bottom: 2px;
+  text-align: center;
+}
+
+.experiment {
   padding: 8px;
 }
 
