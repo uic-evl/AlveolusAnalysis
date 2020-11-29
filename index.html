@@ -39,8 +39,6 @@
     </style>
 
     <title>Alveolus Analysis</title>
-
-    <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <body>
     <div id="flow"><svg width="0" height="0"></svg></div>
@@ -248,6 +246,10 @@
       </div>
     </div>
 
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
+
     <script>
       window.params = Object.fromEntries(
         location.search
@@ -263,6 +265,7 @@
         d3.select("body").classed("dark", true);
       }
     </script>
+
     <script src="./src/main.js" type="module"></script>
     <svg style="width: 0; height: 0; position: absolute">
       <defs>
