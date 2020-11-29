@@ -1,7 +1,7 @@
 //global variabeles
 
 //# of images
-export const NUM_TIMESTEPS = 202;
+export const NUM_TIMESTEPS = 600;
 
 // name of experiments
 export const ITEMS = ["control", "tys"];
