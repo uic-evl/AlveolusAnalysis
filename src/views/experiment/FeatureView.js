@@ -146,7 +146,8 @@ export class FeatureView {
       .attr("class", "y-axis y-axis-neu")
       .attr("transform", `translate(${MARGINS.left}, 0)`);
 
-    this.neuG.append("path").attr("class", "ci-area");
+    //this.neuG.append("path").attr("class", "ci-area");
+    //this.neuG.append("path").attr("class", "mean");
     this.neuG.append("path").attr("class", "mean");
 
     this.xScale = d3
@@ -209,16 +210,23 @@ export class FeatureView {
           ),
         };
 
+        //const neutrophil = {
+        //  mean: getValueAcrossCycles(
+        //    progress,
+        //    fullCycles,
+        //    (t) => d3.mean(Object.values(t.areas_per_neutrophil)) || 0
+        //  ),
+        //  ci: getValueAcrossCycles(
+        //    progress,
+        //    fullCycles,
+        //    (t) => 2 * d3.deviation(Object.values(t.areas_per_neutrophil)) || 0
+        //  ),
+        //};
         const neutrophil = {
-          mean: getValueAcrossCycles(
+          total: getValueAcrossCycles(
             progress,
             fullCycles,
-            (t) => d3.mean(Object.values(t.areas_per_neutrophil)) || 0
-          ),
-          ci: getValueAcrossCycles(
-            progress,
-            fullCycles,
-            (t) => 2 * d3.deviation(Object.values(t.areas_per_neutrophil)) || 0
+            (t) => Object.values(t.areas_per_neutrophil).length || 0
           ),
         };
 
@@ -232,13 +240,21 @@ export class FeatureView {
           ),
         ];
 
+        //const neuExtent = [
+        //  0,
+        //  d3.max(
+        //    features,
+        //    ({ areas_per_neutrophil }, i) =>
+        //      d3.mean(Object.values(areas_per_neutrophil)) +
+        //      2 * d3.deviation(Object.values(areas_per_neutrophil))
+        //  ),
+        //];
         const neuExtent = [
           0,
           d3.max(
             features,
             ({ areas_per_neutrophil }, i) =>
-              d3.mean(Object.values(areas_per_neutrophil)) +
-              2 * d3.deviation(Object.values(areas_per_neutrophil))
+              Object.values(areas_per_neutrophil).length
           ),
         ];
 
@@ -285,30 +301,55 @@ export class FeatureView {
           .duration(100)
           .attr("r", (d) => (d === cycleLocation.c ? 6 : 4));
 
-        this.neuG
-          .select(".ci-area")
-          .attr(
-            "d",
-            this.area(
-              neutrophil.mean.map((mean, i) => [
-                this.xScale(i + 1),
-                this.yScaleNeu(mean - neutrophil.ci[i]),
-                this.yScaleNeu(mean + neutrophil.ci[i]),
-              ])
-            )
-          );
+        //this.neuG
+        //  .select(".ci-area")
+        //  .attr(
+        //    "d",
+        //    this.area(
+        //      neutrophil.mean.map((mean, i) => [
+        //        this.xScale(i + 1),
+        //        this.yScaleNeu(mean - neutrophil.ci[i]),
+        //        this.yScaleNeu(mean + neutrophil.ci[i]),
+        //      ])
+        //    )
+        //  );
+        //this.neuG
+        //  .select(".mean")
+        //  .attr(
+        //    "d",
+        //    this.line(
+        //      neutrophil.mean.map((mean, i) => [
+        //        this.xScale(i + 1),
+        //        this.yScaleNeu(mean),
+        //      ])
+        //    )
+        //  );
         this.neuG
           .select(".mean")
           .attr(
             "d",
             this.line(
-              neutrophil.mean.map((mean, i) => [
+              neutrophil.total.map((total, i) => [
                 this.xScale(i + 1),
-                this.yScaleNeu(mean),
+                this.yScaleNeu(total),
               ])
             )
           );
 
+        //this.neuG
+        //  .selectAll(".cycle-dot")
+        //  .data(d3.range(1, fullCycles.length + 1))
+        //  .join("circle")
+        //  .attr("class", "cycle-dot")
+        //  .classed("highlighted-cycle", (d) => d === cycleLocation.c)
+        //  .attr("cx", (d) => this.xScale(d))
+        //  .attr("cy", (d) => this.yScaleNeu(neutrophil.mean[d - 1]))
+        //  .on("click", (evt, d) =>
+        //    this.onSelectTime(getTimeFromCyclePoint(d, progress, allCycles))
+        //  )
+        //  .transition()
+        //  .duration(100)
+        //  .attr("r", (d) => (d === cycleLocation.c ? 6 : 4));
         this.neuG
           .selectAll(".cycle-dot")
           .data(d3.range(1, fullCycles.length + 1))
@@ -316,7 +357,7 @@ export class FeatureView {
           .attr("class", "cycle-dot")
           .classed("highlighted-cycle", (d) => d === cycleLocation.c)
           .attr("cx", (d) => this.xScale(d))
-          .attr("cy", (d) => this.yScaleNeu(neutrophil.mean[d - 1]))
+          .attr("cy", (d) => this.yScaleNeu(neutrophil.total[d - 1]))
           .on("click", (evt, d) =>
             this.onSelectTime(getTimeFromCyclePoint(d, progress, allCycles))
           )
