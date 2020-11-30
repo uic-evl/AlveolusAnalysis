@@ -63,18 +63,41 @@ export class MouseView {
           .join("div")
           .attr("class", "buttons");
 
-        buttons
-          .selectAll("button")
-          .data(["setTop", "setBot"])
-          .join("button")
-          .text((set) => set.substring(3))
-          .on("click", (e, set) => {
-            const setter = view[set];
-
-            console.log(set, d);
-
-            setter({ name: d });
+        const topButton = buttons
+          .append("button")
+          .text("Top")
+          .on("click", () => {
+            view.setTop({ name: d });
           });
+
+        const botButton = buttons
+          .append("button")
+          .text("Bot")
+          .on("click", () => {
+            view.setBot({ name: d });
+          });
+
+        tippy(topButton.node(), {
+          content: `Show "${d}" in the Top experiment view`,
+          animation: "scale",
+        });
+        tippy(botButton.node(), {
+          content: `Show "${d}" in the Bottom Experiment view`,
+          animation: "scale",
+        });
+
+        // buttons
+        //   .selectAll("button")
+        //   .data(["setTop", "setBot"])
+        //   .join("button")
+        //   .text((set) => set.substring(3))
+        //   .on("click", (e, set) => {
+        //     const setter = view[set];
+
+        //     console.log(set, d);
+
+        //     setter({ name: d });
+        //   });
       });
   }
 }
