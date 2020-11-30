@@ -279,11 +279,12 @@ export class TimelineView {
     this.svg
       .append("text")
       .attr("class", "top-label")
-      .attr("x", (MARGINS.left - 40) / 2)
+      .attr("x", MARGINS.left - 36)
       .attr("y", topRange[1] + 4)
-      .style("fill", "var(--alv)")
-      .style("font-weight", 300)
-      .style("text-anchor", "middle")
+      .style("fill", "var(--accent)")
+      .style("font-family", "var(--font-serif)")
+      .style("font-weight", 600)
+      .style("text-anchor", "end")
       .text("top");
 
     this.svg
@@ -299,11 +300,12 @@ export class TimelineView {
     this.svg
       .append("text")
       .attr("class", "bot-label")
-      .attr("x", (MARGINS.left - 40) / 2)
+      .attr("x", MARGINS.left - 36)
       .attr("y", botRange[1] + 4)
-      .style("fill", "var(--alv)")
-      .style("font-weight", 300)
-      .style("text-anchor", "middle")
+      .style("fill", "var(--accent)")
+      .style("font-family", "var(--font-serif)")
+      .style("font-weight", 600)
+      .style("text-anchor", "end")
       .text("bot");
 
     this.svg
@@ -431,6 +433,10 @@ export class TimelineView {
       .attr("font-size", 12)
       .attr("y", 11)
       .attr("text-anchor", "middle");
+
+    const legendG = this.svg.append("g").attr("transform", "translate(15, 44)");
+
+    drawLegend(legendG, { width: MARGINS.left - 60, height: this.height - 80 });
   }
 
   drawPath({ data, scale, name }) {
@@ -520,4 +526,120 @@ export class TimelineView {
         d3.select(`.${name}-air`).attr("visibility", "hidden");
       });
   }
+}
+
+function drawLegend(selection, { width, height }) {
+  selection
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "none")
+    .attr("stroke", "var(--background)");
+
+  selection
+    .append("path")
+    .attr(
+      "d",
+      `M 0 0 L ${width} 0 L ${width} ${height / 3} Q ${width / 2} ${
+        height / 6
+      } 0 ${height / 3} Z`
+    )
+    .attr("fill", "var(--inter)")
+    .attr("fill-opacity", 0.2);
+
+  selection
+    .append("path")
+    .attr("d", `M 0 10 L 0 0 L ${width} 0 L ${width} 10`)
+    .attr("stroke", "#fff8")
+    .attr("fill", "none");
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", -4)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-style", "italic")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("resp")
+    .append("tspan")
+    .attr("dy", 14)
+    .attr("x", width / 2)
+    .text("cycle");
+
+  selection
+    .append("path")
+    .attr(
+      "d",
+      `M 0 ${height - 10} Q ${width / 2} ${height - 20} ${width} ${
+        height - 10
+      } `
+    )
+    .attr("stroke", "var(--alv)")
+    .attr("fill-opacity", 0);
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height / 3 + 4)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("max");
+
+  selection
+    .append("path")
+    .attr(
+      "d",
+      `M ${width} ${height / 3} Q ${width / 2} ${height / 6} 0 ${height / 3}`
+    )
+    .attr("stroke", "var(--alv)")
+    .attr("fill-opacity", 0);
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - 20)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("min");
+
+  selection
+    .append("line")
+    .attr("x1", width / 2)
+    .attr("x2", width / 2)
+    .attr("y1", (3 * height) / 12)
+    .attr("y2", height - 15)
+    .attr("stroke", "#fff3");
+
+  selection
+    .append("circle")
+    .attr("cx", width / 2)
+    .attr("cy", height / 2)
+    .attr("r", 3)
+    .attr("fill", "#fff3");
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height / 2 + 14)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("mean");
+
+  selection
+    .append("line")
+    .attr("x1", 0)
+    .attr("x2", width)
+    .attr("y1", height)
+    .attr("y2", height)
+    .style("stroke", "var(--alv)")
+    .style("stroke-opacity", 0.5)
+    .style("stroke-dasharray", "2 4");
 }
