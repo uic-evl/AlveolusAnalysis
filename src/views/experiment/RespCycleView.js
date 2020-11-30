@@ -15,6 +15,7 @@ const MARGINS = {
 
 export class RespCycleView {
   cycles = null;
+  currentCycle = 0;
 
   constructor({ data, container, onSelectTime }) {
     this.data = data;
@@ -42,6 +43,8 @@ export class RespCycleView {
     if (this.cycles) {
       const loc = findTimeInCycles(t - 1, this.cycles);
       const cyc = this.cycles[loc.c];
+
+      this.currentCycle = loc.c;
 
       this.paths.selectAll(".cycle").classed("highlighted", false);
 
@@ -125,6 +128,7 @@ export class RespCycleView {
     this.timeScale = d3
       .scaleLinear()
       .domain([0, 1])
+      .clamp(true)
       .range([MARGINS.left, this.width - MARGINS.right]);
 
     this.yScale = d3
@@ -157,13 +161,55 @@ export class RespCycleView {
 
     this.line = d3.line().curve(d3.curveMonotoneX);
 
-    this.paths = this.svg.append("g").attr("class", "cycles");
+    const paths = (this.paths = this.svg
+      .append("g")
+      .attr("class", "cycles")
+      .style("pointer-events", "visibleStroke"));
+
+    const svg = this.svg;
 
     this.timePoint = this.svg
       .append("circle")
       .attr("class", "time-point")
       .attr("r", 6)
-      .attr("visibility", "hidden");
+      .attr("visibility", "hidden")
+      .style("pointer-events", "all")
+      .on("mouseover", function () {
+        d3.select(this).transition().attr("r", 10);
+        paths.style("pointer-events", "none");
+      })
+      .on("mouseleave", function () {
+        if (!d3.select(this).classed("dragging")) {
+          d3.select(this).transition().attr("r", 6);
+          paths.style("pointer-events", "visibleStroke");
+        }
+      })
+      .call(
+        d3
+          .drag()
+          .on("start", function () {
+            d3.select(this).classed("dragging", true).attr("r", 10);
+            paths.style("pointer-events", "none");
+            svg.style("cursor", "ew-resize");
+          })
+          .on("end", function () {
+            d3.select(this)
+              .classed("dragging", false)
+              .transition()
+              .attr("r", 6);
+            paths.style("pointer-events", "visibleStroke");
+            svg.style("cursor", null);
+          })
+          .on("drag", (evt) =>
+            this.onSelectTime(
+              getTimeFromCyclePoint(
+                this.currentCycle,
+                this.timeScale.invert(evt.x),
+                this.cycles
+              )
+            )
+          )
+      );
   }
 
   drawChart() {
