@@ -7,7 +7,7 @@ comparison.setTopExperiment({ name: "control" });
 comparison.setBotExperiment({ name: "tys" });
 
 // set up basic ui tooltips
-tippy("#step-back", { content: "Slow Down", animation: "scale" });
+tippy("#step-back", { content: "Step Backward", animation: "scale" });
 tippy("#play-button", { content: "Play/Pause", animation: "scale" });
 tippy("#step-forward", { content: "Step Forward", animation: "scale" });
 
