@@ -1,5 +1,9 @@
 import { NUM_TIMESTEPS } from "../../global.js";
-import { findMinimaLocations } from "../../util.js";
+import {
+  chuckFeaturesByMinima,
+  findMinimaLocations,
+  getTimeFromCyclePoint,
+} from "../../util.js";
 
 const MARGINS = {
   left: 100,
@@ -219,7 +223,7 @@ export class TimelineView {
 
     this.yScaleTop = d3
       .scaleLinear()
-      .domain([0, 0.5])
+      .domain([0, 0.6])
       .range([top0, MARGINS.top]);
 
     const yAxisTop = d3
@@ -235,7 +239,7 @@ export class TimelineView {
 
     this.yScaleBot = d3
       .scaleLinear()
-      .domain([0, 0.5])
+      .domain([0, 0.6])
       .range([bot0, this.height - MARGINS.bottom]);
 
     const yAxisBot = d3
@@ -430,27 +434,50 @@ export class TimelineView {
   }
 
   drawPath({ data, scale, name }) {
-    const interstitial = d3.area().y0(scale(0.5)).curve(d3.curveMonotoneX);
-    const air = d3.line().curve(d3.curveMonotoneX);
+    const interstitial = d3
+      .area()
+      .x(({ t }) => this.xScale(t))
+      .y0(scale(0.6))
+      .y1(({ extent }) => scale(extent[1]))
+      .curve(d3.curveMonotoneX);
+
+    const air = d3
+      .area()
+      .x(({ t }) => this.xScale(t))
+      .y0(({ extent }) => scale(extent[0]))
+      .y1(({ extent }) => scale(extent[1]))
+      .curve(d3.curveMonotoneX);
 
     data
       .getAllFeatures()
       .then((features) => {
         const minima = findMinimaLocations(features);
+        const cycles = chuckFeaturesByMinima(features, minima);
 
         const ratios = features.map(
           ({ alveoli_area, interstitial_area }) =>
             alveoli_area / (alveoli_area + interstitial_area)
         );
 
+        const cycleExtents = cycles.map((c, ind) => ({
+          t: getTimeFromCyclePoint(ind, 0.5, cycles),
+          extent: d3.extent(
+            c,
+            ({ alveoli_area, interstitial_area }) =>
+              alveoli_area / (alveoli_area + interstitial_area)
+          ),
+          mean: d3.mean(
+            c,
+            ({ alveoli_area, interstitial_area }) =>
+              alveoli_area / (alveoli_area + interstitial_area)
+          ),
+        }));
+
+        console.log(cycleExtents);
+
         this.paths
           .selectAll(`.${name}`)
-          .data([
-            ratios.map((ratio, index) => [
-              this.xScale(index + 1),
-              scale(ratio),
-            ]),
-          ])
+          .data([cycleExtents])
           .join("path")
           .attr("class", `ratio-path ${name}`)
           .attr("visibility", "visible")
@@ -458,29 +485,34 @@ export class TimelineView {
 
         this.paths
           .selectAll(`.${name}-air`)
-          .data([
-            ratios.map((ratio, index) => [
-              this.xScale(index + 1),
-              scale(ratio),
-            ]),
-          ])
+          .data([cycleExtents])
           .join("path")
           .attr("class", `airspace ${name}-air`)
           .attr("visibility", "visible")
           .attr("d", air);
 
         this.paths
-          .selectAll(`.${name}-minima`)
-          .data(minima)
+          .selectAll(`.${name}-minima-extent`)
+          .data(cycleExtents)
           .join("line")
-          .attr("class", `${name}-minima`)
-          .attr("x1", this.xScale)
-          .attr("x2", this.xScale)
-          .attr("y1", scale(0.5))
-          .attr("y2", scale(0))
+          .attr("class", `${name}-minima-extent`)
+          .attr("x1", ({ t }) => this.xScale(t))
+          .attr("x2", ({ t }) => this.xScale(t))
+          .attr("y1", ({ extent }) => scale(extent[0]))
+          .attr("y2", ({ extent }) => scale(extent[1]))
           .attr("stroke-width", 1)
-          .attr("stroke", "var(--accent)")
-          .attr("stroke-dasharray", "4 4");
+          .attr("stroke", "#fff3");
+
+        this.paths
+          .selectAll(`.${name}-minima-mean`)
+          .data(cycleExtents)
+          .join("circle")
+          .attr("class", `${name}-minima-mean`)
+          .attr("cx", ({ t }) => this.xScale(t))
+          .attr("cy", ({ mean }) => scale(mean))
+          .attr("r", 2)
+          .attr("fill", "#fff3");
+        // .attr("stroke-dasharray", "4 4");
       })
       .catch((err) => {
         console.error(err);
