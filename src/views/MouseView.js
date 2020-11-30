@@ -148,21 +148,6 @@ function kiviat(svg, width, height, name) {
       .attr("x2", width / 2 - MARGINS.left)
       .attr("y2", 0)
       .attr("transform", (d, i) => `rotate(${-90 + (360 * i) / numAttributes})`)
-      .each(function (i) {
-        const key = Object.keys(labels)[i];
-        const axis = d3.select(this);
-
-        tippy(
-          axis.node({
-            content: `<div>${labels[key]}</div><div>${formatter(
-              values[key]
-            )}</div>`,
-            allowHTML: true,
-            animation: "scale",
-            placement: "right",
-          })
-        );
-      })
       .on("mouseover", (e, i) => {
         const key = Object.keys(labels)[i];
 
