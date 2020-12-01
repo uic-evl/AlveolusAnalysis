@@ -87,7 +87,8 @@ export class FeatureView {
       .attr("font-weight", 300)
       .attr("font-style", "italic")
       .style("fill", "var(--alv)")
-      .text("Mean Alveolus Area");
+      //.text("Mean Alveolus Area");
+      .text("Air Percentage per Number of Alveoli");
 
     this.alvG
       .append("text")
