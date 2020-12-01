@@ -63,18 +63,41 @@ export class MouseView {
           .join("div")
           .attr("class", "buttons");
 
-        buttons
-          .selectAll("button")
-          .data(["setTop", "setBot"])
-          .join("button")
-          .text((set) => set.substring(3))
-          .on("click", (e, set) => {
-            const setter = view[set];
-
-            console.log(set, d);
-
-            setter({ name: d });
+        const topButton = buttons
+          .append("button")
+          .text("Top")
+          .on("click", () => {
+            view.setTop({ name: d });
           });
+
+        const botButton = buttons
+          .append("button")
+          .text("Bot")
+          .on("click", () => {
+            view.setBot({ name: d });
+          });
+
+        tippy(topButton.node(), {
+          content: `Show "${d}" in the Top experiment view`,
+          animation: "scale",
+        });
+        tippy(botButton.node(), {
+          content: `Show "${d}" in the Bottom Experiment view`,
+          animation: "scale",
+        });
+
+        // buttons
+        //   .selectAll("button")
+        //   .data(["setTop", "setBot"])
+        //   .join("button")
+        //   .text((set) => set.substring(3))
+        //   .on("click", (e, set) => {
+        //     const setter = view[set];
+
+        //     console.log(set, d);
+
+        //     setter({ name: d });
+        //   });
       });
   }
 }
@@ -199,17 +222,17 @@ function rotatePoint(x, deg) {
 
 const domains = {
   // mean # alv across time
-  meanAlvCount: [20, 50],
+  meanAlvCount: [20, 90],
   // mean # neut across time
   meanNeutCount: [0, 10],
   // max diff min/max air %
-  maxAirPercent: [45, 65],
+  maxAirPercent: [30, 65],
   // max of (mean neut area per cycle) across cycles
   maxNeutArea: [0, 200],
   // abs difference in air % - start to end (max point in cycle)
-  absAirPercentChange: [-10, 5],
+  absAirPercentChange: [-20, 20],
   // neut area change % - start to end  (mean per cycle)
-  neutAreaChange: [-500, 500],
+  neutAreaChange: [-1600, 1600],
 };
 
 const labels = {
@@ -238,7 +261,8 @@ const calculators = {
   maxAirPercent: (timesteps) =>
     d3.max(
       timesteps,
-      ({ alveoli_area, interstitial_area }) => alveoli_area / interstitial_area
+      ({ alveoli_area, interstitial_area }) =>
+        alveoli_area / (alveoli_area + interstitial_area)
     ) * 100,
   // max of (mean neut area per cycle) across cycles
   maxNeutArea: (timesteps) =>
@@ -260,13 +284,13 @@ const calculators = {
       d3.max(
         start,
         ({ alveoli_area, interstitial_area }) =>
-          alveoli_area / interstitial_area
+          alveoli_area / (alveoli_area + interstitial_area)
       ) * 100;
     const endPerc =
       d3.max(
         end,
         ({ alveoli_area, interstitial_area }) =>
-          alveoli_area / interstitial_area
+          alveoli_area / (alveoli_area + interstitial_area)
       ) * 100;
 
     return endPerc - startPerc;

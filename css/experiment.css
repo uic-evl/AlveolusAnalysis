@@ -104,14 +104,25 @@
   left: 0;
   right: 0;
   bottom: 0;
-
-  pointer-events: none;
 }
 
 .experiment .resp-cycle .time-point {
   fill: var(--selected);
   stroke-width: 2;
   stroke: white;
+
+  cursor: ew-resize;
+}
+
+.experiment .resp-cycle .time-point:hover {
+  stroke: var(--selected);
+  fill: white;
+}
+
+.experiment .resp-cycle .time-point.dragging {
+  stroke-width: 3;
+  stroke: var(--selected);
+  fill: white;
 }
 
 .experiment .resp-cycle .cycle {
@@ -121,7 +132,6 @@
 
   transition: stroke 250ms ease-out;
 
-  pointer-events: visibleStroke;
   cursor: pointer;
 
   filter: url(#blur);

@@ -39,8 +39,6 @@
     </style>
 
     <title>Alveolus Analysis</title>
-
-    <script src="https://d3js.org/d3.v6.min.js"></script>
   </head>
   <body>
     <div id="flow"><svg width="0" height="0"></svg></div>
@@ -165,13 +163,14 @@
             </div>
             <div
               style="
-                border: 1px dashed var(--accent);
+                border: 1px solid var(--neut);
+                background: rgba(156, 204, 156, 0.2);
                 padding: 2px 8px;
                 margin: 1px;
                 border-radius: 2px;
               "
             >
-              resp. cycle
+              neutrophil
             </div>
           </div>
         </div>
@@ -216,8 +215,17 @@
         <div class="view-title">
           experiment <span class="emph">comparison</span>
         </div>
-        <div id="compare-chart-c" class="box image-pane compare-chart">
-          <!--<div class="view-title">Chart III</div>-->
+        <div
+          id="compare-chart-c"
+          class="box image-pane compare-chart"
+          style="position: relative"
+        >
+          <div
+            class="tooltip-trigger"
+            style="position: absolute; left: 10px; top: 8px; font-size: 16px"
+          >
+            <i class="fas fa-question"></i>
+          </div>
           <svg width="0" height="0"></svg>
         </div>
         <div
@@ -225,7 +233,12 @@
           class="box image-pane compare-chart"
           style="position: relative"
         >
-          <!--<div class="view-title">Chart B</div>-->
+          <div
+            class="tooltip-trigger"
+            style="position: absolute; left: 10px; top: 5px; font-size: 16px"
+          >
+            <i class="fas fa-question"></i>
+          </div>
           <div
             style="position: absolute; top: 10px; right: 10px; font-size: 12px"
           >
@@ -241,12 +254,25 @@
           </div>
           <svg width="0" height="0"></svg>
         </div>
-        <div id="compare-chart-a" class="box image-pane compare-chart">
-          <!--<div class="view-title">Chart 1</div>-->
+        <div
+          id="compare-chart-a"
+          class="box image-pane compare-chart"
+          style="position: relative"
+        >
+          <div
+            class="tooltip-trigger"
+            style="position: absolute; left: 10px; top: 8px; font-size: 16px"
+          >
+            <i class="fas fa-question"></i>
+          </div>
           <svg width="0" height="0"></svg>
         </div>
       </div>
     </div>
+
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="https://unpkg.com/tippy.js@6"></script>
 
     <script>
       window.params = Object.fromEntries(
@@ -263,6 +289,7 @@
         d3.select("body").classed("dark", true);
       }
     </script>
+
     <script src="./src/main.js" type="module"></script>
     <svg style="width: 0; height: 0; position: absolute">
       <defs>

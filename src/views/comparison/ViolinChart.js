@@ -25,7 +25,7 @@ export class ViolinChart {
 
     this.svg
       .append("text")
-      .attr("x", 16)
+      .attr("x", 26)
       .attr("y", MARGINS.top - 28)
       .attr("font-size", 16)
       .attr("font-weight", 300)
@@ -70,6 +70,14 @@ export class ViolinChart {
     });
 
     console.log("ChartB", this);
+
+    tippy(this.container.select(".tooltip-trigger").node(), {
+      content:
+        "The distribution of area by feature type across the selected experiments. Select the checkbox in the upper right to only show values at max inflation",
+      animation: "scale",
+      placement: "left",
+      maxWidth: 300,
+    });
   }
 
   setTopData({ data, name }) {

@@ -1,5 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=Lora:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600;1,700&display=swap");
 
+@import url("https://unpkg.com/tippy.js@6/animations/scale.css");
+
 @import "./shadows.css";
 @import "./box.css";
 @import "./animals.css";
@@ -236,4 +238,37 @@ button:focus {
 .x-axis,
 .y-axis {
   color: #b0b0b0;
+}
+
+.tippy-box {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12),
+    0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--accent);
+  z-index: 1;
+}
+
+.tippy-box[data-placement^="top"] > .tippy-arrow::before {
+  border-top-color: var(--accent);
+  bottom: -8px;
+}
+.tippy-box[data-placement^="bottom"] > .tippy-arrow::before {
+  border-bottom-color: var(--accent);
+  top: -8px;
+}
+.tippy-box[data-placement^="left"] > .tippy-arrow::before {
+  border-left-color: var(--accent);
+  right: -8px;
+}
+.tippy-box[data-placement^="right"] > .tippy-arrow::before {
+  border-right-color: var(--accent);
+  left: -8px;
+}
+
+.tooltip-trigger {
+  color: #e0e0e0;
+  cursor: help;
+}
+
+.tooltip-trigger:hover {
+  color: var(--accent);
 }
