@@ -1,5 +1,9 @@
 import { NUM_TIMESTEPS } from "../../global.js";
-import { findMinimaLocations } from "../../util.js";
+import {
+  chuckFeaturesByMinima,
+  findMinimaLocations,
+  getTimeFromCyclePoint,
+} from "../../util.js";
 
 const MARGINS = {
   left: 100,
@@ -219,7 +223,7 @@ export class TimelineView {
 
     this.yScaleTop = d3
       .scaleLinear()
-      .domain([0, 0.5])
+      .domain([0, 0.6])
       .range([top0, MARGINS.top]);
 
     const yAxisTop = d3
@@ -235,7 +239,7 @@ export class TimelineView {
 
     this.yScaleBot = d3
       .scaleLinear()
-      .domain([0, 0.5])
+      .domain([0, 0.6])
       .range([bot0, this.height - MARGINS.bottom]);
 
     const yAxisBot = d3
@@ -275,11 +279,12 @@ export class TimelineView {
     this.svg
       .append("text")
       .attr("class", "top-label")
-      .attr("x", (MARGINS.left - 40) / 2)
-      .attr("y", (topRange[1] + topRange[0]) / 2 + 4)
-      .style("fill", "var(--alv)")
-      .style("font-weight", 300)
-      .style("text-anchor", "middle")
+      .attr("x", MARGINS.left - 36)
+      .attr("y", topRange[1] + 4)
+      .style("fill", "var(--accent)")
+      .style("font-family", "var(--font-serif)")
+      .style("font-weight", 600)
+      .style("text-anchor", "end")
       .text("top");
 
     this.svg
@@ -295,11 +300,12 @@ export class TimelineView {
     this.svg
       .append("text")
       .attr("class", "bot-label")
-      .attr("x", (MARGINS.left - 40) / 2)
-      .attr("y", (botRange[1] + botRange[0]) / 2 + 4)
-      .style("fill", "var(--alv)")
-      .style("font-weight", 300)
-      .style("text-anchor", "middle")
+      .attr("x", MARGINS.left - 36)
+      .attr("y", botRange[1] + 4)
+      .style("fill", "var(--accent)")
+      .style("font-family", "var(--font-serif)")
+      .style("font-weight", 600)
+      .style("text-anchor", "end")
       .text("bot");
 
     this.svg
@@ -427,30 +433,57 @@ export class TimelineView {
       .attr("font-size", 12)
       .attr("y", 11)
       .attr("text-anchor", "middle");
+
+    const legendG = this.svg.append("g").attr("transform", "translate(15, 44)");
+
+    drawLegend(legendG, { width: MARGINS.left - 60, height: this.height - 80 });
   }
 
   drawPath({ data, scale, name }) {
-    const interstitial = d3.area().y0(scale(0.5)).curve(d3.curveMonotoneX);
-    const air = d3.line().curve(d3.curveMonotoneX);
+    const interstitial = d3
+      .area()
+      .x(({ t }) => this.xScale(t))
+      .y0(scale(0.6))
+      .y1(({ extent }) => scale(extent[1]))
+      .curve(d3.curveMonotoneX);
+
+    const air = d3
+      .area()
+      .x(({ t }) => this.xScale(t))
+      .y0(({ extent }) => scale(extent[0]))
+      .y1(({ extent }) => scale(extent[1]))
+      .curve(d3.curveMonotoneX);
 
     data
       .getAllFeatures()
       .then((features) => {
         const minima = findMinimaLocations(features);
+        const cycles = chuckFeaturesByMinima(features, minima);
 
         const ratios = features.map(
           ({ alveoli_area, interstitial_area }) =>
             alveoli_area / (alveoli_area + interstitial_area)
         );
 
+        const cycleExtents = cycles.map((c, ind) => ({
+          t: getTimeFromCyclePoint(ind, 0.5, cycles),
+          extent: d3.extent(
+            c,
+            ({ alveoli_area, interstitial_area }) =>
+              alveoli_area / (alveoli_area + interstitial_area)
+          ),
+          mean: d3.mean(
+            c,
+            ({ alveoli_area, interstitial_area }) =>
+              alveoli_area / (alveoli_area + interstitial_area)
+          ),
+        }));
+
+        console.log(cycleExtents);
+
         this.paths
           .selectAll(`.${name}`)
-          .data([
-            ratios.map((ratio, index) => [
-              this.xScale(index + 1),
-              scale(ratio),
-            ]),
-          ])
+          .data([cycleExtents])
           .join("path")
           .attr("class", `ratio-path ${name}`)
           .attr("visibility", "visible")
@@ -458,29 +491,34 @@ export class TimelineView {
 
         this.paths
           .selectAll(`.${name}-air`)
-          .data([
-            ratios.map((ratio, index) => [
-              this.xScale(index + 1),
-              scale(ratio),
-            ]),
-          ])
+          .data([cycleExtents])
           .join("path")
           .attr("class", `airspace ${name}-air`)
           .attr("visibility", "visible")
           .attr("d", air);
 
         this.paths
-          .selectAll(`.${name}-minima`)
-          .data(minima)
+          .selectAll(`.${name}-minima-extent`)
+          .data(cycleExtents)
           .join("line")
-          .attr("class", `${name}-minima`)
-          .attr("x1", this.xScale)
-          .attr("x2", this.xScale)
-          .attr("y1", scale(0.5))
-          .attr("y2", scale(0))
+          .attr("class", `${name}-minima-extent`)
+          .attr("x1", ({ t }) => this.xScale(t))
+          .attr("x2", ({ t }) => this.xScale(t))
+          .attr("y1", ({ extent }) => scale(extent[0]))
+          .attr("y2", ({ extent }) => scale(extent[1]))
           .attr("stroke-width", 1)
-          .attr("stroke", "var(--accent)")
-          .attr("stroke-dasharray", "4 4");
+          .attr("stroke", "#fff3");
+
+        this.paths
+          .selectAll(`.${name}-minima-mean`)
+          .data(cycleExtents)
+          .join("circle")
+          .attr("class", `${name}-minima-mean`)
+          .attr("cx", ({ t }) => this.xScale(t))
+          .attr("cy", ({ mean }) => scale(mean))
+          .attr("r", 2)
+          .attr("fill", "#fff3");
+        // .attr("stroke-dasharray", "4 4");
       })
       .catch((err) => {
         console.error(err);
@@ -488,4 +526,120 @@ export class TimelineView {
         d3.select(`.${name}-air`).attr("visibility", "hidden");
       });
   }
+}
+
+function drawLegend(selection, { width, height }) {
+  selection
+    .append("rect")
+    .attr("width", width)
+    .attr("height", height)
+    .attr("fill", "none")
+    .attr("stroke", "var(--background)");
+
+  selection
+    .append("path")
+    .attr(
+      "d",
+      `M 0 0 L ${width} 0 L ${width} ${height / 3} Q ${width / 2} ${
+        height / 6
+      } 0 ${height / 3} Z`
+    )
+    .attr("fill", "var(--inter)")
+    .attr("fill-opacity", 0.2);
+
+  selection
+    .append("path")
+    .attr("d", `M 0 10 L 0 0 L ${width} 0 L ${width} 10`)
+    .attr("stroke", "#fff8")
+    .attr("fill", "none");
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", -4)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-style", "italic")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("resp")
+    .append("tspan")
+    .attr("dy", 14)
+    .attr("x", width / 2)
+    .text("cycle");
+
+  selection
+    .append("path")
+    .attr(
+      "d",
+      `M 0 ${height - 10} Q ${width / 2} ${height - 20} ${width} ${
+        height - 10
+      } `
+    )
+    .attr("stroke", "var(--alv)")
+    .attr("fill-opacity", 0);
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height / 3 + 4)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("max");
+
+  selection
+    .append("path")
+    .attr(
+      "d",
+      `M ${width} ${height / 3} Q ${width / 2} ${height / 6} 0 ${height / 3}`
+    )
+    .attr("stroke", "var(--alv)")
+    .attr("fill-opacity", 0);
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height - 20)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("min");
+
+  selection
+    .append("line")
+    .attr("x1", width / 2)
+    .attr("x2", width / 2)
+    .attr("y1", (3 * height) / 12)
+    .attr("y2", height - 15)
+    .attr("stroke", "#fff3");
+
+  selection
+    .append("circle")
+    .attr("cx", width / 2)
+    .attr("cy", height / 2)
+    .attr("r", 3)
+    .attr("fill", "#fff3");
+
+  selection
+    .append("text")
+    .attr("x", width / 2)
+    .attr("y", height / 2 + 14)
+    .attr("fill", "white")
+    .style("text-anchor", "middle")
+    .style("font-size", 12)
+    .style("font-weight", 300)
+    .text("mean");
+
+  selection
+    .append("line")
+    .attr("x1", 0)
+    .attr("x2", width)
+    .attr("y1", height)
+    .attr("y2", height)
+    .style("stroke", "var(--alv)")
+    .style("stroke-opacity", 0.5)
+    .style("stroke-dasharray", "2 4");
 }

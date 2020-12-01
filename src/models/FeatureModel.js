@@ -1,4 +1,5 @@
 import { NUM_TIMESTEPS } from "../global.js";
+import { findMinimaLocations } from "../util.js";
 
 const FEATURE_SETS = {};
 
