@@ -26,7 +26,7 @@ export class DifferenceChart {
 
     this.svg
       .append("text")
-      .attr("x", 16)
+      .attr("x", 26)
       .attr("y", MARGINS.top - 6)
       .attr("font-size", 16)
       .attr("font-weight", 300)
@@ -77,6 +77,14 @@ export class DifferenceChart {
       .text("Neutrophil Area Difference");
 
     console.log("ChartA", this);
+
+    tippy(this.container.select(".tooltip-trigger").node(), {
+      content:
+        "The absolute difference in area by feature type between the two selected experiments",
+      animation: "scale",
+      placement: "left",
+      maxWidth: 300,
+    });
   }
 
   setTopData({ data }) {

@@ -25,7 +25,7 @@ export class SlopeChart {
 
     this.svg
       .append("text")
-      .attr("x", 16)
+      .attr("x", 26)
       .attr("y", 24)
       .attr("font-size", 16)
       .attr("font-weight", 300)
@@ -103,6 +103,14 @@ export class SlopeChart {
       .text("End");
 
     console.log("ChartC", this);
+
+    tippy(this.container.select(".tooltip-trigger").node(), {
+      content:
+        "The change in Interstitial % and Neutrophil area from the Start to End of the selected experiments",
+      animation: "scale",
+      placement: "left",
+      maxWidth: 300,
+    });
   }
 
   setTopData({ data }) {
