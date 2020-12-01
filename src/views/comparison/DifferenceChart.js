@@ -459,7 +459,7 @@ export class DifferenceChart {
         .selectAll(".subtracts-label")
         .text(`difference: ${this.topData.name} – ${this.botData.name}`);
 
-      console.log("topmaxneutrophil", botmaxair);
+      //console.log("topmaxneutrophil", botmaxair);
     });
   }
 }
