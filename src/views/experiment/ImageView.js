@@ -52,7 +52,7 @@ export class ImageView {
 
     const now = performance.now();
 
-    if (now - this.lastUpdate > 20) {
+    if (now - this.lastUpdate > 45) {
       this.container.select(".loader").style("opacity", 1);
 
       this.lastUpdate = now;

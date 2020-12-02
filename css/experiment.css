@@ -68,24 +68,42 @@
   fill: none;
 }
 
-.experiment .feature-charts .cycle-dot {
+/*.experiment .feature-charts .cycle-dot {
   fill: var(--feature-color);
   stroke-width: 4px;
   stroke: transparent;
+}*/
+
+/*.experiment .feature-charts .cycle-dot:hover {*/
+/* fill: var(--feature-color); */
+/*stroke-width: 4px;
+  stroke: var(--feature-color);
+  cursor: pointer;
+}*/
+
+.experiment .feature-charts .cycle-dot {
+  fill: var(--selected);
+  stroke-width: 2;
+  stroke: white;
+  cursor: ew-resize;
 }
 
 .experiment .feature-charts .cycle-dot:hover {
-  /* fill: var(--feature-color); */
-  stroke-width: 4px;
-  stroke: var(--feature-color);
-  cursor: pointer;
+  stroke: var(--selected);
+  fill: white;
 }
 
-.experiment .feature-charts .cycle-dot.highlighted-cycle {
+.experiment .feature-charts .cycle-dot.dragging {
   fill: var(--selected);
   stroke-width: 2;
   stroke: white;
 }
+
+/*.experiment .feature-charts .cycle-dot.highlighted-cycle {
+  fill: var(--selected);
+  stroke-width: 2;
+  stroke: white;
+}*/
 
 /* RESPIRATORY CYCLE CHART */
 .experiment .resp-cycle {

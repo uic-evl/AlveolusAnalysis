@@ -1,4 +1,8 @@
-import { findMinimaLocations, chuckFeaturesByMinima } from "../../util.js";
+import {
+  findMinimaLocations,
+  chuckFeaturesByMinima,
+  findMaximaLocations,
+} from "../../util.js";
 //import { NUM_TIMESTEPS } from "../../global.js";
 
 const MARGINS = {
@@ -54,7 +58,7 @@ export class DifferenceChart {
       .attr("text-anchor", "start")
       .style("font-style", "italic")
       .style("color", "var(--inter)")
-      .text("Interstitial Area Difference");
+      .text("Interstitial Area Difference for max-air points");
 
     this.svg
       .append("text")
@@ -64,7 +68,7 @@ export class DifferenceChart {
       .attr("text-anchor", "start")
       .style("font-style", "italic")
       .style("color", "var(--alv)")
-      .text("Alveolar Area Difference");
+      .text("Alveolar Area Difference for max-air points");
 
     this.svg
       .append("text")
@@ -74,7 +78,7 @@ export class DifferenceChart {
       .attr("font-size", 12)
       .style("font-style", "italic")
       .style("color", "var(--neut)")
-      .text("Neutrophil Area Difference");
+      .text("Neutrophil Area Difference for maximum per cycle");
 
     console.log("ChartA", this);
 
@@ -99,7 +103,7 @@ export class DifferenceChart {
     this.drawChart();
   }
 
-  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_images }) {
+  drawCoordinate({ min_I, min_A, min_N, max_I, max_A, max_N, min_cycle }) {
     this.svg.selectAll("g").remove();
 
     this.xAxis = this.svg.append("g");
@@ -171,7 +175,7 @@ export class DifferenceChart {
     //x-axis for time
     this.timeScale = d3
       .scaleLinear()
-      .domain([1, min_images])
+      .domain([1, min_cycle])
       .range([MARGINS.left, this.width - MARGINS.right]);
 
     const timeAxis = d3.axisBottom(this.timeScale).ticks(5);
@@ -191,40 +195,91 @@ export class DifferenceChart {
       this.topData.getAllFeatures().catch((err) => []),
       this.botData.getAllFeatures().catch((err) => []),
     ]).then(([topFeatures, botFeatures]) => {
-      //get the difference
+      //get maximum neutrophil per cycle
       const topminima = findMinimaLocations(topFeatures);
       const topallCycles = chuckFeaturesByMinima(topFeatures, topminima);
+      const topfullCycles = topallCycles.slice(1, -1);
+      const topmaxneutrophil = topfullCycles.map((cycle) =>
+        d3.max(cycle, (d) => d.neutrophil_area)
+      );
       const topaligned = [
         ...topallCycles
           .slice(1, -1)
           .map((cycle) => cycle.slice(0, -1))
           .flat(),
       ];
+      const topmaxima = findMaximaLocations(topaligned);
+      const topmaxair = topmaxima.map((m) => topaligned[m]);
+
       const botminima = findMinimaLocations(botFeatures);
       const botallCycles = chuckFeaturesByMinima(botFeatures, botminima);
+      const botfullCycles = botallCycles.slice(1, -1);
+      const botmaxneutrophil = botfullCycles.map((cycle) =>
+        d3.max(cycle, (d) => d.neutrophil_area)
+      );
       const botaligned = [
         ...botallCycles
           .slice(1, -1)
           .map((cycle) => cycle.slice(0, -1))
           .flat(),
       ];
+      const botmaxima = findMaximaLocations(botaligned);
+      const botmaxair = botmaxima.map((m) => botaligned[m]);
 
-      const min_images = d3.min([botaligned.length, topaligned.length]);
+      //get the difference
+      //const topminima = findMinimaLocations(topFeatures);
+      //const topallCycles = chuckFeaturesByMinima(topFeatures, topminima);
+      //const topaligned = [
+      //  ...topallCycles
+      //    .slice(1, -1)
+      //    .map((cycle) => cycle.slice(0, -1))
+      //    .flat(),
+      //];
+      //const botminima = findMinimaLocations(botFeatures);
+      //const botallCycles = chuckFeaturesByMinima(botFeatures, botminima);
+      //const botaligned = [
+      //  ...botallCycles
+      //    .slice(1, -1)
+      //    .map((cycle) => cycle.slice(0, -1))
+      //    .flat(),
+      //];
+
+      //const min_images = d3.min([botaligned.length, topaligned.length]);
+      const min_cycle = d3.min([
+        topfullCycles.length,
+        botfullCycles.length,
+        botmaxima.length,
+        topmaxima.length,
+      ]);
 
       this.diff = [];
 
-      topaligned.forEach((eachtop, index) => {
-        if (index < min_images) {
-          const eachbottom = botaligned[index];
+      topmaxair.forEach((eachtop, index) => {
+        if (index < min_cycle) {
+          const eachbottom = botmaxair[index];
+          const topneutrophil = topmaxneutrophil[index];
+          const botneutrophil = botmaxneutrophil[index];
           this.diff.push({
             alveoli_diff: eachtop.alveoli_area - eachbottom.alveoli_area,
             interstitial_diff:
               eachtop.interstitial_area - eachbottom.interstitial_area,
-            neutrophil_diff:
-              eachtop.neutrophil_area - eachbottom.neutrophil_area,
+            neutrophil_diff: topneutrophil - botneutrophil,
           });
         }
       });
+
+      //topaligned.forEach((eachtop, index) => {
+      //if (index < min_images) {
+      //const eachbottom = botaligned[index];
+      //this.diff.push({
+      //alveoli_diff: eachtop.alveoli_area - eachbottom.alveoli_area,
+      //interstitial_diff:
+      //eachtop.interstitial_area - eachbottom.interstitial_area,
+      //neutrophil_diff:
+      //  eachtop.neutrophil_area - eachbottom.neutrophil_area,
+      //});
+      //}
+      //});
 
       //get the max and min for differnece
       const [min_I, max_I] = d3.extent(this.diff, (d) => d.interstitial_diff);
@@ -243,7 +298,7 @@ export class DifferenceChart {
         max_I,
         max_A,
         max_N,
-        min_images,
+        min_cycle,
       });
 
       //draw three line chart
@@ -404,7 +459,7 @@ export class DifferenceChart {
         .selectAll(".subtracts-label")
         .text(`difference: ${this.topData.name} – ${this.botData.name}`);
 
-      //console.log("diff", this.diff);
+      //console.log("topmaxneutrophil", botmaxair);
     });
   }
 }
