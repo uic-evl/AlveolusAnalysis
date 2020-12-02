@@ -18,6 +18,9 @@ const PADDING = 12;
 export class FeatureView {
   time = 1;
 
+  alvExtent = null;
+  neuExtent = null;
+
   constructor({ name, data, container, onSelectTime }) {
     this.name = name;
     this.data = data;
@@ -288,16 +291,18 @@ export class FeatureView {
           ci: getValueAcrossCycles(
             progress,
             fullCycles,
-            (t) =>
-              d3.deviation(
-                Object.values(t.areas_per_alveoli).map(
-                  (v) =>
-                    ((2 /
-                      Math.sqrt(Object.values(t.areas_per_alveoli).length)) *
-                      v) /
-                    total_area
-                )
-              ) || 0
+            ({ areas_per_alveoli }) => {
+              const areas = Object.values(areas_per_alveoli);
+
+              const coeff =
+                2 / Math.sqrt(Object.values(areas_per_alveoli).length);
+
+              return d3.deviation(
+                areas.map((v) => {
+                  return (coeff * v) / total_area;
+                })
+              );
+            }
           ),
         };
 
@@ -309,31 +314,39 @@ export class FeatureView {
           ),
         };
 
-        const alvExtent = [
-          0,
-          d3.max(
-            features,
-            ({ areas_per_alveoli }, i) =>
-              (1 / total_area) * d3.mean(Object.values(areas_per_alveoli)) +
-              d3.deviation(
-                Object.values(areas_per_alveoli).map(
-                  (v) =>
-                    ((2 / Math.sqrt(Object.values(areas_per_alveoli).length)) *
-                      v) /
-                    total_area
-                )
-              )
-          ),
-        ];
+        if (!this.alvExtent) {
+          this.alvExtent = [
+            0,
+            d3.max(features, ({ areas_per_alveoli }, i) => {
+              const areas = Object.values(areas_per_alveoli);
 
-        const neuExtent = [
-          0,
-          d3.max(
-            features,
-            ({ areas_per_neutrophil }, i) =>
-              Object.values(areas_per_neutrophil).length
-          ),
-        ];
+              const coeff =
+                2 / Math.sqrt(Object.values(areas_per_alveoli).length);
+
+              return (
+                (1 / total_area) * d3.mean(areas) +
+                d3.deviation(
+                  areas.map((v) => {
+                    return (coeff * v) / total_area;
+                  })
+                )
+              );
+            }),
+          ];
+        }
+
+        if (!this.neuExtent) {
+          this.neuExtent = [
+            0,
+            d3.max(
+              features,
+              ({ areas_per_neutrophil }, i) =>
+                Object.values(areas_per_neutrophil).length
+            ),
+          ];
+        }
+
+        const { alvExtent, neuExtent } = this;
 
         this.updateXAxis([1, fullCycles.length]);
         this.updateYAxisAlv(alvExtent);
