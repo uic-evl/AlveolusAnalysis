@@ -4,21 +4,18 @@ This README contains a user guide for the Alveolus Analysis web-based applicatio
 
 We provide a Web Demonstration of the system which includes data for two pre-processed experiments. This demonstration may be found at the link below:
 
-[**_Link to Web Demonstration of System_**](https://dyushen.github.io/CS529_final_project/)
+[**_Link to Web Demonstration of System_**](https://uic-evl.github.io/AlveolusAnalysis/)
 
 ---
 
 ## Table of Contents  
 [**User Guide**](#application-user-guide)  
 * [Chart Explanations](#charts-and-their-explanations)
-* [Example Workflow](#example-workflow)
 
 [**Setup Instructions**](#setting-up-locally-for-your-own-use)
 * [Clone The Repository](#cloning-the-repository)
 * [Starting the Web-based Application](#starting-the-application)
 * [Data Preprocessing](#data-preprocessing)
-* [Loading Your Preprocessed Data](#adding-your-preprocessed-data)
-* [Setup Instructions](#setting-up-locally-for-your-own-use)
 
 [**Libraries and Tools Used**](#libraries-and-tools)
 
@@ -26,7 +23,7 @@ We provide a Web Demonstration of the system which includes data for two pre-pro
 
 ##  Application User Guide
 
-This section will give you an overview of the visualizations included in Alveolus Analysis, how to use it
+This section will give you an overview of the visualizations included in Alveolus Analysis.
 
 ### Charts and Their Explanations
 
@@ -34,16 +31,16 @@ This section will give you an overview of the visualizations included in Alveolu
 
 | Name | Example | Explanation |
 | ---- | ------- | ----------- |
-| Experiment Summary | ![image](https://user-images.githubusercontent.com/15022659/187833313-db4c4809-c87a-4692-b72b-bf77a4c65259.png) | |
-| Timeline | ![image](https://user-images.githubusercontent.com/15022659/187833923-63e91f38-6f24-4a3f-b992-70a147690144.png) | |
+| Experiment Summary | ![image](https://user-images.githubusercontent.com/15022659/187833313-db4c4809-c87a-4692-b72b-bf77a4c65259.png) | A Kiviat diagram with summary statistics about each experiment to support visual comparison |
+| Timeline | ![image](https://user-images.githubusercontent.com/15022659/187833923-63e91f38-6f24-4a3f-b992-70a147690144.png) | The Timeline visualizes the change in alveolar/interstitial area over the course of each experiment. The blue area is the interstitial space, while the empty area is the alveoli. The stem represents the peak of each respiratory cycle and encodes the minimum, maximum, and mean observed alveolar area. You can use the play/pause controls to play the experiment like a video, or click/drag the timeline |
 
 #### Single Experiment Charts
 
 | Name | Example | Explanation |
 | ---- | ------- | ----------- |
-| Cycle Stage Over Time | ![image](https://user-images.githubusercontent.com/15022659/187834005-0412a392-0190-4103-a634-21f198cea9b0.png) | |
-| Respiratory Cycle | ![image](https://user-images.githubusercontent.com/15022659/187834028-bdc78928-07a6-4d18-a565-5a3ad152cb4e.png) | |
-| Image Preview | ![image](https://user-images.githubusercontent.com/15022659/187834058-8249dd87-46d9-43e5-82d5-6d602b847f00.png) | |
+| Cycle Stage Over Time | ![image](https://user-images.githubusercontent.com/15022659/187834005-0412a392-0190-4103-a634-21f198cea9b0.png) | The "cycle stage over time" chart visualizes the change in alveolar area and neutrophil count over the course of the experiment at a specific time point in a cycle. For example, if you have are viewing the point of peak inhalation of a respiratory cycle, this chart will plot these values for the peak of every cycle |
+| Respiratory Cycle | ![image](https://user-images.githubusercontent.com/15022659/187834028-bdc78928-07a6-4d18-a565-5a3ad152cb4e.png) | The Respiratory Cycle chart overlays all respiratory cycles over the experiment, highlighting the current full cycle. Cycle curve colors fade from white to blue over the course of the experiment. The dot may be dragged horizontally to seek within a single cycle, and clicking on another cycle's curve will jump to view that time point |
+| Image Preview | ![image](https://user-images.githubusercontent.com/15022659/187834058-8249dd87-46d9-43e5-82d5-6d602b847f00.png) | The Image Preview shows the pre-processed, combined imaging data. White overlaid contours show the shape of extracted alveoli, and red dots show neutrophil features |
 
 #### Experiment Pairwise Comparison Charts
 
@@ -52,10 +49,6 @@ This section will give you an overview of the visualizations included in Alveolu
 | Area Change Start-to-End | ![image](https://user-images.githubusercontent.com/15022659/187834085-9531fda8-5ba7-46ce-8378-49050b0c673a.png) | The change in Interstitial % and Neutrophil area from the Start to End of the selected experiments |
 | Feature Area Distribution | ![image](https://user-images.githubusercontent.com/15022659/187834124-e3e26fdb-a87d-4fab-a9f3-a72ffc3be7dd.png) | The distribution of area by feature type across the selected experiments. Select the checkbox in the upper right to only show values at max inflation |
 | Feature Area Difference Over Time | ![image](https://user-images.githubusercontent.com/15022659/187834166-a24cf7a3-b533-4004-9698-acecafa905da.png) |  The absolute difference in area by feature type between the two selected experiments |
-
-
-### Example Workflow
-
 
 
 ---
