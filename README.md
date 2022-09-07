@@ -32,7 +32,11 @@ This section will give you an overview of the visualizations included in Alveolu
 | Name | Example | Explanation |
 | ---- | ------- | ----------- |
 | Experiment Summary | ![image](https://user-images.githubusercontent.com/15022659/187833313-db4c4809-c87a-4692-b72b-bf77a4c65259.png) | A Kiviat diagram with summary statistics about each experiment to support visual comparison |
-| Timeline | ![image](https://user-images.githubusercontent.com/15022659/187833923-63e91f38-6f24-4a3f-b992-70a147690144.png) | The Timeline visualizes the change in alveolar/interstitial area over the course of each experiment. The blue area is the interstitial space, while the empty area is the alveoli. The stem represents the peak of each respiratory cycle and encodes the minimum, maximum, and mean observed alveolar area. You can use the play/pause controls to play the experiment like a video, or click/drag the timeline |
+| Timeline | _wide image below_ | The Timeline visualizes the change in alveolar/interstitial area over the course of each experiment. The blue area is the interstitial space, while the empty area is the alveoli. The stem represents the peak of each respiratory cycle and encodes the minimum, maximum, and mean observed alveolar area. You can use the play/pause controls to play the experiment like a video, or click/drag the timeline |
+
+##### Experiment Timeline
+
+![image](https://user-images.githubusercontent.com/15022659/187833923-63e91f38-6f24-4a3f-b992-70a147690144.png)
 
 #### Single Experiment Charts
 
