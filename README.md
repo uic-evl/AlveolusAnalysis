@@ -69,7 +69,7 @@ This section will describe the steps to download the code of the project to your
 You can download the code for this project by cloning the repository to your machine:
 
 ```bash
-git clone https://github.com/dyushen/CS529_final_project.git
+git clone https://github.com/uic-evl/AlveolusAnalysis.git
 ```
 
 ### Starting the Application
@@ -150,11 +150,6 @@ Below is an example of the input data for each `ch2` anc `ch4` image type.
 | Feature Filter Window                     | `--ff_window`    | `-o`      | filtering  | 1  | how many frames features must persist across (unidirectional) in both size and location
 | Filter Location Sensitivity               | `--ff_loc_sens`  | `-l`      | filtering  | 10 | how close feature centers should be in neighboring frames to be counted as the same, note that the unit here is pixels
 | Filter Size Sensitivity                   | `--ff_size_sens` | `-z`      | filtering  | 20 | how close feature areas should be in neighboring frames to be counted as the same, note that the unit here is (approximately) square pixels
-
-
-### Adding Your Preprocessed Data
-
-a
 
 ---
 
